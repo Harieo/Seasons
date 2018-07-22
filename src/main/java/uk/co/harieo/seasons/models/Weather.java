@@ -68,7 +68,7 @@ public enum Weather {
 	SNOWY("Snowy",
 			ChatColor.GRAY + "A great white blanket covers the world, it's " + ChatColor.WHITE + "Snowy",
 			false,
-			Arrays.asList(new Frostbite(), new FluffyCoat()),
+			Collections.singletonList(new FluffyCoat()),
 			Collections.singletonList(Season.WINTER)),
 	NIGHT("Night", // Night is a weather with no effect, to give people a break
 			ChatColor.GRAY + "The world rests with the sun and all is calm... Until the mobs come to eat you!",

@@ -8,5 +8,5 @@ worlds:
 Days-Per-Season: 30
 # Whether to activate the effects of the seasonal weathers
 Custom-Weathers: true
-# How many ticks per damage dealt to a player on a harmful weather
-Ticks-Of-Damage: 60
+# How many seconds per damage dealt to a player on a harmful weather
+Seconds-Of-Damage: 3

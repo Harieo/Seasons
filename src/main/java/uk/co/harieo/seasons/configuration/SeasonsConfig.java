@@ -7,13 +7,13 @@ public class SeasonsConfig {
 	private static SeasonsConfig INSTANCE;
 
 	private int daysPerSeason; // Days that must go by before the world moves to the next season
-	private int ticksPerDamage; // Whether to activate the effects of the seasonal weathers
+	private int secondsPerDamage; // Whether to activate the effects of the seasonal weathers
 	private boolean enableEffects; // How many ticks per damage dealt to a player on a harmful weather
 
 	public SeasonsConfig(FileConfiguration config) {
-		daysPerSeason = config.getInt("Days-Per-Season");
-		ticksPerDamage = config.getInt("Ticks-Of-Damage");
-		enableEffects = config.getBoolean("Custom-Weathers");
+		daysPerSeason = config.getInt("Days-Per-Season", 30);
+		secondsPerDamage = config.getInt("Seconds-Of-Damage", 3);
+		enableEffects = config.getBoolean("Custom-Weathers", true);
 		INSTANCE = this;
 	}
 
@@ -21,8 +21,8 @@ public class SeasonsConfig {
 		return daysPerSeason;
 	}
 
-	public int getTicksPerDamage() {
-		return ticksPerDamage;
+	public int getSecondsPerDamage() {
+		return secondsPerDamage;
 	}
 
 	public boolean hasEnabledEffects() {
