@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import uk.co.harieo.seasons.configuration.SeasonsConfig;
 import uk.co.harieo.seasons.configuration.SeasonsWorlds;
 import uk.co.harieo.seasons.models.Cycle;
@@ -14,6 +15,7 @@ public class Seasons extends JavaPlugin {
 
 	public static final String PREFIX =
 			ChatColor.GOLD + ChatColor.BOLD.toString() + "Seasons" + ChatColor.GRAY + "∙ " + ChatColor.RESET;
+	public static final Random RANDOM = new Random();
 
 	private static List<Cycle> CYCLES = new ArrayList<>();
 	private static Seasons INSTANCE;

@@ -10,6 +10,8 @@ import uk.co.harieo.seasons.events.DayEndEvent;
 import uk.co.harieo.seasons.events.SeasonChangeEvent;
 import uk.co.harieo.seasons.events.SeasonsWeatherChangeEvent;
 import uk.co.harieo.seasons.models.*;
+import uk.co.harieo.seasons.models.effect.Effect;
+import uk.co.harieo.seasons.models.effect.TickableEffect;
 
 public class WorldTicker extends BukkitRunnable {
 

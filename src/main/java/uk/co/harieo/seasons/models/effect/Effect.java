@@ -1,16 +1,18 @@
-package uk.co.harieo.seasons.models;
+package uk.co.harieo.seasons.models.effect;
 
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.List;
 import uk.co.harieo.seasons.Seasons;
 import uk.co.harieo.seasons.configuration.SeasonsConfig;
 import uk.co.harieo.seasons.events.SeasonsWeatherChangeEvent;
+import uk.co.harieo.seasons.models.Cycle;
+import uk.co.harieo.seasons.models.Weather;
 
 public abstract class Effect implements Listener {
 
@@ -53,5 +55,11 @@ public abstract class Effect implements Listener {
 	}
 
 	@EventHandler
-	public abstract void onWeatherChange(SeasonsWeatherChangeEvent event);
+	public void onWeatherChange(SeasonsWeatherChangeEvent event){
+		if (isWeatherApplicable(event.getChangedTo())) {
+			onTrigger(event.getCycle().getWorld());
+		}
+	}
+
+	public abstract void onTrigger(World world);
 }

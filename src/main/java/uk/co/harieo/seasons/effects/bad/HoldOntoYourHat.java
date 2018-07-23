@@ -1,43 +1,54 @@
 package uk.co.harieo.seasons.effects.bad;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import java.util.Collections;
-import java.util.Random;
-import uk.co.harieo.seasons.events.SeasonsWeatherChangeEvent;
-import uk.co.harieo.seasons.models.Effect;
+import uk.co.harieo.seasons.Seasons;
+import uk.co.harieo.seasons.models.effect.Effect;
 import uk.co.harieo.seasons.models.Weather;
 
 public class HoldOntoYourHat extends Effect {
-
-	private static final Random RANDOM = new Random();
 
 	public HoldOntoYourHat() {
 		super("Hold onto Your Hat", Collections.singletonList(Weather.BREEZY), false);
 	}
 
-	@Override
-	public void onWeatherChange(SeasonsWeatherChangeEvent event) {
-		if (isWeatherApplicable(event.getChangedTo())) {
-			World world = event.getCycle().getWorld();
-			for (Player player : world.getPlayers()) {
-				PlayerInventory inventory = player.getInventory();
-				ItemStack helmet = inventory.getHelmet();
+	private void chanceHat(Player player) {
+		PlayerInventory inventory = player.getInventory();
+		ItemStack helmet = inventory.getHelmet();
 
-				if (helmet.getType() == Material.LEATHER_HELMET) {
-					int random = RANDOM.nextInt(3);
-					if (random == 2) {
-						world.dropItem(player.getLocation(), helmet);
-						inventory.setHelmet(null);
-					}
-				}
+		if (helmet.getType() == Material.LEATHER_HELMET) {
+			int random = Seasons.RANDOM.nextInt(100);
+			if (random == 1) { // 1% chance
+				player.getWorld().dropItem(player.getLocation(), helmet);
+				inventory.setHelmet(null);
+				player.sendMessage(Seasons.PREFIX + ChatColor.YELLOW + "Your hat just blew off, oh dear!");
 			}
 		}
 	}
 
-	// TODO Instead of on equip, do a miniscule chance on any inventory click as looks far nicer
+	@Override
+	public void onTrigger(World world) {
+		for (Player player : world.getPlayers()) {
+			chanceHat(player);
+		}
+	}
+
+	@EventHandler
+	public void onInventoryClick(InventoryClickEvent event) {
+		if (event.getWhoClicked() instanceof Player) {
+			Player player = (Player) event.getWhoClicked();
+			if (isPlayerCycleApplicable(player)) {
+				chanceHat(player);
+			}
+		}
+	}
+
 }

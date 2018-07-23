@@ -1,4 +1,6 @@
-package uk.co.harieo.seasons.models;
+package uk.co.harieo.seasons.models.effect;
+
+import uk.co.harieo.seasons.models.Cycle;
 
 public interface TickableEffect {
 

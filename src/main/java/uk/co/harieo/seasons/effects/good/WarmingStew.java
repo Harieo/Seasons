@@ -11,8 +11,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.Collections;
 import uk.co.harieo.seasons.Seasons;
-import uk.co.harieo.seasons.events.SeasonsWeatherChangeEvent;
-import uk.co.harieo.seasons.models.Effect;
+import uk.co.harieo.seasons.models.effect.Effect;
 import uk.co.harieo.seasons.models.Weather;
 
 public class WarmingStew extends Effect {
@@ -24,13 +23,10 @@ public class WarmingStew extends Effect {
 	}
 
 	@Override
-	public void onWeatherChange(SeasonsWeatherChangeEvent event) {
-		if (isWeatherApplicable(event.getChangedTo())) {
-			World world = event.getCycle().getWorld();
-			for (Player player : world.getPlayers()) {
-				player.sendMessage(Seasons.PREFIX + ChatColor.GRAY
-						+ "Your stomach starts to grumble and you begin to crave some hearty soup...");
-			}
+	public void onTrigger(World world) {
+		for (Player player : world.getPlayers()) {
+			player.sendMessage(Seasons.PREFIX + ChatColor.GRAY
+					+ "Your stomach starts to grumble and you begin to crave some hearty soup...");
 		}
 	}
 

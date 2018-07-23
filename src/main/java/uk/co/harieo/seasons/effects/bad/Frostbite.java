@@ -9,10 +9,9 @@ import java.util.Arrays;
 import java.util.List;
 import uk.co.harieo.seasons.Seasons;
 import uk.co.harieo.seasons.configuration.SeasonsConfig;
-import uk.co.harieo.seasons.events.SeasonsWeatherChangeEvent;
 import uk.co.harieo.seasons.models.Cycle;
-import uk.co.harieo.seasons.models.Effect;
-import uk.co.harieo.seasons.models.TickableEffect;
+import uk.co.harieo.seasons.models.effect.Effect;
+import uk.co.harieo.seasons.models.effect.TickableEffect;
 import uk.co.harieo.seasons.models.Weather;
 
 public class Frostbite extends Effect implements TickableEffect {
@@ -25,13 +24,11 @@ public class Frostbite extends Effect implements TickableEffect {
 	private boolean active = false;
 
 	@Override
-	public void onWeatherChange(SeasonsWeatherChangeEvent event) {
-		if (isWeatherApplicable(event.getChangedTo())) {
-			World world = event.getCycle().getWorld();
-			for (Player player : world.getPlayers()) {
-				player.sendMessage(Seasons.PREFIX + ChatColor.RED
-						+ "The world is freezing over and so will you if you don't get armour on!");
-			}
+	public void onTrigger(World world) {
+		secondsPast = 0;
+		for (Player player : world.getPlayers()) {
+			player.sendMessage(Seasons.PREFIX + ChatColor.RED
+					+ "The world is freezing over and so will you if you don't get armour on!");
 		}
 	}
 

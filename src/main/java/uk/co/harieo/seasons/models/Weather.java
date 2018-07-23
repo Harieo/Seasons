@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import java.util.*;
 import uk.co.harieo.seasons.effects.bad.*;
 import uk.co.harieo.seasons.effects.good.*;
+import uk.co.harieo.seasons.models.effect.Effect;
 
 public enum Weather {
 

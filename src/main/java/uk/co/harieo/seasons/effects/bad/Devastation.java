@@ -8,8 +8,7 @@ import org.bukkit.event.entity.EntityRegainHealthEvent;
 
 import java.util.Collections;
 import uk.co.harieo.seasons.Seasons;
-import uk.co.harieo.seasons.events.SeasonsWeatherChangeEvent;
-import uk.co.harieo.seasons.models.Effect;
+import uk.co.harieo.seasons.models.effect.Effect;
 import uk.co.harieo.seasons.models.Weather;
 
 public class Devastation extends Effect {
@@ -19,13 +18,10 @@ public class Devastation extends Effect {
 	}
 
 	@Override
-	public void onWeatherChange(SeasonsWeatherChangeEvent event) {
-		if (isWeatherApplicable(event.getChangedTo())) {
-			World world = event.getCycle().getWorld();
-			for (Player player : world.getPlayers()) {
-				player.sendMessage(Seasons.PREFIX + ChatColor.RED
-						+ "Your hearts beats rapidly, yours legs tremble and you find you cannot regenerate health until this Devastation passes!");
-			}
+	public void onTrigger(World world) {
+		for (Player player : world.getPlayers()) {
+			player.sendMessage(Seasons.PREFIX + ChatColor.RED
+					+ "Your hearts beats rapidly, yours legs tremble and you find you cannot regenerate health until this Devastation passes!");
 		}
 	}
 
