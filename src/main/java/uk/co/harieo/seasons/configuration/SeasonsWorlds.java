@@ -21,6 +21,12 @@ public class SeasonsWorlds {
 	private static final Season DEFAULT_SEASON = Season.SPRING;
 	private static final Weather DEFAULT_WEATHER = Weather.BEAUTIFUL;
 
+	/**
+	 * Parses the default configuration file for any previously saved worlds and loads those settings if found
+	 *
+	 * @return a list of cycles of all applicable worlds, regardless of whether they were found in the configuration
+	 * file
+	 */
 	public static List<Cycle> parseWorldsAutosave() {
 		List<Cycle> cycles = new ArrayList<>();
 
@@ -52,12 +58,20 @@ public class SeasonsWorlds {
 		return cycles;
 	}
 
+	/**
+	 * Saves all worlds currently stored in the configuration file so they can be loaded on server restart
+	 */
 	public static void saveAllWorlds() {
 		for (Cycle cycle : Seasons.getCycles()) {
 			setWorldSave(cycle);
 		}
 	}
 
+	/**
+	 * Sets the configuration values to save the given Cycles and their worlds
+	 *
+	 * @param cycle to save to the configuration file
+	 */
 	private static void setWorldSave(Cycle cycle) {
 		String worldName = cycle.getWorld().getName();
 		CONFIG.set(DEFAULT_PATH + worldName + ".day", cycle.getDay());

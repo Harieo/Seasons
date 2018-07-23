@@ -22,8 +22,21 @@ public abstract class SeasonsPotionEffect extends Effect {
 		this.effect = effect;
 	}
 
+	/**
+	 * An abstract method containing the conditions that calculate whether the {@link PotionEffect} should be given
+	 * to the {@link Player} stated
+	 *
+	 * @param player that is being affected
+	 * @return whether the {@link PotionEffect} should be given to the {@link Player}
+	 */
 	public abstract boolean shouldGive(Player player);
 
+	/**
+	 * Gives the registered {@link PotionEffect} after checking that all conditions are met successfully
+	 *
+	 * @param player to give the effect to
+	 * @param sendMessage whether or not to call {@link #sendGiveMessage(Player)}
+	 */
 	protected void giveEffect(Player player, boolean sendMessage) {
 		if (shouldGive(player) && !player.hasPotionEffect(effect.getType())) {
 			player.addPotionEffect(effect);
@@ -33,6 +46,12 @@ public abstract class SeasonsPotionEffect extends Effect {
 		}
 	}
 
+	/**
+	 * Removes the registered {@link PotionEffect} regardless of any conditions
+	 *
+	 * @param player to remove the effect from
+	 * @param sendMessage whether or not to call {@link #sendRemoveMessage(Player)}
+	 */
 	protected void removeEffect(Player player, boolean sendMessage) {
 		player.removePotionEffect(effect.getType());
 		if (sendMessage) {
@@ -40,9 +59,23 @@ public abstract class SeasonsPotionEffect extends Effect {
 		}
 	}
 
+	/**
+	 * Sends a message to the {@link Player} on the assumption that {@link #giveEffect(Player, boolean)} was called
+	 * before this method
+	 *
+	 * @param player to send the message to
+	 */
 	public abstract void sendGiveMessage(Player player);
 
+	/**
+	 * Sends a message to the {@link Player} on the assumption that {@link #removeEffect(Player, boolean)} was called
+	 * before this method
+	 *
+	 * @param player to send the message to
+	 */
 	public abstract void sendRemoveMessage(Player player);
+
+	// The events that are global to all classes that extend this class for handling effects //
 
 	@Override
 	public void onTrigger(World world) {

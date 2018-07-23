@@ -33,22 +33,44 @@ public abstract class Effect implements Listener {
 		}
 	}
 
+	/**
+	 * @return the name of this effect, shown to the player
+	 */
 	public String getName() {
 		return name;
 	}
 
-	public List<Weather> getWeathers() {
+	/**
+	 * @return the list of {@link Weather} to which this effect can be used upon
+	 */
+	private List<Weather> getWeathers() {
 		return weathers;
 	}
 
+	/**
+	 * @return whether this is a primarily positive effect for the player
+	 */
 	public boolean isGood() {
 		return isGood;
 	}
 
-	protected boolean isWeatherApplicable(Weather weather) {
+	/**
+	 * Checks whether the {@link Weather} is in the list of applicable Weathers attached to this effect
+	 *
+	 * @param weather to be checked
+	 * @return whether this {@link Weather} can be used with this effect
+	 */
+	boolean isWeatherApplicable(Weather weather) {
 		return getWeathers().contains(weather);
 	}
 
+	/**
+	 * Retrieves the {@link Cycle} and, by extension, {@link Weather} that the {@link Player} is currently affected by
+	 * and checks whether the stated {@link Player} is affected by this effect
+	 *
+	 * @param player to be checked
+	 * @return whether the {@link Player} is affected by this effect
+	 */
 	protected boolean isPlayerCycleApplicable(Player player) {
 		Cycle cycle = Seasons.getWorldCycle(player.getWorld());
 		return cycle != null && isWeatherApplicable(cycle.getWeather());
@@ -61,5 +83,10 @@ public abstract class Effect implements Listener {
 		}
 	}
 
+	/**
+	 * An abstract method to handle when this effect is activated upon a {@link World}
+	 *
+	 * @param world that this effect is being triggered on
+	 */
 	public abstract void onTrigger(World world);
 }

@@ -135,10 +135,21 @@ public enum Weather {
 		return null;
 	}
 
+	/**
+	 * Gets a random {@link Weather} from the list of values without any constraints
+	 *
+	 * @return a randomly selected {@link Weather}
+	 */
 	public static Weather randomWeather() {
 		return values()[random.nextInt(values().length)];
 	}
 
+	/**
+	 * Gets a random {@link Weather} that is applicable in the stated {@link Season}
+	 *
+	 * @param season as a constraint to what weathers will be used
+	 * @return a random {@link Weather} that can be used in the stated {@link Season}
+	 */
 	public static Weather randomWeather(Season season) {
 		List<Weather> applicableWeathers = new ArrayList<>();
 		for (Weather weather : values()) {
