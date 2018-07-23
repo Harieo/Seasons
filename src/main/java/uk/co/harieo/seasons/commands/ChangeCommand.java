@@ -59,6 +59,16 @@ public class ChangeCommand implements CommandExecutor {
 		return false;
 	}
 
+	/**
+	 * Basic processing of specified parameters that are variable and cannot be predicted
+	 * This method handles 3 different commands in 1
+	 *
+	 * @param sender of the original command
+	 * @param command sent by the sender
+	 * @param name of the value they wish to change, specific to the command executed
+	 * @param cycle that they are attempting to edit
+	 *
+	 */
 	private void change(CommandSender sender, String command, String name, Cycle cycle) {
 		World world = cycle.getWorld();
 		if (command.equalsIgnoreCase("changeday")) {

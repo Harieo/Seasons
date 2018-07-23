@@ -11,7 +11,6 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.Collections;
 import uk.co.harieo.seasons.Seasons;
-import uk.co.harieo.seasons.models.effect.Effect;
 import uk.co.harieo.seasons.models.Weather;
 import uk.co.harieo.seasons.models.effect.SeasonsPotionEffect;
 

@@ -2,20 +2,15 @@ package uk.co.harieo.seasons.effects.bad;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.Collections;
 import uk.co.harieo.seasons.Seasons;
-import uk.co.harieo.seasons.models.Cycle;
-import uk.co.harieo.seasons.models.effect.Effect;
 import uk.co.harieo.seasons.models.Weather;
 import uk.co.harieo.seasons.models.effect.SeasonsPotionEffect;
 
