@@ -1,5 +1,6 @@
 package uk.co.harieo.seasons;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -7,6 +8,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import uk.co.harieo.seasons.commands.ChangeCommand;
+import uk.co.harieo.seasons.commands.SeasonsCommand;
 import uk.co.harieo.seasons.configuration.SeasonsConfig;
 import uk.co.harieo.seasons.configuration.SeasonsWorlds;
 import uk.co.harieo.seasons.models.Cycle;
@@ -27,6 +30,12 @@ public class Seasons extends JavaPlugin {
 		CYCLES = SeasonsWorlds.parseWorldsAutosave(); // Load saved worlds
 
 		new WorldTicker().runTaskTimer(this, 0, 20); // Begin the cycles
+
+		ChangeCommand changeCommand = new ChangeCommand();
+		Bukkit.getPluginCommand("season").setExecutor(new SeasonsCommand());
+		Bukkit.getPluginCommand("changeday").setExecutor(changeCommand);
+		Bukkit.getPluginCommand("changeweather").setExecutor(changeCommand);
+		Bukkit.getPluginCommand("changeseason").setExecutor(changeCommand);
 
 		INSTANCE = this;
 	}

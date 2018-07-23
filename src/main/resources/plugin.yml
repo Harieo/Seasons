@@ -4,3 +4,30 @@ name: Seasons
 author: Harieo
 
 commands:
+  season:
+    description: Display the current Seasons information
+    aliases: [seasons]
+  changeday:
+    description: Changes the day in a world
+  changeweather:
+    description: Changes the weather in a world
+  changeseason:
+    description: Changes the season in a world
+
+permissions:
+  seasons.change.*:
+    description: Use all the change commands
+    default: op
+    children:
+      seasons.change.day: true
+      seasons.change.weather: true
+      seasons.change.season: true
+  seasons.change.day:
+    description: Change the day in a world
+    default: op
+  seasons.change.weather:
+    description: Change the weather in a world
+    default: op
+  seasons.change.season:
+    description: Change the season in a world
+    default: op
