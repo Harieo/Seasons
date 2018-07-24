@@ -90,6 +90,10 @@ public abstract class SeasonsPotionEffect extends Effect {
 	 */
 	public abstract void sendRemoveMessage(Player player);
 
+	public PotionEffect getEffect() {
+		return effect;
+	}
+
 	// The events that are global to all classes that extend this class for handling effects //
 
 	@Override

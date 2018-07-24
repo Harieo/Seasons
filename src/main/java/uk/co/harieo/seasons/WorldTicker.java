@@ -59,11 +59,11 @@ public class WorldTicker extends BukkitRunnable {
 		}
 
 		Weather newWeather = Weather.randomWeather(season);
-		Bukkit.getPluginManager()
-				.callEvent(new SeasonsWeatherChangeEvent(cycle, newWeather, true));
 		cycle.setWeather(newWeather);
 
 		broadcastWeatherMessage(newWeather, world);
+		Bukkit.getPluginManager()
+				.callEvent(new SeasonsWeatherChangeEvent(cycle, newWeather, true));
 	}
 
 	private void newNight(Cycle cycle, World world) {

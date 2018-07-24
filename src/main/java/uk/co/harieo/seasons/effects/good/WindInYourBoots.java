@@ -30,7 +30,7 @@ public class WindInYourBoots extends Effect implements TickableEffect {
 	public void onTick(Cycle cycle) {
 		if (secondsPast >= 60 * 2) {
 			int random = Seasons.RANDOM.nextInt(10);
-			if (random < 1) {
+			if (random < 5) {
 				World world = cycle.getWorld();
 				for (Player player : world.getPlayers()) {
 					if (!player.hasPotionEffect(PotionEffectType.SPEED)) {

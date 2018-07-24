@@ -1,13 +1,20 @@
 package uk.co.harieo.seasons.effects.good;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.inventory.*;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Collections;
 import uk.co.harieo.seasons.Seasons;
@@ -26,7 +33,7 @@ public class PrimitiveHeating extends SeasonsPotionEffect {
 
 	@Override
 	public boolean shouldGive(Player player) {
-		if (!isPlayerCycleApplicable(player)) {
+		if (isPlayerCycleApplicable(player)) {
 			PlayerInventory inventory = player.getInventory();
 			for (Material material : HOT_MATERIALS) {
 				if (inventory.contains(material)) {
@@ -52,13 +59,49 @@ public class PrimitiveHeating extends SeasonsPotionEffect {
 
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
-		if (event.getWhoClicked() instanceof Player) {
-			Player player = (Player) event.getWhoClicked();
-			if (shouldGive(player)) {
-				giveEffect(player, true);
-			} else {
-				removeEffect(player, true);
+		// This event fires before the action happens, meaning a delay is required
+		BukkitRunnable runnable = new BukkitRunnable() {
+			@Override
+			public void run() {
+				if (event.getWhoClicked() instanceof Player) {
+					Player player = (Player) event.getWhoClicked();
+					if (shouldGive(player)) {
+						giveEffect(player, false);
+					} else {
+						removeEffect(player, false);
+					}
+				}
+			}
+		};
+		runnable.runTaskLater(Seasons.getPlugin(), 10);
+	}
+
+	@EventHandler
+	public void onItemPickup(EntityPickupItemEvent event) {
+		if (event.getEntity() instanceof Player) {
+			Player player = (Player) event.getEntity();
+			if (!shouldGive(player) && isHotItem(event.getItem().getItemStack())) {
+				player.addPotionEffect(getEffect()); // For some reason the standard method fails here for unknown reason
+				sendGiveMessage(player);
 			}
 		}
+	}
+
+	@EventHandler
+	public void onItemDrop(PlayerDropItemEvent event) {
+		Player player = event.getPlayer();
+		if (!shouldGive(player) && isHotItem(event.getItemDrop().getItemStack())) {
+			removeEffect(player, true);
+		}
+	}
+
+	private boolean isHotItem(ItemStack item) {
+		for (Material material : HOT_MATERIALS) {
+			if (item.getType() == material) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

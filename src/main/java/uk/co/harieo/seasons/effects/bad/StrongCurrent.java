@@ -1,5 +1,6 @@
 package uk.co.harieo.seasons.effects.bad;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -18,14 +19,14 @@ public class StrongCurrent extends SeasonsPotionEffect {
 
 	public StrongCurrent() {
 		super("Strong Current", Collections.singletonList(Weather.STORMY), false,
-				new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 1));
+				new PotionEffect(PotionEffectType.SLOW, 20 * 20, 1));
 	}
 
 	@Override
 	public boolean shouldGive(Player player) {
 		if (isPlayerCycleApplicable(player)) {
 			Block block = player.getLocation().getBlock();
-			return block.getType() == Material.WATER;
+			return block.getType() == Material.STATIONARY_WATER;
 		} else {
 			return false;
 		}
@@ -34,23 +35,19 @@ public class StrongCurrent extends SeasonsPotionEffect {
 	@Override
 	public void sendGiveMessage(Player player) {
 		player.sendMessage(
-				Seasons.PREFIX + ChatColor.RED + "The current crashes against you and you struggle to fight it...");
+				Seasons.PREFIX + ChatColor.RED + "The current crashes against you and your muscles cry in pain...");
 	}
 
 	@Override
 	public void sendRemoveMessage(Player player) {
 		player.sendMessage(Seasons.PREFIX + ChatColor.GREEN
-				+ "You are free from the devastating currents but you are far from safe yet...");
+				+ "The waters die down and grow still...");
 	}
 
 	@EventHandler
 	public void onMove(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
-		if (shouldGive(player)) {
-			giveEffect(player, true);
-		} else {
-			removeEffect(player, false);
-		}
+		giveEffect(player, true);
 	}
 
 }

@@ -7,8 +7,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 
 import uk.co.harieo.seasons.Seasons;
+import uk.co.harieo.seasons.events.SeasonChangeEvent;
+import uk.co.harieo.seasons.events.SeasonsWeatherChangeEvent;
 import uk.co.harieo.seasons.models.Cycle;
 import uk.co.harieo.seasons.models.Season;
 import uk.co.harieo.seasons.models.Weather;
@@ -71,6 +74,7 @@ public class ChangeCommand implements CommandExecutor {
 	 */
 	private void change(CommandSender sender, String command, String name, Cycle cycle) {
 		World world = cycle.getWorld();
+		PluginManager manager = Bukkit.getPluginManager();
 		if (command.equalsIgnoreCase("changeday")) {
 			int newDay;
 			try {
@@ -96,6 +100,7 @@ public class ChangeCommand implements CommandExecutor {
 			broadcast(world, Seasons.PREFIX + ChatColor.GRAY
 					+ "The skies grow silent and with a great rumble the weather turns to " + ChatColor.GREEN + weather
 					.getName());
+			manager.callEvent(new SeasonsWeatherChangeEvent(cycle, weather, false));
 		} else if (command.equalsIgnoreCase("changeseason")) {
 			Season season = Season.fromName(name);
 			if (season == null) {
@@ -103,6 +108,7 @@ public class ChangeCommand implements CommandExecutor {
 				return;
 			}
 
+			manager.callEvent(new SeasonChangeEvent(cycle, season, cycle.getSeason(), false));
 			cycle.setSeason(season);
 			broadcast(world,
 					Seasons.PREFIX + ChatColor.GRAY + "The air around you changes mystically and becomes "
