@@ -12,6 +12,7 @@ public class DayEndEvent extends Event {
 	private Weather changeFrom;
 
 	public DayEndEvent(Cycle cycle, Weather changeFrom) {
+		this.cycle = cycle;
 		this.changeFrom = changeFrom;
 	}
 

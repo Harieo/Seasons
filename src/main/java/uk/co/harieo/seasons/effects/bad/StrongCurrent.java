@@ -49,7 +49,7 @@ public class StrongCurrent extends SeasonsPotionEffect {
 		if (shouldGive(player)) {
 			giveEffect(player, true);
 		} else {
-			removeEffect(player, true);
+			removeEffect(player, false);
 		}
 	}
 

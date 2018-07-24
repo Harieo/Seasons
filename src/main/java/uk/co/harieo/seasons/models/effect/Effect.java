@@ -43,7 +43,7 @@ public abstract class Effect implements Listener {
 	/**
 	 * @return the list of {@link Weather} to which this effect can be used upon
 	 */
-	private List<Weather> getWeathers() {
+	public List<Weather> getWeathers() {
 		return weathers;
 	}
 
@@ -60,7 +60,7 @@ public abstract class Effect implements Listener {
 	 * @param weather to be checked
 	 * @return whether this {@link Weather} can be used with this effect
 	 */
-	boolean isWeatherApplicable(Weather weather) {
+	public boolean isWeatherApplicable(Weather weather) {
 		return getWeathers().contains(weather);
 	}
 

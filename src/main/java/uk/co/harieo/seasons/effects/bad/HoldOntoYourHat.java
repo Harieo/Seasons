@@ -23,12 +23,16 @@ public class HoldOntoYourHat extends Effect {
 	private void chanceHat(Player player) {
 		PlayerInventory inventory = player.getInventory();
 		ItemStack helmet = inventory.getHelmet();
+		if (helmet == null)
+			return;
 
 		if (helmet.getType() == Material.LEATHER_HELMET) {
 			int random = Seasons.RANDOM.nextInt(100);
-			if (random == 1) { // 1% chance
+			if (random < 10) { // 10% chance
 				player.getWorld().dropItem(player.getLocation(), helmet);
+				// Remove both to prevent duplication glitches
 				inventory.setHelmet(null);
+				player.setItemOnCursor(null);
 				player.sendMessage(Seasons.PREFIX + ChatColor.YELLOW + "Your hat just blew off, oh dear!");
 			}
 		}

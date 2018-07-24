@@ -30,8 +30,9 @@ public class SeasonsCommand implements CommandExecutor {
 		} else {
 			Season season = cycle.getSeason();
 			player.sendMessage(season.getColor() + "Your world is in " + season.getName());
-			player.sendMessage(ChatColor.AQUA + "The weather is currently " + cycle.getWeather().getName());
-			player.sendMessage(ChatColor.YELLOW + "Today is day " + cycle.getDay()
+			player.sendMessage(ChatColor.GREEN + "The weather is currently " + ChatColor.DARK_GREEN
+					+ cycle.getWeather().getName());
+			player.sendMessage(ChatColor.GOLD + "Today is day " + cycle.getDay()
 					+ " of " + SeasonsConfig.get().getDaysPerSeason());
 		}
 

@@ -20,37 +20,20 @@ public class WorldTicker extends BukkitRunnable {
 	public void run() {
 		for (Cycle cycle : Seasons.getCycles()) {
 			World world = cycle.getWorld();
+			boolean isNight = cycle.getWeather() == Weather.NIGHT;
+			boolean shouldProgressDay = world.getTime() >= 23850 && world.getTime() > 0 && isNight;
+			boolean shouldProgressNight = world.getTime() >= 12300 && world.getTime() < 12400;
+			boolean isUnregisteredDay = !isNight && world.getTime() > 12400 && world.getTime() < 23850;
+			boolean isUnregisteredNight = isNight && world.getTime() > 0 && world.getTime() < 12300;
 
 			// If the world is entering night and not already handled
-			if (world.getTime() >= 12300 && world.getTime() < 12400 && cycle.getWeather() != Weather.NIGHT) {
-				Bukkit.getPluginManager().callEvent(new DayEndEvent(cycle, cycle.getWeather()));
-				cycle.setWeather(Weather.NIGHT);
-				broadcastWeatherMessage(Weather.NIGHT, world);
-			} else if (world.getTime() >= 23850 && world.getTime() > 0) {
-				int day = cycle.getDay();
-				Season season;
-
-				// If the next day will advance past the amount of days in a season, switch to new season
-				if (day + 1 > SeasonsConfig.get().getDaysPerSeason()) {
-					cycle.setDay(1);
-					season = Season.next(cycle.getSeason());
-					Bukkit.getPluginManager().callEvent(new SeasonChangeEvent(cycle, cycle.getSeason(), season, true));
-					cycle.setSeason(season);
-					broadcastSeasonMessage(season, world);
-				} else {
-					cycle.setDay(day + 1);
-					season = cycle.getSeason();
-				}
-
-				Weather newWeather = Weather.randomWeather(season);
-				Bukkit.getPluginManager()
-						.callEvent(new SeasonsWeatherChangeEvent(cycle, newWeather, true));
-				cycle.setWeather(newWeather);
-
-				broadcastWeatherMessage(newWeather, world);
+			if ((shouldProgressNight & !isNight) | isUnregisteredDay) {
+				newNight(cycle, world);
+			} else if (isUnregisteredNight || shouldProgressDay) {
+				newDay(cycle, world);
 			} else {
-				for (Effect effect : cycle.getWeather().getEffects()) {
-					if (effect instanceof TickableEffect) {
+				for (Effect effect : Seasons.getEffects()) {
+					if (effect.isWeatherApplicable(cycle.getWeather()) && effect instanceof TickableEffect) {
 						TickableEffect tickableEffect = (TickableEffect) effect;
 						tickableEffect.onTick(cycle);
 					}
@@ -59,9 +42,39 @@ public class WorldTicker extends BukkitRunnable {
 		}
 	}
 
+	private void newDay(Cycle cycle, World world) {
+		int day = cycle.getDay();
+		Season season;
+
+		// If the next day will advance past the amount of days in a season, switch to new season
+		if (day + 1 > SeasonsConfig.get().getDaysPerSeason()) {
+			cycle.setDay(1);
+			season = Season.next(cycle.getSeason());
+			Bukkit.getPluginManager().callEvent(new SeasonChangeEvent(cycle, cycle.getSeason(), season, true));
+			cycle.setSeason(season);
+			broadcastSeasonMessage(season, world);
+		} else {
+			cycle.setDay(day + 1);
+			season = cycle.getSeason();
+		}
+
+		Weather newWeather = Weather.randomWeather(season);
+		Bukkit.getPluginManager()
+				.callEvent(new SeasonsWeatherChangeEvent(cycle, newWeather, true));
+		cycle.setWeather(newWeather);
+
+		broadcastWeatherMessage(newWeather, world);
+	}
+
+	private void newNight(Cycle cycle, World world) {
+		Bukkit.getPluginManager().callEvent(new DayEndEvent(cycle, cycle.getWeather()));
+		cycle.setWeather(Weather.NIGHT);
+		broadcastWeatherMessage(Weather.NIGHT, world);
+	}
+
 	/**
-	 * Broadcasts the trigger message for the given {@link Weather} to all players in the {@link World} in which
-	 * the given {@link Weather} affects
+	 * Broadcasts the trigger message for the given {@link Weather} to all players in the {@link World} in which the
+	 * given {@link Weather} affects
 	 *
 	 * @param weather that is being triggered
 	 * @param world that the {@param weather} is being triggered on
@@ -78,8 +91,8 @@ public class WorldTicker extends BukkitRunnable {
 	}
 
 	/**
-	 * Broadcasts the trigger message for the given {@link Season} to all players in the {@link World} in which
-	 * the given {@link Season} affects
+	 * Broadcasts the trigger message for the given {@link Season} to all players in the {@link World} in which the
+	 * given {@link Season} affects
 	 *
 	 * @param season that is being triggered
 	 * @param world that the {@param season} is being triggered on

@@ -1,5 +1,6 @@
 package uk.co.harieo.seasons.effects.good;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -16,6 +17,7 @@ public class Revitalized extends SeasonsPotionEffect {
 	public Revitalized() {
 		super("Revitalized", Collections.singletonList(Weather.BEAUTIFUL), true,
 				new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 0));
+		Bukkit.broadcastMessage(Weather.BEAUTIFUL.getName());
 	}
 
 	@Override
@@ -26,7 +28,7 @@ public class Revitalized extends SeasonsPotionEffect {
 	@Override
 	public void sendGiveMessage(Player player) {
 		player.sendMessage(Seasons.PREFIX
-				+ "The sun from this world is so " + ChatColor.YELLOW + "Revitalising"
+				+ ChatColor.GREEN + "The sun from this world is so " + ChatColor.YELLOW + "Revitalising"
 				+ ChatColor.GREEN + ", it's Regenerating you!");
 	}
 

@@ -1,5 +1,6 @@
 package uk.co.harieo.seasons.models.effect;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,8 +24,8 @@ public abstract class SeasonsPotionEffect extends Effect {
 	}
 
 	/**
-	 * An abstract method containing the conditions that calculate whether the {@link PotionEffect} should be given
-	 * to the {@link Player} stated
+	 * An abstract method containing the conditions that calculate whether the {@link PotionEffect} should be given to
+	 * the {@link Player} stated
 	 *
 	 * @param player that is being affected
 	 * @return whether the {@link PotionEffect} should be given to the {@link Player}
@@ -51,12 +52,26 @@ public abstract class SeasonsPotionEffect extends Effect {
 	 *
 	 * @param player to remove the effect from
 	 * @param sendMessage whether or not to call {@link #sendRemoveMessage(Player)}
+	 * @param force whether to ignore the player cycle and remove regardless of conditions
+	 */
+	protected void removeEffect(Player player, boolean sendMessage, boolean force) {
+		if (isPlayerCycleApplicable(player) || force) {
+			player.removePotionEffect(effect.getType());
+			if (sendMessage) {
+				sendRemoveMessage(player);
+			}
+		}
+	}
+
+	/**
+	 * Removes effects on the assumption that this is not a forceful action
+	 * Calls {@link #removeEffect(Player, boolean, boolean)} with force as false
+	 *
+	 * @param player to remove the effect from
+	 * @param sendMessage whether or not to call {@link #sendRemoveMessage(Player)}
 	 */
 	protected void removeEffect(Player player, boolean sendMessage) {
-		player.removePotionEffect(effect.getType());
-		if (sendMessage) {
-			sendRemoveMessage(player);
-		}
+		removeEffect(player, sendMessage, false);
 	}
 
 	/**
@@ -68,8 +83,8 @@ public abstract class SeasonsPotionEffect extends Effect {
 	public abstract void sendGiveMessage(Player player);
 
 	/**
-	 * Sends a message to the {@link Player} on the assumption that {@link #removeEffect(Player, boolean)} was called
-	 * before this method
+	 * Sends a message to the {@link Player} on the assumption that {@link #removeEffect(Player, boolean, boolean)} was
+	 * called before this method
 	 *
 	 * @param player to send the message to
 	 */
@@ -105,7 +120,7 @@ public abstract class SeasonsPotionEffect extends Effect {
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		if (isPlayerCycleApplicable(player)) {
-			removeEffect(player, false);
+			removeEffect(player, false, false);
 		}
 	}
 
@@ -119,7 +134,7 @@ public abstract class SeasonsPotionEffect extends Effect {
 			}
 		}
 
-		removeEffect(player, true);
+		removeEffect(player, true, true);
 	}
 
 	@EventHandler
@@ -127,7 +142,7 @@ public abstract class SeasonsPotionEffect extends Effect {
 		if (isWeatherApplicable(event.getChangeFrom())) {
 			World world = event.getCycle().getWorld();
 			for (Player player : world.getPlayers()) {
-				removeEffect(player, true);
+				removeEffect(player, true, false);
 			}
 		}
 	}

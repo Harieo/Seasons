@@ -14,12 +14,61 @@ import uk.co.harieo.seasons.models.Weather;
 
 public class SeasonsWorlds {
 
-	private static final FileConfiguration CONFIG = Seasons.getPlugin().getConfig();
-	private static final String DEFAULT_PATH = "world.";
+	private static final String DEFAULT_PATH = "worlds.";
 
 	// These values will be used when the config contains either invalid values or none of these values
 	private static final Season DEFAULT_SEASON = Season.SPRING;
 	private static final Weather DEFAULT_WEATHER = Weather.BEAUTIFUL;
+
+	private FileConfiguration config;
+	private List<Cycle> cycles;
+
+	public SeasonsWorlds(FileConfiguration config) {
+		this.config = config;
+		this.cycles = new ArrayList<>();
+		parse();
+	}
+
+	/**
+	 * Parses the configuration file for previously saved cycles in all applicable worlds If no saved cycle for a world
+	 * is found, it will be assumed the world is new and set with default values
+	 */
+	private void parse() {
+		for (World world : Bukkit.getWorlds()) { // Scan all loaded worlds
+			if (world.getEnvironment().equals(Environment.NORMAL)) { // Only normal worlds are subject to cycles
+				String worldName = world.getName();
+				String path = DEFAULT_PATH + worldName;
+
+				int day = 1;
+				Season season = DEFAULT_SEASON;
+				Weather weather = DEFAULT_WEATHER;
+				boolean save = false;
+
+				if (config.contains(path)) { // Config knows of this world, load settings
+					day = config.getInt(path + ".day");
+					season = Season.fromName(config.getString(path + ".season"));
+					weather = Weather.fromName(config.getString(path + ".weather"));
+
+					if (season == null || weather == null || day < 1) { // One or more saved values are invalid
+						Seasons.getPlugin().getLogger().severe("World " + worldName
+								+ " has one or more invalid configuration parameters, world will load from default settings");
+						day = 1;
+						season = DEFAULT_SEASON;
+						weather = DEFAULT_WEATHER;
+					}
+				} else {
+					save = true;
+				}
+
+				Cycle cycle = new Cycle(world, season,
+						world.getTime() > 12400 && world.getTime() < 23850 ? Weather.NIGHT : weather, day);
+				cycles.add(cycle);
+				if (save) {
+					saveWorld(cycle);
+				}
+			}
+		}
+	}
 
 	/**
 	 * Parses the default configuration file for any previously saved worlds and loads those settings if found
@@ -27,43 +76,16 @@ public class SeasonsWorlds {
 	 * @return a list of cycles of all applicable worlds, regardless of whether they were found in the configuration
 	 * file
 	 */
-	public static List<Cycle> parseWorldsAutosave() {
-		List<Cycle> cycles = new ArrayList<>();
-
-		for (World world : Bukkit.getWorlds()) { // Scan all loaded worlds
-			if (world.getEnvironment().equals(Environment.NORMAL)) { // Only normal worlds are subject to cycles
-				String worldName = world.getName();
-				String path = DEFAULT_PATH + worldName;
-
-				if (CONFIG.contains(path)) { // Config knows of this world, load settings
-					int day = CONFIG.getInt(path + ".day");
-					Season season = Season.fromName(CONFIG.getString(path + ".season"));
-					Weather weather = Weather.fromName(CONFIG.getString(path + ".weather"));
-
-					if (season == null || weather == null || day < 1) { // One or more saved values are invalid
-						Seasons.getPlugin().getLogger().severe("World " + worldName
-								+ " has one or more invalid configuration parameters, world will load from default settings");
-						cycles.add(new Cycle(world, DEFAULT_SEASON, DEFAULT_WEATHER, 1));
-					} else { // Values successfully loaded
-						cycles.add(new Cycle(world, season, weather, day));
-					}
-				} else {
-					Cycle cycle = new Cycle(world, DEFAULT_SEASON, DEFAULT_WEATHER, 1);
-					cycles.add(cycle);
-					setWorldSave(cycle);
-				}
-			}
-		}
-
+	public List<Cycle> getParsedCycles() {
 		return cycles;
 	}
 
 	/**
 	 * Saves all worlds currently stored in the configuration file so they can be loaded on server restart
 	 */
-	public static void saveAllWorlds() {
+	public void saveAllWorlds() {
 		for (Cycle cycle : Seasons.getCycles()) {
-			setWorldSave(cycle);
+			saveWorld(cycle);
 		}
 	}
 
@@ -72,11 +94,12 @@ public class SeasonsWorlds {
 	 *
 	 * @param cycle to save to the configuration file
 	 */
-	private static void setWorldSave(Cycle cycle) {
+	private void saveWorld(Cycle cycle) {
 		String worldName = cycle.getWorld().getName();
-		CONFIG.set(DEFAULT_PATH + worldName + ".day", cycle.getDay());
-		CONFIG.set(DEFAULT_PATH + worldName + ".season", cycle.getSeason());
-		CONFIG.set(DEFAULT_PATH + worldName + ".weather", cycle.getWeather());
+		config.set(DEFAULT_PATH + worldName + ".day", cycle.getDay());
+		config.set(DEFAULT_PATH + worldName + ".season", cycle.getSeason().getName());
+		config.set(DEFAULT_PATH + worldName + ".weather", cycle.getWeather().getName());
+		Seasons.getPlugin().saveConfig();
 	}
 
 }
