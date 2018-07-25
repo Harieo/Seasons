@@ -27,7 +27,7 @@ public class WetMud extends SeasonsPotionEffect {
 	@Override
 	public boolean shouldGive(Player player) {
 		if (isPlayerCycleApplicable(player)) {
-			Block block = player.getLocation().getBlock();
+			Block block = player.getLocation().clone().subtract(0, 1, 0).getBlock();
 			for (Material material : MUDDY) {
 				if (block.getType() == material) {
 					return true;

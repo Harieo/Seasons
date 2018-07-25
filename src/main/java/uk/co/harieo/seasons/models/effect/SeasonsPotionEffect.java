@@ -158,7 +158,7 @@ public abstract class SeasonsPotionEffect extends Effect {
 		if (isWeatherApplicable(event.getChangeFrom())) {
 			World world = event.getCycle().getWorld();
 			for (Player player : world.getPlayers()) {
-				removeEffect(player, true, false);
+				removeEffect(player, true, true);
 			}
 		}
 	}

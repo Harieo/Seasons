@@ -1,10 +1,7 @@
 package uk.co.harieo.seasons;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
-import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -72,7 +69,7 @@ public class WorldTicker extends BukkitRunnable {
 		cycle.setWeather(Weather.NIGHT);
 
 		PluginManager manager = Bukkit.getPluginManager();
-		manager.callEvent(new DayEndEvent(cycle, oldWeather));
+		manager.callEvent(new DayEndEvent(cycle, oldWeather, true));
 	}
 
 }

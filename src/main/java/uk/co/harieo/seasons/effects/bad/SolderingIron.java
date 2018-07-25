@@ -29,7 +29,7 @@ public class SolderingIron extends Effect implements TickableEffect {
 			Material.IRON_DOOR, Material.IRON_HELMET, Material.IRON_CHESTPLATE, Material.IRON_LEGGINGS,
 			Material.IRON_BOOTS, Material.ANVIL, Material.IRON_NUGGET, Material.IRON_FENCE, Material.IRON_TRAPDOOR,
 			Material.CHAINMAIL_HELMET, Material.CHAINMAIL_CHESTPLATE, Material.CHAINMAIL_LEGGINGS,
-			Material.CHAINMAIL_BOOTS};
+			Material.CHAINMAIL_BOOTS, Material.WATER_BUCKET, Material.LAVA_BUCKET};
 
 	private Map<Player, Integer> secondsPast = new HashMap<>();
 

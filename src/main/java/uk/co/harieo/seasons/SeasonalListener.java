@@ -40,9 +40,11 @@ public class SeasonalListener implements Listener {
 
 	@EventHandler
 	public void onDayEnd(DayEndEvent event) {
-		World world = event.getCycle().getWorld();
-		for (Player player : world.getPlayers()) {
-			player.sendMessage(Seasons.PREFIX + Weather.NIGHT.getMessage());
+		if (event.isNatural()) {
+			World world = event.getCycle().getWorld();
+			for (Player player : world.getPlayers()) {
+				player.sendMessage(Seasons.PREFIX + Weather.NIGHT.getMessage());
+			}
 		}
 	}
 

@@ -81,11 +81,13 @@ public class PrimitiveHeating extends SeasonsPotionEffect {
 	public void onItemPickup(EntityPickupItemEvent event) {
 		if (event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();
-			if (!shouldGive(player) && isHotItem(event.getItem().getItemStack())) {
-				player.addPotionEffect(
-						getEffect()); // For some reason the standard method fails here for unknown reason
-				sendGiveMessage(player);
-			}
+			BukkitRunnable runnable = new BukkitRunnable() {
+				@Override
+				public void run() {
+					giveEffect(player, true);
+				}
+			};
+			runnable.runTaskLater(Seasons.getPlugin(), 10);
 		}
 	}
 
@@ -93,7 +95,7 @@ public class PrimitiveHeating extends SeasonsPotionEffect {
 	public void onItemDrop(PlayerDropItemEvent event) {
 		Player player = event.getPlayer();
 		if (!shouldGive(player) && isHotItem(event.getItemDrop().getItemStack())) {
-			removeEffect(player, true);
+			removeEffect(player, false, true);
 		}
 	}
 

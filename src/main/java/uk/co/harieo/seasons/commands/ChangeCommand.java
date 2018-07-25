@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
 import uk.co.harieo.seasons.Seasons;
+import uk.co.harieo.seasons.events.DayEndEvent;
 import uk.co.harieo.seasons.events.SeasonChangeEvent;
 import uk.co.harieo.seasons.events.SeasonsWeatherChangeEvent;
 import uk.co.harieo.seasons.models.Cycle;
@@ -108,6 +109,7 @@ public class ChangeCommand implements CommandExecutor {
 			broadcast(world, Seasons.PREFIX + ChatColor.GRAY
 					+ "The skies grow silent and with a great rumble the weather turns to " + ChatColor.GREEN + weather
 					.getName());
+			manager.callEvent(new DayEndEvent(cycle, oldWeather, false));
 			manager.callEvent(new SeasonsWeatherChangeEvent(cycle, oldWeather, weather, false));
 		} else if (command.equalsIgnoreCase("changeseason")) {
 			if (!hasPermission(sender, "seasons.change.season")) {

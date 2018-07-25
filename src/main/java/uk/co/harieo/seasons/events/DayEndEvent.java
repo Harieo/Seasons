@@ -10,10 +10,12 @@ public class DayEndEvent extends Event {
 
 	private Cycle cycle;
 	private Weather changeFrom;
+	private boolean natural;
 
-	public DayEndEvent(Cycle cycle, Weather changeFrom) {
+	public DayEndEvent(Cycle cycle, Weather changeFrom, boolean natural) {
 		this.cycle = cycle;
 		this.changeFrom = changeFrom;
+		this.natural = natural;
 	}
 
 	public Cycle getCycle() {
@@ -22,6 +24,10 @@ public class DayEndEvent extends Event {
 
 	public Weather getChangeFrom() {
 		return changeFrom;
+	}
+
+	public boolean isNatural() {
+		return natural;
 	}
 
 	private static final HandlerList handlers = new HandlerList();
