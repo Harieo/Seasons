@@ -1,4 +1,4 @@
-Seasons v2
+<h1>Seasons v2</h1>
 
 Before you go ahead and start making your own awesomeness with this code, some
 boring legal stuff to note:
