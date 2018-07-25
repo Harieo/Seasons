@@ -4,6 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.event.weather.WeatherChangeEvent;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import uk.co.harieo.seasons.configuration.SeasonsConfig;
@@ -28,9 +30,9 @@ public class WorldTicker extends BukkitRunnable {
 
 			// If the world is entering night and not already handled
 			if ((shouldProgressNight & !isNight) | isUnregisteredDay) {
-				newNight(cycle, world);
+				newNight(cycle);
 			} else if (isUnregisteredNight || shouldProgressDay) {
-				newDay(cycle, world);
+				newDay(cycle);
 			} else {
 				for (Effect effect : Seasons.getEffects()) {
 					if (effect.isWeatherApplicable(cycle.getWeather()) && effect instanceof TickableEffect) {
@@ -42,7 +44,7 @@ public class WorldTicker extends BukkitRunnable {
 		}
 	}
 
-	private void newDay(Cycle cycle, World world) {
+	private void newDay(Cycle cycle) {
 		int day = cycle.getDay();
 		Season season;
 
@@ -52,7 +54,6 @@ public class WorldTicker extends BukkitRunnable {
 			season = Season.next(cycle.getSeason());
 			Bukkit.getPluginManager().callEvent(new SeasonChangeEvent(cycle, cycle.getSeason(), season, true));
 			cycle.setSeason(season);
-			broadcastSeasonMessage(season, world);
 		} else {
 			cycle.setDay(day + 1);
 			season = cycle.getSeason();
@@ -62,46 +63,16 @@ public class WorldTicker extends BukkitRunnable {
 		Weather newWeather = Weather.randomWeather(season);
 		cycle.setWeather(newWeather);
 
-		broadcastWeatherMessage(newWeather, world);
 		Bukkit.getPluginManager()
 				.callEvent(new SeasonsWeatherChangeEvent(cycle, oldWeather, newWeather, true));
 	}
 
-	private void newNight(Cycle cycle, World world) {
-		Bukkit.getPluginManager().callEvent(new DayEndEvent(cycle, cycle.getWeather()));
+	private void newNight(Cycle cycle) {
+		Weather oldWeather = Weather.fromName(cycle.getWeather().getName());
 		cycle.setWeather(Weather.NIGHT);
-		broadcastWeatherMessage(Weather.NIGHT, world);
-	}
 
-	/**
-	 * Broadcasts the trigger message for the given {@link Weather} to all players in the {@link World} in which the
-	 * given {@link Weather} affects
-	 *
-	 * @param weather that is being triggered
-	 * @param world that the {@param weather} is being triggered on
-	 */
-	private void broadcastWeatherMessage(Weather weather, World world) {
-		for (Player player : world.getPlayers()) {
-			if (weather.isCatastrophic()) {
-				player.sendMessage(Seasons.PREFIX + ChatColor.RED + ChatColor.BOLD.toString()
-						+ "CATASTROPHIC WEATHER ALERT - Your chances of dying have increased dramatically");
-			}
-
-			player.sendMessage(Seasons.PREFIX + weather.getMessage());
-		}
-	}
-
-	/**
-	 * Broadcasts the trigger message for the given {@link Season} to all players in the {@link World} in which the
-	 * given {@link Season} affects
-	 *
-	 * @param season that is being triggered
-	 * @param world that the {@param season} is being triggered on Your
-	 */
-	private void broadcastSeasonMessage(Season season, World world) {
-		for (Player player : world.getPlayers()) {
-			player.sendMessage(Seasons.PREFIX + season.getMessage());
-		}
+		PluginManager manager = Bukkit.getPluginManager();
+		manager.callEvent(new DayEndEvent(cycle, oldWeather));
 	}
 
 }

@@ -29,10 +29,10 @@ public enum Weather {
 	SCORCHING("Scorching",
 			ChatColor.YELLOW + "The sun burns your skin and the ground hurts to touch, it's " + ChatColor.GOLD
 					+ "Scorching",
-			true,
+			false,
 			Collections.singletonList(Season.SUMMER)),
 	HOT("Hot",
-			ChatColor.YELLOW + "It's going to be a very " + ChatColor.GOLD + "Hot " + ChatColor.YELLOW
+			ChatColor.YELLOW + "It's going to be very " + ChatColor.GOLD + "Hot " + ChatColor.YELLOW
 					+ "today",
 			false,
 			Collections.singletonList(Season.SUMMER)),

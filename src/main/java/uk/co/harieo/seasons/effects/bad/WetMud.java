@@ -54,7 +54,7 @@ public class WetMud extends SeasonsPotionEffect {
 	public void onMove(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
 		if (shouldGive(player)) {
-			giveEffect(player, true);
+			giveEffect(player, false);
 		} else {
 			removeEffect(player, false);
 		}

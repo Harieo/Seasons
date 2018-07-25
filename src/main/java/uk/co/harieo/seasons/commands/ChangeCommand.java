@@ -22,10 +22,7 @@ public class ChangeCommand implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
-			if (!player.isOp() && !player.hasPermission("seasons.change.day")) {
-				player.sendMessage(Seasons.PREFIX + ChatColor.RED + "You do not have permission to change the day!");
-				return false;
-			} else if (args.length == 1) {
+			if (args.length == 1) {
 				Cycle cycle = Seasons.getWorldCycle(player.getWorld());
 				if (cycle == null) {
 					player.sendMessage(
@@ -63,19 +60,23 @@ public class ChangeCommand implements CommandExecutor {
 	}
 
 	/**
-	 * Basic processing of specified parameters that are variable and cannot be predicted
-	 * This method handles 3 different commands in 1
+	 * Basic processing of specified parameters that are variable and cannot be predicted This method handles 3
+	 * different commands in 1
 	 *
 	 * @param sender of the original command
 	 * @param command sent by the sender
 	 * @param name of the value they wish to change, specific to the command executed
 	 * @param cycle that they are attempting to edit
-	 *
 	 */
 	private void change(CommandSender sender, String command, String name, Cycle cycle) {
 		World world = cycle.getWorld();
 		PluginManager manager = Bukkit.getPluginManager();
 		if (command.equalsIgnoreCase("changeday")) {
+			if (!hasPermission(sender, "seasons.change.day")) {
+				sender.sendMessage(Seasons.PREFIX + ChatColor.RED + "You don't have permission to change the day!");
+				return;
+			}
+
 			int newDay;
 			try {
 				newDay = Integer.parseInt(name);
@@ -90,6 +91,11 @@ public class ChangeCommand implements CommandExecutor {
 					Seasons.PREFIX + ChatColor.GRAY + "Time shatters before you, days fly by and it is now Day "
 							+ ChatColor.LIGHT_PURPLE + newDay);
 		} else if (command.equalsIgnoreCase("changeweather")) {
+			if (!hasPermission(sender, "seasons.change.weather")) {
+				sender.sendMessage(Seasons.PREFIX + ChatColor.RED + "You don't have permission to change the weather!");
+				return;
+			}
+
 			Weather weather = Weather.fromName(name);
 			if (weather == null) {
 				sender.sendMessage(Seasons.PREFIX + ChatColor.RED + "We couldn't find a weather called " + name);
@@ -104,6 +110,11 @@ public class ChangeCommand implements CommandExecutor {
 					.getName());
 			manager.callEvent(new SeasonsWeatherChangeEvent(cycle, oldWeather, weather, false));
 		} else if (command.equalsIgnoreCase("changeseason")) {
+			if (!hasPermission(sender, "seasons.change.season")) {
+				sender.sendMessage(Seasons.PREFIX + ChatColor.RED + "You don't have permission to change the season!");
+				return;
+			}
+
 			Season season = Season.fromName(name);
 			if (season == null) {
 				sender.sendMessage(Seasons.PREFIX + ChatColor.RED + "We couldn't find a season called " + name);
@@ -112,9 +123,8 @@ public class ChangeCommand implements CommandExecutor {
 
 			manager.callEvent(new SeasonChangeEvent(cycle, season, cycle.getSeason(), false));
 			cycle.setSeason(season);
-			broadcast(world,
-					Seasons.PREFIX + ChatColor.GRAY + "The air around you changes mystically and becomes "
-							+ ChatColor.GOLD + season.getName());
+			broadcast(world, Seasons.PREFIX + ChatColor.GRAY + "The air around you changes mystically and becomes "
+					+ ChatColor.GOLD + season.getName());
 		} else {
 			throw new IllegalArgumentException("A command was sent called " + command + " but couldn't be processed");
 		}
@@ -124,6 +134,15 @@ public class ChangeCommand implements CommandExecutor {
 		for (Player player : world.getPlayers()) {
 			player.sendMessage(message);
 		}
+	}
+
+	private boolean hasPermission(CommandSender sender, String permission) {
+		if (sender instanceof Player) {
+			Player player = (Player) sender;
+			return player.isOp() || player.hasPermission(permission);
+		}
+
+		return true;
 	}
 
 }

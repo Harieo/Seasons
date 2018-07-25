@@ -1,5 +1,6 @@
 package uk.co.harieo.seasons.effects.bad;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -26,7 +27,9 @@ public class SolderingIron extends Effect implements TickableEffect {
 
 	private static final Material[] SOLDERING_ITEMS = {Material.BUCKET, Material.IRON_INGOT, Material.IRON_BLOCK,
 			Material.IRON_DOOR, Material.IRON_HELMET, Material.IRON_CHESTPLATE, Material.IRON_LEGGINGS,
-			Material.IRON_BOOTS, Material.ANVIL, Material.IRON_NUGGET, Material.IRON_FENCE, Material.IRON_TRAPDOOR};
+			Material.IRON_BOOTS, Material.ANVIL, Material.IRON_NUGGET, Material.IRON_FENCE, Material.IRON_TRAPDOOR,
+			Material.CHAINMAIL_HELMET, Material.CHAINMAIL_CHESTPLATE, Material.CHAINMAIL_LEGGINGS,
+			Material.CHAINMAIL_BOOTS};
 
 	private Map<Player, Integer> secondsPast = new HashMap<>();
 
@@ -36,8 +39,8 @@ public class SolderingIron extends Effect implements TickableEffect {
 	}
 
 	/**
-	 * Checks the items in the Player's hands to see if they contain any soldering items
-	 * If an item is found, they will be marked to take damage and visa versa
+	 * Checks the items in the Player's hands to see if they contain any soldering items If an item is found, they will
+	 * be marked to take damage and visa versa
 	 *
 	 * @param player to be checked
 	 */
@@ -99,7 +102,7 @@ public class SolderingIron extends Effect implements TickableEffect {
 	public void onHotbarSwitch(PlayerItemHeldEvent event) {
 		Player player = event.getPlayer();
 		if (isPlayerCycleApplicable(player)) {
-			checkHotbar(player);
+			delayedCheckHotbar(player);
 		}
 	}
 

@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Collections;
 import uk.co.harieo.seasons.Seasons;
@@ -17,9 +18,9 @@ import uk.co.harieo.seasons.models.effect.SeasonsPotionEffect;
 public class Sweating extends SeasonsPotionEffect {
 
 	public Sweating() {
-		super("Sweating", "Receive Weakness 1 when you have full armour on",
+		super("Sweating", "Receive Weakness 2 when you have full armour on",
 				Collections.singletonList(Weather.HOT), false,
-				new PotionEffect(PotionEffectType.WEAKNESS, Integer.MAX_VALUE, 0));
+				new PotionEffect(PotionEffectType.WEAKNESS, Integer.MAX_VALUE, 1));
 	}
 
 	@Override
@@ -47,18 +48,24 @@ public class Sweating extends SeasonsPotionEffect {
 	@Override
 	public void sendRemoveMessage(Player player) {
 		player.sendMessage(Seasons.PREFIX + ChatColor.GREEN
-				+ "You feel the breeze on your exposed skin and the heat becomes more bearable!");
+				+ "The air turns cooler and you wipe the sweat from your forehead...");
 	}
 
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
 		if (event.getWhoClicked() instanceof Player) {
 			Player player = (Player) event.getWhoClicked();
-			if (shouldGive(player)) {
-				giveEffect(player, true);
-			} else {
-				removeEffect(player, false);
-			}
+			BukkitRunnable runnable = new BukkitRunnable() {
+				@Override
+				public void run() {
+					if (shouldGive(player)) {
+						giveEffect(player, true);
+					} else {
+						removeEffect(player, false);
+					}
+				}
+			};
+			runnable.runTaskLater(Seasons.getPlugin(), 10);
 		}
 	}
 

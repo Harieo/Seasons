@@ -15,7 +15,7 @@ import uk.co.harieo.seasons.models.Weather;
 public class HotSand extends Effect {
 
 	public HotSand() {
-		super("Hot Sand", "A small chance that you take damage walking on sand",
+		super("Hot Sand", "A moderate chance that you take damage walking on sand",
 				Collections.singletonList(Weather.SCORCHING), false);
 	}
 
@@ -27,9 +27,9 @@ public class HotSand extends Effect {
 	public void onMove(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
 		if (isPlayerCycleApplicable(player)) {
-			Block block = event.getTo().getBlock();
+			Block block = event.getTo().clone().subtract(0, 1, 0).getBlock();
 			if (block.getType() == Material.SAND) {
-				if (Seasons.RANDOM.nextInt(100) < 5) {
+				if (Seasons.RANDOM.nextInt(100) < 25) {
 					player.damage(1);
 				}
 			}

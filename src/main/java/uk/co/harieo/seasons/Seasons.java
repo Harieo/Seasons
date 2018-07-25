@@ -45,6 +45,7 @@ public class Seasons extends JavaPlugin {
 		Bukkit.getPluginCommand("changeday").setExecutor(changeCommand);
 		Bukkit.getPluginCommand("changeweather").setExecutor(changeCommand);
 		Bukkit.getPluginCommand("changeseason").setExecutor(changeCommand);
+		Bukkit.getPluginManager().registerEvents(new SeasonalListener(), this);
 
 		// Register effects
 		addEffects(new Devastation(), new FeelsGood(), new FluffyCoat(), new Frostbite(), new HoldOntoYourHat(),

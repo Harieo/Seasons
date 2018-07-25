@@ -1,5 +1,6 @@
 package uk.co.harieo.seasons.models.effect;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -158,16 +159,6 @@ public abstract class SeasonsPotionEffect extends Effect {
 			World world = event.getCycle().getWorld();
 			for (Player player : world.getPlayers()) {
 				removeEffect(player, true, false);
-			}
-		}
-	}
-
-	@EventHandler
-	public void onWeatherChange(SeasonsWeatherChangeEvent event) {
-		if (isWeatherApplicable(event.getChangeFrom()) && !isWeatherApplicable(event.getChangedTo())) {
-			World world = event.getCycle().getWorld();
-			for (Player player : world.getPlayers()) {
-				removeEffect(player, true, true);
 			}
 		}
 	}
