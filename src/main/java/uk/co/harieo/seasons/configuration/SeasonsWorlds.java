@@ -99,7 +99,7 @@ public class SeasonsWorlds {
 		config.set(DEFAULT_PATH + worldName + ".day", cycle.getDay());
 		config.set(DEFAULT_PATH + worldName + ".season", cycle.getSeason().getName());
 		config.set(DEFAULT_PATH + worldName + ".weather", cycle.getWeather().getName());
-		Seasons.getPlugin().saveConfig();
+		Seasons.getPlugin().saveDefaultConfig();
 	}
 
 }

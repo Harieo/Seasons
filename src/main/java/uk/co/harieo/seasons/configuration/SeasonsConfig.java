@@ -11,9 +11,9 @@ public class SeasonsConfig {
 	private boolean enableEffects; // How many ticks per damage dealt to a player on a harmful weather
 
 	public SeasonsConfig(FileConfiguration config) {
-		daysPerSeason = config.getInt("Days-Per-Season", 30);
-		secondsPerDamage = config.getInt("Seconds-Of-Damage", 3);
-		enableEffects = config.getBoolean("Custom-Weathers", true);
+		daysPerSeason = config.getInt("DaysPerSeason");
+		secondsPerDamage = config.getInt("SecondsOfDamage");
+		enableEffects = config.getBoolean("CustomWeathers");
 		INSTANCE = this;
 	}
 
