@@ -58,12 +58,13 @@ public class WorldTicker extends BukkitRunnable {
 			season = cycle.getSeason();
 		}
 
+		Weather oldWeather = Weather.fromName(cycle.getWeather().getName());
 		Weather newWeather = Weather.randomWeather(season);
 		cycle.setWeather(newWeather);
 
 		broadcastWeatherMessage(newWeather, world);
 		Bukkit.getPluginManager()
-				.callEvent(new SeasonsWeatherChangeEvent(cycle, newWeather, true));
+				.callEvent(new SeasonsWeatherChangeEvent(cycle, oldWeather, newWeather, true));
 	}
 
 	private void newNight(Cycle cycle, World world) {
@@ -95,7 +96,7 @@ public class WorldTicker extends BukkitRunnable {
 	 * given {@link Season} affects
 	 *
 	 * @param season that is being triggered
-	 * @param world that the {@param season} is being triggered on
+	 * @param world that the {@param season} is being triggered on Your
 	 */
 	private void broadcastSeasonMessage(Season season, World world) {
 		for (Player player : world.getPlayers()) {

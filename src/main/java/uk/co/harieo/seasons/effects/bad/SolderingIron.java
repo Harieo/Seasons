@@ -5,10 +5,13 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,9 +31,16 @@ public class SolderingIron extends Effect implements TickableEffect {
 	private Map<Player, Integer> secondsPast = new HashMap<>();
 
 	public SolderingIron() {
-		super("Soldering Iron", Collections.singletonList(Weather.SCORCHING), false);
+		super("Soldering Iron", "Take damage if you hold a primarily iron item",
+				Collections.singletonList(Weather.SCORCHING), false);
 	}
 
+	/**
+	 * Checks the items in the Player's hands to see if they contain any soldering items
+	 * If an item is found, they will be marked to take damage and visa versa
+	 *
+	 * @param player to be checked
+	 */
 	private void checkHotbar(Player player) {
 		PlayerInventory inventory = player.getInventory();
 		boolean containsKey = secondsPast.containsKey(player);
@@ -48,6 +58,21 @@ public class SolderingIron extends Effect implements TickableEffect {
 		if (containsKey) { // They were holding no soldering items but were last time a check was done
 			secondsPast.remove(player);
 		}
+	}
+
+	/**
+	 * Delayed call of {@link #checkHotbar(Player)} for events that occur before the fact
+	 *
+	 * @param player to call the method for
+	 */
+	private void delayedCheckHotbar(Player player) {
+		BukkitRunnable runnable = new BukkitRunnable() {
+			@Override
+			public void run() {
+				checkHotbar(player);
+			}
+		};
+		runnable.runTaskLater(Seasons.getPlugin(), 10);
 	}
 
 	@Override
@@ -83,7 +108,25 @@ public class SolderingIron extends Effect implements TickableEffect {
 		if (event.getWhoClicked() instanceof Player) {
 			Player player = (Player) event.getWhoClicked();
 			if (isPlayerCycleApplicable(player)) {
-				checkHotbar(player);
+				delayedCheckHotbar(player);
+			}
+		}
+	}
+
+	@EventHandler
+	public void onItemDrop(PlayerDropItemEvent event) {
+		Player player = event.getPlayer();
+		if (isPlayerCycleApplicable(player)) {
+			delayedCheckHotbar(player);
+		}
+	}
+
+	@EventHandler
+	public void onItemPickup(EntityPickupItemEvent event) {
+		if (event.getEntity() instanceof Player) {
+			Player player = (Player) event.getEntity();
+			if (isPlayerCycleApplicable(player)) {
+				delayedCheckHotbar(player);
 			}
 		}
 	}

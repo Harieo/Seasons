@@ -17,7 +17,8 @@ import uk.co.harieo.seasons.models.Weather;
 public class Frostbite extends Effect implements TickableEffect {
 
 	public Frostbite() {
-		super("Frostbite", Arrays.asList(Weather.FREEZING, Weather.SNOWY), false);
+		super("Frostbite", "Harms you if you do not have full armour on after 10 seconds down to half a heart",
+				Arrays.asList(Weather.FREEZING, Weather.SNOWY), false);
 	}
 
 	private int secondsPast = 0;

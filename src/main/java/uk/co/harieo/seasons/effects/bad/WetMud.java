@@ -19,7 +19,8 @@ public class WetMud extends SeasonsPotionEffect {
 	private static final Material[] MUDDY = {Material.DIRT, Material.SOIL};
 
 	public WetMud() {
-		super("Wet Mud", Collections.singletonList(Weather.RAINY), false,
+		super("Wet Mud", "Receive Slowness 2 when walking on dirt",
+				Collections.singletonList(Weather.RAINY), false,
 				new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 1));
 	}
 

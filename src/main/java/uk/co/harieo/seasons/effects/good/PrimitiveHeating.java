@@ -27,7 +27,8 @@ public class PrimitiveHeating extends SeasonsPotionEffect {
 			Material.DRAGONS_BREATH, Material.MAGMA_CREAM};
 
 	public PrimitiveHeating() {
-		super("Primitive Heating", Collections.singletonList(Weather.COLD), true,
+		super("Primitive Heating", "Receive Resistance 1 when your inventory contains a very hot item",
+				Collections.singletonList(Weather.COLD), true,
 				new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 0));
 	}
 
@@ -81,7 +82,8 @@ public class PrimitiveHeating extends SeasonsPotionEffect {
 		if (event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();
 			if (!shouldGive(player) && isHotItem(event.getItem().getItemStack())) {
-				player.addPotionEffect(getEffect()); // For some reason the standard method fails here for unknown reason
+				player.addPotionEffect(
+						getEffect()); // For some reason the standard method fails here for unknown reason
 				sendGiveMessage(player);
 			}
 		}

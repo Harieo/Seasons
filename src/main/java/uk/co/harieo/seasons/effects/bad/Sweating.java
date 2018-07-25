@@ -17,7 +17,8 @@ import uk.co.harieo.seasons.models.effect.SeasonsPotionEffect;
 public class Sweating extends SeasonsPotionEffect {
 
 	public Sweating() {
-		super("Sweating", Collections.singletonList(Weather.HOT), false,
+		super("Sweating", "Receive Weakness 1 when you have full armour on",
+				Collections.singletonList(Weather.HOT), false,
 				new PotionEffect(PotionEffectType.WEAKNESS, Integer.MAX_VALUE, 0));
 	}
 
@@ -56,7 +57,7 @@ public class Sweating extends SeasonsPotionEffect {
 			if (shouldGive(player)) {
 				giveEffect(player, true);
 			} else {
-				removeEffect(player, true);
+				removeEffect(player, false);
 			}
 		}
 	}

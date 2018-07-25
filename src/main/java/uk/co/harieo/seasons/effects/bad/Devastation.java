@@ -14,7 +14,8 @@ import uk.co.harieo.seasons.models.Weather;
 public class Devastation extends Effect {
 
 	public Devastation() {
-		super("Devastation", Collections.singletonList(Weather.STORMY), false);
+		super("Devastation", "You may not regenerate health naturally, don't take damage!",
+				Collections.singletonList(Weather.STORMY), false);
 	}
 
 	@Override

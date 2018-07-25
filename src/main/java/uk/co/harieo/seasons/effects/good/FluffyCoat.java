@@ -18,7 +18,8 @@ import uk.co.harieo.seasons.models.effect.SeasonsPotionEffect;
 public class FluffyCoat extends SeasonsPotionEffect {
 
 	public FluffyCoat() {
-		super("Fluffy Coat", Collections.singletonList(Weather.SNOWY), true,
+		super("Fluffy Coat", "Receive Resistance 1 when wearing full armour",
+				Collections.singletonList(Weather.SNOWY), true,
 				new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 0));
 	}
 
@@ -46,7 +47,7 @@ public class FluffyCoat extends SeasonsPotionEffect {
 
 	@Override
 	public void sendRemoveMessage(Player player) {
-		player.sendMessage(Seasons.PREFIX + ChatColor.RED + "Your ");
+		player.sendMessage(Seasons.PREFIX + ChatColor.RED + "Without armour, your body feels the cold once again and is no longer resistant to it");
 	}
 
 	@Override
@@ -63,7 +64,7 @@ public class FluffyCoat extends SeasonsPotionEffect {
 			if (shouldGive(player)) {
 				giveEffect(player, true);
 			} else {
-				removeEffect(player, true);
+				removeEffect(player, false);
 			}
 		}
 	}

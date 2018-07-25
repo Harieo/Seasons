@@ -4,8 +4,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Collections;
 import uk.co.harieo.seasons.Seasons;
@@ -15,14 +18,15 @@ import uk.co.harieo.seasons.models.effect.SeasonsPotionEffect;
 public class Revitalized extends SeasonsPotionEffect {
 
 	public Revitalized() {
-		super("Revitalized", Collections.singletonList(Weather.BEAUTIFUL), true,
+		super("Revitalized", "Receive Regeneration 1 until the day ends",
+				Collections.singletonList(Weather.BEAUTIFUL), true,
 				new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 0));
 		Bukkit.broadcastMessage(Weather.BEAUTIFUL.getName());
 	}
 
 	@Override
 	public boolean shouldGive(Player player) {
-		return true;
+		return isPlayerCycleApplicable(player);
 	}
 
 	@Override
@@ -46,5 +50,16 @@ public class Revitalized extends SeasonsPotionEffect {
 					+ ChatColor.GREEN + "As the sun rises, you feel it's Regenerating energy "
 					+ ChatColor.YELLOW + "Revitalise " + ChatColor.GREEN + "you!");
 		}
+	}
+
+	@EventHandler
+	public void onRespawn(PlayerRespawnEvent event) {
+		BukkitRunnable runnable = new BukkitRunnable() {
+			@Override
+			public void run() {
+				giveEffect(event.getPlayer(), true);
+			}
+		};
+		runnable.runTaskLater(Seasons.getPlugin(), 10);
 	}
 }

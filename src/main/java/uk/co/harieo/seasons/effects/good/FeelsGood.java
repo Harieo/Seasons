@@ -17,8 +17,9 @@ import uk.co.harieo.seasons.models.effect.SeasonsPotionEffect;
 public class FeelsGood extends SeasonsPotionEffect {
 
 	public FeelsGood() {
-		super("Feels Good", Collections.singletonList(Weather.WARM), true,
-				new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0));
+		super("Feels Good", "Receive Speed 2 when not wearing armour",
+				Collections.singletonList(Weather.WARM), true,
+				new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1));
 	}
 
 	public boolean shouldGive(Player player) {
@@ -55,7 +56,7 @@ public class FeelsGood extends SeasonsPotionEffect {
 			if (shouldGive(player)) {
 				giveEffect(player, true);
 			} else {
-				removeEffect(player, true);
+				removeEffect(player, false);
 			}
 		}
 	}

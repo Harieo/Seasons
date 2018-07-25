@@ -3,6 +3,8 @@ package uk.co.harieo.seasons.models;
 import org.bukkit.ChatColor;
 
 import java.util.*;
+import uk.co.harieo.seasons.Seasons;
+import uk.co.harieo.seasons.models.effect.Effect;
 
 public enum Weather {
 
@@ -96,6 +98,18 @@ public enum Weather {
 
 	public List<Season> getAffectedSeasons() {
 		return seasons;
+	}
+
+	public List<Effect> getEffects() {
+		List<Effect> effects = new ArrayList<>();
+
+		for(Effect effect : Seasons.getEffects()) {
+			if (effect.isWeatherApplicable(this)) {
+				effects.add(effect);
+			}
+		}
+
+		return effects;
 	}
 
 	/**

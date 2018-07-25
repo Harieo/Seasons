@@ -19,7 +19,8 @@ public class WarmingStew extends Effect {
 	private static final Material[] STEWS = {Material.BEETROOT_SOUP, Material.MUSHROOM_SOUP, Material.RABBIT_STEW};
 
 	public WarmingStew() {
-		super("Warming Stew", Collections.singletonList(Weather.COLD), true);
+		super("Warming Stew", "Receive Regeneration 1 for 10 seconds when you consume stew",
+				Collections.singletonList(Weather.COLD), true);
 	}
 
 	@Override

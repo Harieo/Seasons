@@ -19,11 +19,13 @@ public abstract class Effect implements Listener {
 	private static final List<String> cache = new ArrayList<>(); // Prevents multiple registrations of 1 listener
 
 	private String name;
+	private String description;
 	private List<Weather> weathers;
 	private boolean isGood;
 
-	public Effect(String name, List<Weather> weathers, boolean good) {
+	public Effect(String name, String description, List<Weather> weathers, boolean good) {
 		this.name = name;
+		this.description = description;
 		this.weathers = weathers;
 		this.isGood = good;
 
@@ -38,6 +40,13 @@ public abstract class Effect implements Listener {
 	 */
 	public String getName() {
 		return name;
+	}
+
+	/**
+	 * @return a description of this effect, shown to the player
+	 */
+	public String getDescription() {
+		return description;
 	}
 
 	/**

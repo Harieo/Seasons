@@ -17,14 +17,16 @@ import uk.co.harieo.seasons.models.Weather;
 public class HoldOntoYourHat extends Effect {
 
 	public HoldOntoYourHat() {
-		super("Hold onto Your Hat", Collections.singletonList(Weather.BREEZY), false);
+		super("Hold onto Your Hat", "A small chance that your hat will fall off when you put it on",
+				Collections.singletonList(Weather.BREEZY), false);
 	}
 
 	private void chanceHat(Player player) {
 		PlayerInventory inventory = player.getInventory();
 		ItemStack helmet = inventory.getHelmet();
-		if (helmet == null)
+		if (helmet == null) {
 			return;
+		}
 
 		if (helmet.getType() == Material.LEATHER_HELMET) {
 			int random = Seasons.RANDOM.nextInt(100);

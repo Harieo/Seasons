@@ -14,7 +14,8 @@ import uk.co.harieo.seasons.models.Weather;
 public class Icy extends Effect {
 
 	public Icy() {
-		super("Icy", Collections.singletonList(Weather.FREEZING), false);
+		super("Icy", "Any water you place down will turn to ice",
+				Collections.singletonList(Weather.FREEZING), false);
 	}
 
 	@Override

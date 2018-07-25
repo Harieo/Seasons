@@ -1,6 +1,5 @@
 package uk.co.harieo.seasons.models.effect;
 
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,17 +8,26 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import uk.co.harieo.seasons.events.DayEndEvent;
+import uk.co.harieo.seasons.events.SeasonsWeatherChangeEvent;
 import uk.co.harieo.seasons.models.Weather;
 
 public abstract class SeasonsPotionEffect extends Effect {
 
+	// Stores the UUID of players that have effects that need to be removed onDisable in the executor //
+	public static final Map<UUID, PotionEffectType> PENDING = new HashMap<>();
+
 	private PotionEffect effect;
 
-	public SeasonsPotionEffect(String name, List<Weather> weathers, boolean good, PotionEffect effect) {
-		super(name, weathers, good);
+	public SeasonsPotionEffect(String name, String description, List<Weather> weathers, boolean good,
+			PotionEffect effect) {
+		super(name, description, weathers, good);
 		this.effect = effect;
 	}
 
@@ -41,6 +49,7 @@ public abstract class SeasonsPotionEffect extends Effect {
 	protected void giveEffect(Player player, boolean sendMessage) {
 		if (shouldGive(player) && !player.hasPotionEffect(effect.getType())) {
 			player.addPotionEffect(effect);
+			PENDING.put(player.getUniqueId(), effect.getType()); // Indicate that the effect was given
 			if (sendMessage) {
 				sendGiveMessage(player);
 			}
@@ -57,15 +66,17 @@ public abstract class SeasonsPotionEffect extends Effect {
 	protected void removeEffect(Player player, boolean sendMessage, boolean force) {
 		if (isPlayerCycleApplicable(player) || force) {
 			player.removePotionEffect(effect.getType());
-			if (sendMessage) {
-				sendRemoveMessage(player);
-			}
+			PENDING.remove(player.getUniqueId()); // Indicate that the effect was removed
+		}
+
+		if (sendMessage) {
+			sendRemoveMessage(player);
 		}
 	}
 
 	/**
-	 * Removes effects on the assumption that this is not a forceful action
-	 * Calls {@link #removeEffect(Player, boolean, boolean)} with force as false
+	 * Removes effects on the assumption that this is not a forceful action Calls {@link #removeEffect(Player, boolean,
+	 * boolean)} with force as false
 	 *
 	 * @param player to remove the effect from
 	 * @param sendMessage whether or not to call {@link #sendRemoveMessage(Player)}
@@ -147,6 +158,16 @@ public abstract class SeasonsPotionEffect extends Effect {
 			World world = event.getCycle().getWorld();
 			for (Player player : world.getPlayers()) {
 				removeEffect(player, true, false);
+			}
+		}
+	}
+
+	@EventHandler
+	public void onWeatherChange(SeasonsWeatherChangeEvent event) {
+		if (isWeatherApplicable(event.getChangeFrom()) && !isWeatherApplicable(event.getChangedTo())) {
+			World world = event.getCycle().getWorld();
+			for (Player player : world.getPlayers()) {
+				removeEffect(player, true, true);
 			}
 		}
 	}

@@ -96,11 +96,13 @@ public class ChangeCommand implements CommandExecutor {
 				return;
 			}
 
+			// The painful realisation that Java hates you when you have to do this
+			Weather oldWeather = Weather.fromName(cycle.getWeather().getName());
 			cycle.setWeather(weather);
 			broadcast(world, Seasons.PREFIX + ChatColor.GRAY
 					+ "The skies grow silent and with a great rumble the weather turns to " + ChatColor.GREEN + weather
 					.getName());
-			manager.callEvent(new SeasonsWeatherChangeEvent(cycle, weather, false));
+			manager.callEvent(new SeasonsWeatherChangeEvent(cycle, oldWeather, weather, false));
 		} else if (command.equalsIgnoreCase("changeseason")) {
 			Season season = Season.fromName(name);
 			if (season == null) {

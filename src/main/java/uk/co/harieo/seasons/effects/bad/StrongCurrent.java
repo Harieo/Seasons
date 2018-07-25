@@ -18,7 +18,8 @@ import uk.co.harieo.seasons.models.effect.SeasonsPotionEffect;
 public class StrongCurrent extends SeasonsPotionEffect {
 
 	public StrongCurrent() {
-		super("Strong Current", Collections.singletonList(Weather.STORMY), false,
+		super("Strong Current", "Receive Slowness 2 for 20 seconds when you enter water",
+				Collections.singletonList(Weather.STORMY), false,
 				new PotionEffect(PotionEffectType.SLOW, 20 * 20, 1));
 	}
 

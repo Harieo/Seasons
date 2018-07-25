@@ -15,11 +15,13 @@ import uk.co.harieo.seasons.models.Weather;
 public class HotSand extends Effect {
 
 	public HotSand() {
-		super("Hot Sand", Collections.singletonList(Weather.SCORCHING), false);
+		super("Hot Sand", "A small chance that you take damage walking on sand",
+				Collections.singletonList(Weather.SCORCHING), false);
 	}
 
 	@Override
-	public void onTrigger(World world) { }
+	public void onTrigger(World world) {
+	}
 
 	@EventHandler
 	public void onMove(PlayerMoveEvent event) {

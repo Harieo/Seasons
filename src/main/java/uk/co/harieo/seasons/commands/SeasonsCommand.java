@@ -10,6 +10,8 @@ import uk.co.harieo.seasons.Seasons;
 import uk.co.harieo.seasons.configuration.SeasonsConfig;
 import uk.co.harieo.seasons.models.Cycle;
 import uk.co.harieo.seasons.models.Season;
+import uk.co.harieo.seasons.models.Weather;
+import uk.co.harieo.seasons.models.effect.Effect;
 
 public class SeasonsCommand implements CommandExecutor {
 
@@ -27,6 +29,26 @@ public class SeasonsCommand implements CommandExecutor {
 		Cycle cycle = Seasons.getWorldCycle(player.getWorld());
 		if (cycle == null) {
 			player.sendMessage(ChatColor.RED + "This world is barren and full of darkness... It has no season!");
+			return false;
+		}
+
+		boolean hasEnabledEffects = SeasonsConfig.get().hasEnabledEffects();
+
+		if (args.length > 0 && args[0].equalsIgnoreCase("effects")) {
+			if (hasEnabledEffects) {
+				Weather weather = cycle.getWeather();
+				player.sendMessage(
+						ChatColor.GRAY + "For the weather " + ChatColor.YELLOW + weather.getName()
+								+ ChatColor.GRAY + " the effects are:");
+				for (Effect effect : weather.getEffects()) {
+					player.sendMessage(
+							ChatColor.GOLD + ChatColor.BOLD.toString() + effect.getName() + ": "
+									+ ChatColor.GRAY + effect.getDescription());
+				}
+			} else {
+				player.sendMessage(
+						ChatColor.RED + "Your server administrator has decreed that all effects be disabled...");
+			}
 		} else {
 			Season season = cycle.getSeason();
 			player.sendMessage(season.getColor() + "Your world is in " + season.getName());
@@ -34,6 +56,11 @@ public class SeasonsCommand implements CommandExecutor {
 					+ cycle.getWeather().getName());
 			player.sendMessage(ChatColor.GOLD + "Today is day " + cycle.getDay()
 					+ " of " + SeasonsConfig.get().getDaysPerSeason());
+			if (hasEnabledEffects) {
+				player.sendMessage(
+						ChatColor.GRAY + "To see the effects of this weather, use the command " + ChatColor.YELLOW
+								+ "/seasons effects");
+			}
 		}
 
 		return false;

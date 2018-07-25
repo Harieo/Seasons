@@ -4,12 +4,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import uk.co.harieo.seasons.commands.ChangeCommand;
 import uk.co.harieo.seasons.commands.SeasonsCommand;
 import uk.co.harieo.seasons.configuration.SeasonsConfig;
@@ -18,6 +16,7 @@ import uk.co.harieo.seasons.effects.bad.*;
 import uk.co.harieo.seasons.effects.good.*;
 import uk.co.harieo.seasons.models.Cycle;
 import uk.co.harieo.seasons.models.effect.Effect;
+import uk.co.harieo.seasons.models.effect.SeasonsPotionEffect;
 
 public class Seasons extends JavaPlugin {
 
@@ -57,6 +56,12 @@ public class Seasons extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		WORLD_HANDLER.saveAllWorlds();
+		for (UUID uuid : SeasonsPotionEffect.PENDING.keySet()) {
+			Player player = Bukkit.getPlayer(uuid);
+			if (player != null) {
+				player.removePotionEffect(SeasonsPotionEffect.PENDING.get(uuid));
+			}
+		}
 	}
 
 	private void addEffects(Effect... effects) {

@@ -9,11 +9,13 @@ import uk.co.harieo.seasons.models.Weather;
 public class SeasonsWeatherChangeEvent extends Event {
 
 	private Cycle cycle;
+	private Weather changeFrom;
 	private Weather changeTo;
 	private boolean naturalChange;
 
-	public SeasonsWeatherChangeEvent(Cycle cycle, Weather changeTo, boolean natural) {
+	public SeasonsWeatherChangeEvent(Cycle cycle, Weather changeFrom, Weather changeTo, boolean natural) {
 		this.cycle = cycle;
+		this.changeFrom = changeFrom;
 		this.changeTo = changeTo;
 		// Note: this event is only called when night ends, therefore it will always changeFrom NIGHT
 		this.naturalChange = natural;
@@ -24,6 +26,13 @@ public class SeasonsWeatherChangeEvent extends Event {
 	 */
 	public Cycle getCycle() {
 		return cycle;
+	}
+
+	/**
+	 * @return the {@link Weather} that the {@link Cycle} changed from
+	 */
+	public Weather getChangeFrom() {
+		return changeFrom;
 	}
 
 	/**
