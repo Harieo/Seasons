@@ -1,15 +1,12 @@
 package uk.co.harieo.seasons.effects.good;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
@@ -99,6 +96,12 @@ public class PrimitiveHeating extends SeasonsPotionEffect {
 		}
 	}
 
+	/**
+	 * Checks whether an item is considered a hot material in this effect
+	 *
+	 * @param item to be checked
+	 * @return whether the item is considered a hot material
+	 */
 	private boolean isHotItem(ItemStack item) {
 		for (Material material : HOT_MATERIALS) {
 			if (item.getType() == material) {

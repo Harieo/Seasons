@@ -33,6 +33,11 @@ public class Frostbite extends Effect implements TickableEffect {
 		}
 	}
 
+	/**
+	 * Damages all players in a world if they are missing any armour
+	 *
+	 * @param world to damage players in
+	 */
 	private void damage(World world) {
 		for (Player player : world.getPlayers()) {
 			if (player.getHealth() > 1) {

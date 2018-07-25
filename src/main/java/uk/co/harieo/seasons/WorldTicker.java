@@ -41,6 +41,12 @@ public class WorldTicker extends BukkitRunnable {
 		}
 	}
 
+	/**
+	 * Perform all necessary checks and updates required to advance the day
+	 * This will change the weather and season as required by these checks
+	 *
+	 * @param cycle to advance the day on
+	 */
 	private void newDay(Cycle cycle) {
 		int day = cycle.getDay();
 		Season season;
@@ -64,6 +70,11 @@ public class WorldTicker extends BukkitRunnable {
 				.callEvent(new SeasonsWeatherChangeEvent(cycle, oldWeather, newWeather, true));
 	}
 
+	/**
+	 * Performs all necessary tasks required to end the previous day and enter night
+	 *
+	 * @param cycle to enter night for
+	 */
 	private void newNight(Cycle cycle) {
 		Weather oldWeather = Weather.fromName(cycle.getWeather().getName());
 		cycle.setWeather(Weather.NIGHT);

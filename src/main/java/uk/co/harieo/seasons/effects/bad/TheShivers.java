@@ -29,6 +29,13 @@ public class TheShivers extends Effect implements TickableEffect {
 				Collections.singletonList(Weather.CHILLY), false);
 	}
 
+	/**
+	 * Checks whether a player is standing in water and is not in a boat
+	 * If this condition is met, they are marked to be damaged
+	 * If this condition is NOT met, the damage marker is removed
+	 *
+	 * @param player to check and mark
+	 */
 	private void damage(Player player) {
 		if (isPlayerCycleApplicable(player)) {
 			Block block = player.getLocation().getBlock();

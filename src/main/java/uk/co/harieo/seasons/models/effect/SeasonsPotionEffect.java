@@ -1,6 +1,5 @@
 package uk.co.harieo.seasons.models.effect;
 
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import uk.co.harieo.seasons.events.DayEndEvent;
-import uk.co.harieo.seasons.events.SeasonsWeatherChangeEvent;
 import uk.co.harieo.seasons.models.Weather;
 
 public abstract class SeasonsPotionEffect extends Effect {

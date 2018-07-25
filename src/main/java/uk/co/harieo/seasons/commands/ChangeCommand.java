@@ -73,7 +73,7 @@ public class ChangeCommand implements CommandExecutor {
 		World world = cycle.getWorld();
 		PluginManager manager = Bukkit.getPluginManager();
 		if (command.equalsIgnoreCase("changeday")) {
-			if (!hasPermission(sender, "seasons.change.day")) {
+			if (hasInsufficientPermissions(sender, "seasons.change.day")) {
 				sender.sendMessage(Seasons.PREFIX + ChatColor.RED + "You don't have permission to change the day!");
 				return;
 			}
@@ -92,7 +92,7 @@ public class ChangeCommand implements CommandExecutor {
 					Seasons.PREFIX + ChatColor.GRAY + "Time shatters before you, days fly by and it is now Day "
 							+ ChatColor.LIGHT_PURPLE + newDay);
 		} else if (command.equalsIgnoreCase("changeweather")) {
-			if (!hasPermission(sender, "seasons.change.weather")) {
+			if (hasInsufficientPermissions(sender, "seasons.change.weather")) {
 				sender.sendMessage(Seasons.PREFIX + ChatColor.RED + "You don't have permission to change the weather!");
 				return;
 			}
@@ -112,7 +112,7 @@ public class ChangeCommand implements CommandExecutor {
 			manager.callEvent(new DayEndEvent(cycle, oldWeather, false));
 			manager.callEvent(new SeasonsWeatherChangeEvent(cycle, oldWeather, weather, false));
 		} else if (command.equalsIgnoreCase("changeseason")) {
-			if (!hasPermission(sender, "seasons.change.season")) {
+			if (hasInsufficientPermissions(sender, "seasons.change.season")) {
 				sender.sendMessage(Seasons.PREFIX + ChatColor.RED + "You don't have permission to change the season!");
 				return;
 			}
@@ -132,19 +132,33 @@ public class ChangeCommand implements CommandExecutor {
 		}
 	}
 
+	/**
+	 * Broadcasta a message to all players in a world
+	 *
+	 * @param world to send the message to
+	 * @param message to be sent
+	 */
 	private void broadcast(World world, String message) {
 		for (Player player : world.getPlayers()) {
 			player.sendMessage(message);
 		}
 	}
 
-	private boolean hasPermission(CommandSender sender, String permission) {
+	/**
+	 * Checks whether a sender has insufficient permission to perform a command
+	 * Note: Only checks a Player as all other senders have permission
+	 *
+	 * @param sender to check the permissions of
+	 * @param permission that is required
+	 * @return whether the sender does NOT have the permission
+	 */
+	private boolean hasInsufficientPermissions(CommandSender sender, String permission) {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
-			return player.isOp() || player.hasPermission(permission);
+			return !player.isOp() && !player.hasPermission(permission);
 		}
 
-		return true;
+		return false;
 	}
 
 }

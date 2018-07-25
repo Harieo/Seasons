@@ -21,6 +21,12 @@ public class HoldOntoYourHat extends Effect {
 				Collections.singletonList(Weather.BREEZY), false);
 	}
 
+	/**
+	 * Checks whether a player has a helmet on and that the helmet is leather
+	 * If this condition is met, gives a 10% chance that the helmet will be dropped
+	 *
+	 * @param player to randomise for
+	 */
 	private void chanceHat(Player player) {
 		PlayerInventory inventory = player.getInventory();
 		ItemStack helmet = inventory.getHelmet();
