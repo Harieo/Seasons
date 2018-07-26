@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
+import org.apache.commons.lang.Validate;
 import uk.co.harieo.seasons.commands.ChangeCommand;
 import uk.co.harieo.seasons.commands.SeasonsCommand;
 import uk.co.harieo.seasons.configuration.SeasonsConfig;
@@ -33,8 +34,13 @@ public class Seasons extends JavaPlugin {
 	public void onEnable() {
 		INSTANCE = this;
 
+		FileConfiguration config = getConfig();
+		config.addDefault("DaysPerSeason", 30);
+		config.addDefault("SecondsOfDamage", 3);
+		config.addDefault("CustomWeathers", true);
+
 		getConfig().options().copyDefaults(true);
-		saveDefaultConfig();
+		saveConfig();
 		CONFIG = getConfig();
 		new SeasonsConfig(CONFIG); // Load settings
 		WORLD_HANDLER = new SeasonsWorlds(CONFIG); // Load saved worlds
@@ -96,6 +102,20 @@ public class Seasons extends JavaPlugin {
 		}
 
 		return null;
+	}
+
+	public static SeasonsWorlds getWorldHandler() {
+		return WORLD_HANDLER;
+	}
+
+	/**
+	 * Adds a {@link Cycle} to the list of used cycles so that the WorldTicker can begin processing it
+	 *
+	 * @param cycle of the world that is to be imported
+	 */
+	public static void addCycle(Cycle cycle) {
+		Validate.notNull(cycle);
+		WORLD_HANDLER.getParsedCycles().add(cycle);
 	}
 
 	public static List<Effect> getEffects() {

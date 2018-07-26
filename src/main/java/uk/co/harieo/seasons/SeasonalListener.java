@@ -5,6 +5,8 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.world.WorldLoadEvent;
 
 import uk.co.harieo.seasons.events.DayEndEvent;
 import uk.co.harieo.seasons.events.SeasonChangeEvent;
@@ -45,6 +47,14 @@ public class SeasonalListener implements Listener {
 			for (Player player : world.getPlayers()) {
 				player.sendMessage(Seasons.PREFIX + Weather.NIGHT.getMessage());
 			}
+		}
+	}
+
+	@EventHandler
+	public void onWorldLoad(WorldLoadEvent event) {
+		World world = event.getWorld();
+		if (Seasons.getWorldCycle(world) == null) {
+			Seasons.getWorldHandler().addWorld(world); // Method will check environment so we don't need to
 		}
 	}
 

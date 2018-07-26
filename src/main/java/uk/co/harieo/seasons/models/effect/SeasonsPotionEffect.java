@@ -148,7 +148,7 @@ public abstract class SeasonsPotionEffect extends Effect {
 			}
 		}
 
-		removeEffect(player, true, true);
+		removeEffect(player, false, true);
 	}
 
 	@EventHandler
