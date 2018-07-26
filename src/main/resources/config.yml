@@ -4,6 +4,3 @@ worlds:
     season: SPRING
     weather: BEAUTIFUL
 
-DaysPerSeason: 30
-CustomWeathers: true
-SecondsOfDamage: 3
