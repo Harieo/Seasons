@@ -33,6 +33,7 @@ public class Seasons extends JavaPlugin {
 	public void onEnable() {
 		INSTANCE = this;
 
+		getConfig().options().copyDefaults(true);
 		saveDefaultConfig();
 		CONFIG = getConfig();
 		new SeasonsConfig(CONFIG); // Load settings
