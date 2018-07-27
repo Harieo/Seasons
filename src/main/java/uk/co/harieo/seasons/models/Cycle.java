@@ -6,7 +6,7 @@ public class Cycle {
 
 	/**
 	 * This class represents a cycle of a season and weather in a world based on Minecraft days.
-	 * The purpose of this constructor is to easily represent the data; it will NOT to handle the mechanics of this
+	 * The purpose of this constructor is to easily represent the data; it will NOT handle the mechanics of this
 	 * system.
 	 */
 

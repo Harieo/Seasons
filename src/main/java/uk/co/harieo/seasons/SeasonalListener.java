@@ -5,7 +5,6 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 
 import uk.co.harieo.seasons.events.DayEndEvent;
@@ -38,6 +37,8 @@ public class SeasonalListener implements Listener {
 
 			player.sendMessage(Seasons.PREFIX + weather.getMessage());
 		}
+
+		world.setStorm(weather.isStorm());
 	}
 
 	@EventHandler

@@ -21,12 +21,12 @@ public class WorldTicker extends BukkitRunnable {
 			World world = cycle.getWorld();
 			boolean isNight = cycle.getWeather() == Weather.NIGHT;
 			boolean shouldProgressDay = world.getTime() >= 23850 && world.getTime() > 0 && isNight;
-			boolean shouldProgressNight = world.getTime() >= 12300 && world.getTime() < 12400;
-			boolean isUnregisteredDay = !isNight && world.getTime() > 12400 && world.getTime() < 23850;
+			boolean shouldProgressNight = !isNight && world.getTime() >= 12300 && world.getTime() < 12400;
+			boolean isUnregisteredDay = !isNight && world.getTime() > 12300 && world.getTime() < 23850;
 			boolean isUnregisteredNight = isNight && world.getTime() > 0 && world.getTime() < 12300;
 
 			// If the world is entering night and not already handled
-			if ((shouldProgressNight & !isNight) | isUnregisteredDay) {
+			if (shouldProgressNight || isUnregisteredDay) {
 				newNight(cycle);
 			} else if (isUnregisteredNight || shouldProgressDay) {
 				newDay(cycle);
