@@ -79,6 +79,7 @@ public class SeasonsWorlds {
 				saveWorld(cycle);
 			}
 
+			world.setStorm(weather.isStorm());
 			logger.info("Loaded world '" + worldName + "' into Seasons!");
 		}
 	}

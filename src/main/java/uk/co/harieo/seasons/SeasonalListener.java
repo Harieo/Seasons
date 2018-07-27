@@ -39,13 +39,7 @@ public class SeasonalListener implements Listener {
 			player.sendMessage(Seasons.PREFIX + weather.getMessage());
 		}
 
-		BukkitRunnable runnable = new BukkitRunnable() {
-			@Override
-			public void run() {
-				world.setStorm(weather.isStorm());
-			}
-		};
-		runnable.runTaskLater(Seasons.getPlugin(), 20);
+		world.setStorm(weather.isStorm());
 	}
 
 	@EventHandler
