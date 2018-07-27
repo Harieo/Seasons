@@ -1,5 +1,6 @@
 package uk.co.harieo.seasons;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -7,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.world.WorldLoadEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import uk.co.harieo.seasons.events.DayEndEvent;
 import uk.co.harieo.seasons.events.SeasonChangeEvent;
@@ -38,6 +40,14 @@ public class SeasonalListener implements Listener {
 
 			player.sendMessage(Seasons.PREFIX + weather.getMessage());
 		}
+
+		BukkitRunnable runnable = new BukkitRunnable() {
+			@Override
+			public void run() {
+				world.setStorm(weather.isStorm());
+			}
+		};
+		runnable.runTaskLater(Seasons.getPlugin(), 20);
 	}
 
 	@EventHandler
