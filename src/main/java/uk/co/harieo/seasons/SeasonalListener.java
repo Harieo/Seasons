@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldLoadEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import uk.co.harieo.seasons.events.DayEndEvent;
 import uk.co.harieo.seasons.events.SeasonChangeEvent;
