@@ -5,23 +5,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>uk.co.harieo</groupId>
-    <artifactId>Seasons</artifactId>
-    <version>2.0.2</version>
+    <artifactId>Seasons-parent</artifactId>
+    <packaging>pom</packaging>
+    <version>parent</version>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.12.2-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot</artifactId>
-            <version>1.12.2-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
+    <modules>
+        <module>core</module>
+        <module>v1_12_2_R1</module>
+        <module>v1_13_R1</module>
+        <module>plugin</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
