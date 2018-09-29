@@ -29,7 +29,7 @@ public class SeasonsCore extends JavaPlugin {
 			Seasons.addEffects(new Icy(), new PrimitiveHeating(), new SolderingIron(), new StrongCurrent(), new TheShivers(),
 					new WetMud(), new WarmingStew());
 		} else {
-			getLogger().info("Seasons has detected v1_12_2_R1 Spigot (pre-1.13) and will adapt to use 1.12 implementation");
+			getLogger().info("Seasons has detected legacy Spigot (pre-1.13) and will adapt to use 1.12 implementation");
 			Seasons.addEffects(new Legacy_Icy(), new Legacy_PrimitiveHeating(), new Legacy_SolderingIron(),
 					new Legacy_StrongCurrent(), new Legacy_TheShivers(), new Legacy_WetMud(), new Legacy_WarmingStew());
 		}
