@@ -24,7 +24,8 @@ public class SeasonsCore extends JavaPlugin {
 
 		Seasons.startup(this, config);
 
-		if (Bukkit.getVersion().contains("1.13")) {
+		String version = Bukkit.getVersion();
+		if (version.contains("1.13") || version.contains("1.14")) {
 			getLogger().info("Seasons has detected modern Spigot (1.13+) and will adapt to use 1.13 implementation");
 			Seasons.addEffects(new Icy(), new PrimitiveHeating(), new SolderingIron(), new StrongCurrent(), new TheShivers(),
 					new WetMud(), new WarmingStew());
