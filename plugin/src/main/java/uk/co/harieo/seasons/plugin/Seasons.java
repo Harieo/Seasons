@@ -14,6 +14,7 @@ import uk.co.harieo.seasons.plugin.configuration.SeasonsWorlds;
 import uk.co.harieo.seasons.plugin.models.Cycle;
 import uk.co.harieo.seasons.plugin.models.effect.Effect;
 import uk.co.harieo.seasons.plugin.models.effect.SeasonsPotionEffect;
+import uk.co.harieo.seasons.plugin.placeholders.SeasonsPlaceholderExpansion;
 
 public class Seasons {
 
@@ -43,6 +44,10 @@ public class Seasons {
 		Bukkit.getPluginCommand("changeweather").setExecutor(changeCommand);
 		Bukkit.getPluginCommand("changeseason").setExecutor(changeCommand);
 		Bukkit.getPluginManager().registerEvents(new SeasonalListener(), PLUGIN);
+
+		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+			new SeasonsPlaceholderExpansion(this).register();
+		}
 	}
 
 	public void disable() {
