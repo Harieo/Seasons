@@ -63,11 +63,7 @@ public class Seasons {
 	}
 
 	public void addEffects(Effect... effects) {
-		for (Effect effect : effects) {
-			if (!CONFIG.getDisabledEffects().contains(effect.getName())) {
-				EFFECTS.add(effect);
-			}
-		}
+		EFFECTS.addAll(Arrays.asList(effects));
 	}
 
 	public JavaPlugin getPlugin() {

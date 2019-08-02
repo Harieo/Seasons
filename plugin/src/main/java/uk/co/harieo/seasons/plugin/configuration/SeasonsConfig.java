@@ -10,14 +10,14 @@ public class SeasonsConfig {
 	private int secondsPerDamage; // Whether to activate the effects of the seasonal weathers
 	private boolean enableEffects; // How many ticks per damage dealt to a player on a harmful weather
 	private List<String> disabledWorlds;
-	private List<String> disabledEffects;
+	private List<String> disabledWeathers;
 
 	public SeasonsConfig(FileConfiguration config) {
 		daysPerSeason = config.getInt("DaysPerSeason");
 		secondsPerDamage = config.getInt("SecondsOfDamage");
 		enableEffects = config.getBoolean("CustomWeathers");
 		disabledWorlds = config.getStringList("disabled-worlds");
-		disabledEffects = config.getStringList("disabled-effects");
+		disabledWeathers = config.getStringList("disabled-weathers");
 	}
 
 	public int getDaysPerSeason() {
@@ -36,8 +36,8 @@ public class SeasonsConfig {
 		return disabledWorlds;
 	}
 
-	public List<String> getDisabledEffects() {
-		return disabledEffects;
+	public List<String> getDisabledWeathers() {
+		return disabledWeathers;
 	}
 
 }

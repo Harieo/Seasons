@@ -1,9 +1,11 @@
 package uk.co.harieo.seasons.plugin.models;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import java.util.*;
 import uk.co.harieo.seasons.plugin.Seasons;
+import uk.co.harieo.seasons.plugin.configuration.SeasonsConfig;
 import uk.co.harieo.seasons.plugin.models.effect.Effect;
 
 public enum Weather {
@@ -154,12 +156,29 @@ public enum Weather {
 	public static Weather randomWeather(Season season) {
 		List<Weather> applicableWeathers = new ArrayList<>();
 		for (Weather weather : values()) {
-			if (weather.seasons.contains(season)) { // Whether the weather can be used with the season
+			if (weather.seasons.contains(season) && !isManuallyDisabled(weather)) { // Whether the weather can be used with the season
 				applicableWeathers.add(weather);
 			}
 		}
 
 		return applicableWeathers.get(random.nextInt(applicableWeathers.size()));
+	}
+
+	/**
+	 * Checks whether a weather has been manually disabled via config
+	 *
+	 * @param weather to check
+	 * @return whether the weather is manually disabled
+	 */
+	public static boolean isManuallyDisabled(Weather weather) {
+		SeasonsConfig config = Seasons.getInstance().getSeasonsConfig();
+		for (String weatherName : config.getDisabledWeathers()) {
+			if (weatherName.equalsIgnoreCase(weather.getName().toLowerCase())) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 }
