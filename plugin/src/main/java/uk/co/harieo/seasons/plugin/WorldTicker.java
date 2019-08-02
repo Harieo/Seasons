@@ -19,7 +19,8 @@ public class WorldTicker extends BukkitRunnable {
 
 	@Override
 	public void run() {
-		for (Cycle cycle : Seasons.getCycles()) {
+		Seasons seasons = Seasons.getInstance();
+		for (Cycle cycle : seasons.getCycles()) {
 			World world = cycle.getWorld();
 			boolean isNight = cycle.getWeather() == Weather.NIGHT;
 			boolean shouldProgressDay = world.getTime() >= 23850 && world.getTime() > 0 && isNight;
@@ -33,7 +34,7 @@ public class WorldTicker extends BukkitRunnable {
 			} else if (isUnregisteredNight || shouldProgressDay) {
 				newDay(cycle);
 			} else {
-				for (Effect effect : Seasons.getEffects()) {
+				for (Effect effect : seasons.getEffects()) {
 					if (effect.isWeatherApplicable(cycle.getWeather()) && effect instanceof TickableEffect) {
 						TickableEffect tickableEffect = (TickableEffect) effect;
 						tickableEffect.onTick(cycle);
@@ -54,7 +55,7 @@ public class WorldTicker extends BukkitRunnable {
 		Season season;
 
 		// If the next day will advance past the amount of days in a season, switch to new season
-		if (day + 1 > SeasonsConfig.get().getDaysPerSeason()) {
+		if (day + 1 > Seasons.getInstance().getSeasonsConfig().getDaysPerSeason()) {
 			cycle.setDay(1);
 			season = Season.next(cycle.getSeason());
 			Bukkit.getPluginManager().callEvent(new SeasonChangeEvent(cycle, cycle.getSeason(), season, true));

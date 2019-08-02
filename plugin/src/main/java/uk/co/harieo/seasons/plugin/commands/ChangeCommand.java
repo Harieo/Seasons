@@ -21,10 +21,11 @@ public class ChangeCommand implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
+		Seasons seasons = Seasons.getInstance();
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
 			if (args.length == 1) {
-				Cycle cycle = Seasons.getWorldCycle(player.getWorld());
+				Cycle cycle = seasons.getWorldCycle(player.getWorld());
 				if (cycle == null) {
 					player.sendMessage(
 							Seasons.PREFIX + ChatColor.RED + "You are not in a world that can have it's day changed!");
@@ -48,7 +49,7 @@ public class ChangeCommand implements CommandExecutor {
 			return false;
 		}
 
-		Cycle cycle = Seasons.getWorldCycle(world);
+		Cycle cycle = seasons.getWorldCycle(world);
 		if (cycle == null) {
 			sender.sendMessage(
 					Seasons.PREFIX + ChatColor.RED + "That world is too barren to be affected by Seasons...");

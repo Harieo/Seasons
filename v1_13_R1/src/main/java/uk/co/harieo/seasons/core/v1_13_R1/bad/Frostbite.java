@@ -10,6 +10,7 @@ import java.util.List;
 import uk.co.harieo.seasons.plugin.Seasons;
 import uk.co.harieo.seasons.plugin.configuration.SeasonsConfig;
 import uk.co.harieo.seasons.plugin.models.Cycle;
+import uk.co.harieo.seasons.plugin.models.Season;
 import uk.co.harieo.seasons.plugin.models.Weather;
 import uk.co.harieo.seasons.plugin.models.effect.Effect;
 import uk.co.harieo.seasons.plugin.models.effect.TickableEffect;
@@ -52,7 +53,7 @@ public class Frostbite extends Effect implements TickableEffect {
 	@Override
 	public void onTick(Cycle cycle) {
 		if (active) {
-			if (secondsPast >= SeasonsConfig.get().getSecondsPerDamage()) {
+			if (secondsPast >= Seasons.getInstance().getSeasonsConfig().getSecondsPerDamage()) {
 				damage(cycle.getWorld());
 				secondsPast = 0;
 			} else {

@@ -54,8 +54,9 @@ public class SeasonalListener implements Listener {
 	@EventHandler
 	public void onWorldLoad(WorldLoadEvent event) {
 		World world = event.getWorld();
-		if (Seasons.getWorldCycle(world) == null) {
-			Seasons.getWorldHandler().addWorld(world); // Method will check environment so we don't need to
+		Seasons seasons = Seasons.getInstance();
+		if (seasons.getWorldCycle(world) == null) {
+			seasons.getWorldHandler().addWorld(world); // Method will check environment so we don't need to
 		}
 	}
 

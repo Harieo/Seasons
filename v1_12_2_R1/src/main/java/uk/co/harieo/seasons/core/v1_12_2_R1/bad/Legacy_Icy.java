@@ -40,7 +40,7 @@ public class Legacy_Icy extends Effect {
 					}
 				}
 			};
-			runnable.runTaskLater(Seasons.getPlugin(), 10);
+			runnable.runTaskLater(Seasons.getInstance().getPlugin(), 10);
 		}
 	}
 

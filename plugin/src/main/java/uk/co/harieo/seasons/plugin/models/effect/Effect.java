@@ -29,8 +29,9 @@ public abstract class Effect implements Listener {
 		this.weathers = weathers;
 		this.isGood = good;
 
-		if (!cache.contains(name) && SeasonsConfig.get().hasEnabledEffects()) {
-			Bukkit.getPluginManager().registerEvents(this, Seasons.getPlugin());
+		Seasons seasons = Seasons.getInstance();
+		if (!cache.contains(name) && seasons.getSeasonsConfig().hasEnabledEffects()) {
+			Bukkit.getPluginManager().registerEvents(this, seasons.getPlugin());
 			cache.add(name);
 		}
 	}
@@ -81,7 +82,7 @@ public abstract class Effect implements Listener {
 	 * @return whether the {@link Player} is affected by this effect
 	 */
 	protected boolean isPlayerCycleApplicable(Player player) {
-		Cycle cycle = Seasons.getWorldCycle(player.getWorld());
+		Cycle cycle = Seasons.getInstance().getWorldCycle(player.getWorld());
 		return cycle != null && isWeatherApplicable(cycle.getWeather());
 	}
 

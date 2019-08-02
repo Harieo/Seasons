@@ -60,6 +60,6 @@ public class Revitalized extends SeasonsPotionEffect {
 				giveEffect(event.getPlayer(), true);
 			}
 		};
-		runnable.runTaskLater(Seasons.getPlugin(), 10);
+		runnable.runTaskLater(Seasons.getInstance().getPlugin(), 10);
 	}
 }

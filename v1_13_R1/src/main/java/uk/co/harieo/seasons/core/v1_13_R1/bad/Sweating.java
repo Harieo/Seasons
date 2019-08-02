@@ -65,7 +65,7 @@ public class Sweating extends SeasonsPotionEffect {
 					}
 				}
 			};
-			runnable.runTaskLater(Seasons.getPlugin(), 10);
+			runnable.runTaskLater(Seasons.getInstance().getPlugin(), 10);
 		}
 	}
 

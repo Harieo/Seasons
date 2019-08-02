@@ -74,7 +74,7 @@ public class Legacy_SolderingIron extends Effect implements TickableEffect {
 				checkHotbar(player);
 			}
 		};
-		runnable.runTaskLater(Seasons.getPlugin(), 10);
+		runnable.runTaskLater(Seasons.getInstance().getPlugin(), 10);
 	}
 
 	@Override

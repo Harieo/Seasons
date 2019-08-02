@@ -110,7 +110,8 @@ public enum Weather {
 	public List<Effect> getEffects() {
 		List<Effect> effects = new ArrayList<>();
 
-		for(Effect effect : Seasons.getEffects()) {
+		Seasons seasons = Seasons.getInstance();
+		for (Effect effect : seasons.getEffects()) {
 			if (effect.isWeatherApplicable(this)) {
 				effects.add(effect);
 			}

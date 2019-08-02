@@ -19,7 +19,8 @@ public class SeasonsCommand implements CommandExecutor {
 
 	private static final String WATERMARK =
 			ChatColor.GOLD + ChatColor.BOLD.toString() + "Seasons " + ChatColor.GRAY + "v"
-					+ Seasons.getPlugin().getDescription().getVersion() + " made by " + ChatColor.YELLOW + "Harieo";
+					+ Seasons.getInstance().getPlugin().getDescription().getVersion() + " made by " + ChatColor.YELLOW
+					+ "Harieo";
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
@@ -28,9 +29,10 @@ public class SeasonsCommand implements CommandExecutor {
 			return false;
 		}
 
+		Seasons seasons = Seasons.getInstance();
 		Player player = (Player) sender;
-		Cycle cycle = Seasons.getWorldCycle(player.getWorld());
-		boolean hasEnabledEffects = SeasonsConfig.get().hasEnabledEffects();
+		Cycle cycle = seasons.getWorldCycle(player.getWorld());
+		boolean hasEnabledEffects = seasons.getSeasonsConfig().hasEnabledEffects();
 
 		if (args.length > 0) {
 			if (args[0].equalsIgnoreCase("import")) {
@@ -48,12 +50,13 @@ public class SeasonsCommand implements CommandExecutor {
 
 	private void sendEffectsList(Player player, Cycle cycle, boolean hasEnabledEffects) {
 		if (cycle == null) {
-			player.sendMessage(ChatColor.RED + "This world is barren and full of darkness... It has no season!");
+			sendBarrenWorldError(player);
 			return;
 		}
 
 		if (hasEnabledEffects) {
 			Weather weather = cycle.getWeather();
+			player.sendMessage("");
 			player.sendMessage(Seasons.PREFIX +
 					ChatColor.GRAY + "For the weather " + ChatColor.YELLOW + weather.getName()
 					+ ChatColor.GRAY + " the effects are:");
@@ -62,6 +65,7 @@ public class SeasonsCommand implements CommandExecutor {
 						ChatColor.GOLD + ChatColor.BOLD.toString() + effect.getName() + ": "
 								+ ChatColor.GRAY + effect.getDescription());
 			}
+			player.sendMessage("");
 		} else {
 			player.sendMessage(
 					ChatColor.RED + "Your server administrator has decreed that all effects be disabled...");
@@ -70,34 +74,41 @@ public class SeasonsCommand implements CommandExecutor {
 
 	private void sendSeasonInfo(Player player, Cycle cycle, boolean hasEnabledEffects) {
 		if (cycle == null) {
-			player.sendMessage(ChatColor.RED + "This world is barren and full of darkness... It has no season!");
+			sendBarrenWorldError(player);
 			return;
 		}
 
 		Season season = cycle.getSeason();
+		player.sendMessage("");
 		player.sendMessage(season.getColor() + "Your world is in " + season.getName());
 		player.sendMessage(ChatColor.GREEN + "The weather is currently " + ChatColor.DARK_GREEN
 				+ cycle.getWeather().getName());
 		player.sendMessage(ChatColor.GOLD + "Today is day " + cycle.getDay()
-				+ " of " + SeasonsConfig.get().getDaysPerSeason());
+				+ " of " + Seasons.getInstance().getSeasonsConfig().getDaysPerSeason());
 
 		if (hasEnabledEffects) {
 			player.sendMessage(
 					ChatColor.GRAY + "To see the effects of this weather, use the command " + ChatColor.YELLOW
 							+ "/seasons effects");
 		}
+		player.sendMessage("");
 	}
 
 	private void importWorld(Player player, World world) {
-		if (Seasons.getWorldCycle(world) != null) {
+		Seasons seasons = Seasons.getInstance();
+		if (seasons.getWorldCycle(world) != null) {
 			player.sendMessage(Seasons.PREFIX + ChatColor.RED + "This world has already been imported!");
 		} else if (world.getEnvironment() != Environment.NORMAL) {
 			player.sendMessage(Seasons.PREFIX + ChatColor.RED
 					+ "This world has an invalid environment, Seasons doesn't use NETHER or END worlds");
 		} else {
-			Seasons.getWorldHandler().addWorld(world);
+			seasons.getWorldHandler().addWorld(world);
 			player.sendMessage(Seasons.PREFIX + ChatColor.GREEN + "Successfully imported world!");
 		}
+	}
+
+	private void sendBarrenWorldError(Player player) {
+		player.sendMessage(ChatColor.RED + "This world is barren and full of darkness... It has no season!");
 	}
 
 }

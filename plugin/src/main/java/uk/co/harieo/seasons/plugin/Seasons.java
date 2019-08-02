@@ -20,32 +20,40 @@ public class Seasons {
 	public static final String PREFIX =
 			ChatColor.GOLD + ChatColor.BOLD.toString() + "Seasons" + ChatColor.GRAY + "∙ " + ChatColor.RESET;
 	public static final Random RANDOM = new Random();
+	private static Seasons INSTANCE;
 
-	private static FileConfiguration CONFIG;
-	private static SeasonsWorlds WORLD_HANDLER;
-	private static JavaPlugin INSTANCE;
-	private static final List<Effect> EFFECTS = new ArrayList<>();
+	private SeasonsConfig CONFIG;
+	private SeasonsWorlds WORLD_HANDLER;
+	private JavaPlugin PLUGIN;
+	private final List<Effect> EFFECTS = new ArrayList<>();
 
-	public static void startup(JavaPlugin plugin, FileConfiguration configuration) {
-		INSTANCE = plugin;
+	public Seasons(JavaPlugin plugin, FileConfiguration configuration) {
+		INSTANCE = this;
+		PLUGIN = plugin;
+		CONFIG = new SeasonsConfig(configuration); // Load settings
+	}
 
-
-		CONFIG = configuration;
-		new SeasonsConfig(CONFIG); // Load settings
-		WORLD_HANDLER = new SeasonsWorlds(CONFIG); // Load saved worlds
-
-		new WorldTicker().runTaskTimer(plugin, 0, 20); // Begin the cycles
+	public void startup() {
+		WORLD_HANDLER = new SeasonsWorlds(this); // Load saved worlds
+		new WorldTicker().runTaskTimer(PLUGIN, 0, 20); // Begin the cycles
 
 		ChangeCommand changeCommand = new ChangeCommand();
 		Bukkit.getPluginCommand("season").setExecutor(new SeasonsCommand());
 		Bukkit.getPluginCommand("changeday").setExecutor(changeCommand);
 		Bukkit.getPluginCommand("changeweather").setExecutor(changeCommand);
 		Bukkit.getPluginCommand("changeseason").setExecutor(changeCommand);
-		Bukkit.getPluginManager().registerEvents(new SeasonalListener(), plugin);
+		Bukkit.getPluginManager().registerEvents(new SeasonalListener(), PLUGIN);
 	}
 
-	public static void disable() {
-		WORLD_HANDLER.saveAllWorlds();
+	public void disable() {
+		PLUGIN.getLogger().info("Saving all seasons-enabled worlds...");
+
+		if (WORLD_HANDLER.saveAllWorlds()) {
+			PLUGIN.getLogger().info("Saved all worlds successfully");
+		} else {
+			PLUGIN.getLogger().severe("Failed to save all worlds");
+		}
+
 		for (UUID uuid : SeasonsPotionEffect.PENDING.keySet()) {
 			Player player = Bukkit.getPlayer(uuid);
 			if (player != null) {
@@ -54,19 +62,23 @@ public class Seasons {
 		}
 	}
 
-	public static void addEffects(Effect... effects) {
-		EFFECTS.addAll(Arrays.asList(effects));
+	public void addEffects(Effect... effects) {
+		for (Effect effect : effects) {
+			if (!CONFIG.getDisabledEffects().contains(effect.getName())) {
+				EFFECTS.add(effect);
+			}
+		}
 	}
 
-	public static JavaPlugin getPlugin() {
-		return INSTANCE;
+	public JavaPlugin getPlugin() {
+		return PLUGIN;
 	}
 
-	public static FileConfiguration getSeasonsConfig() {
+	public SeasonsConfig getSeasonsConfig() {
 		return CONFIG;
 	}
 
-	public static List<Cycle> getCycles() {
+	public List<Cycle> getCycles() {
 		return WORLD_HANDLER.getParsedCycles();
 	}
 
@@ -76,7 +88,7 @@ public class Seasons {
 	 * @param world to find the cycle of
 	 * @return the {@link Cycle} instance or null if none exists
 	 */
-	public static Cycle getWorldCycle(World world) {
+	public Cycle getWorldCycle(World world) {
 		for (Cycle cycle : WORLD_HANDLER.getParsedCycles()) {
 			if (cycle.getWorld().equals(world)) {
 				return cycle;
@@ -86,7 +98,7 @@ public class Seasons {
 		return null;
 	}
 
-	public static SeasonsWorlds getWorldHandler() {
+	public SeasonsWorlds getWorldHandler() {
 		return WORLD_HANDLER;
 	}
 
@@ -95,12 +107,16 @@ public class Seasons {
 	 *
 	 * @param cycle of the world that is to be imported
 	 */
-	public static void addCycle(Cycle cycle) {
+	public void addCycle(Cycle cycle) {
 		Validate.notNull(cycle);
 		WORLD_HANDLER.getParsedCycles().add(cycle);
 	}
 
-	public static List<Effect> getEffects() {
+	public List<Effect> getEffects() {
 		return EFFECTS;
+	}
+
+	public static Seasons getInstance() {
+		return INSTANCE;
 	}
 }
