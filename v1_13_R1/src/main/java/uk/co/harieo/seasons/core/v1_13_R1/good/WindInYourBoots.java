@@ -23,6 +23,11 @@ public class WindInYourBoots extends Effect implements TickableEffect {
 	}
 
 	@Override
+	public String getId() {
+		return "wind-in-your-boots";
+	}
+
+	@Override
 	public void onTrigger(World world) {
 		secondsPast = 0;
 	}

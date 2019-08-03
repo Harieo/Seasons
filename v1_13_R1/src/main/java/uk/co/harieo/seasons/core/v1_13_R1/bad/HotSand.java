@@ -20,6 +20,11 @@ public class HotSand extends Effect {
 	}
 
 	@Override
+	public String getId() {
+		return "hot-sand";
+	}
+
+	@Override
 	public void onTrigger(World world) {
 	}
 

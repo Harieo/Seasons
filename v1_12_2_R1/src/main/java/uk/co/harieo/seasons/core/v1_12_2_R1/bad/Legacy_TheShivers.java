@@ -29,6 +29,11 @@ public class Legacy_TheShivers extends Effect implements TickableEffect {
 				Collections.singletonList(Weather.CHILLY), false);
 	}
 
+	@Override
+	public String getId() {
+		return "the-shivers";
+	}
+
 	/**
 	 * Checks whether a player is standing in water and is not in a boat
 	 * If this condition is met, they are marked to be damaged
@@ -55,8 +60,6 @@ public class Legacy_TheShivers extends Effect implements TickableEffect {
 		secondsPast.clear();
 		for (Player player : world.getPlayers()) {
 			damage(player);
-			player.sendMessage(Seasons.PREFIX + ChatColor.RED
-					+ "You shiver from the icy water, plan your next move carefully or it will be your last...");
 		}
 	}
 

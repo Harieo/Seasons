@@ -18,6 +18,25 @@ seasons:
     autumn: "A cool breeze whispers to the leaves that fall from the trees, \"it's Autumn!\""
     winter: "A few snowflakes fall and the world grows cold, time for Winter to make it's mark..."
 
+effects:
+    on-trigger:
+        devastation: "&cYour hearts beats rapidly, yours legs tremble and you find you cannot regenerate health until this Devastation passes!"
+        feels-good: "&aThe breeze feels so good on your skin, armour would just ruin the effect..."
+        fluffy-coat: "&aYour armour gives you a soothing warmth, making you resistant to the harsh cold!"
+        frostbite: "&cThe world is freezing over and so will you if you don't get armour on!"
+        hold-onto-your-hat: "&7Be careful with your hat, the wind is getting up..."
+        hot-sand: "&eWalking on sand in this heat must be painful!"
+        icy: "&9A chill runs down your spine as water turns to ice!"
+        primitive-heating: "&9A source of heat would be great to carry around in this cold!"
+        revitalized: "&aThis weather is so revitalizing!"
+        soldering-iron: "&eThe nearby iron starts to sizzle, better put it down for now..."
+        strong-current: "&9The water flows with a strong current, it'll be hard to wade through!"
+        sweating: "&eThis is most definitely NOT the weather for full armour..."
+        the-shivers: "&cThe water is near ice and dangerously cold to the touch..."
+        wet-mud: "&7The dirt coats your boots and becomes hard to move through in this weather..."
+        warming-stew: "&7Your stomach starts to grumble and you begin to crave some hearty soup..."
+        wind-in-your-boots: "&7You feel the wind in your favour today!"
+
 command:
     effects-list-title: "&7For the weather &e%weather%, &7the effects are:"
     effects-list-element: "&6&l%effect%: &7%description%"

@@ -22,6 +22,11 @@ public class FeelsGood extends SeasonsPotionEffect {
 				new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1));
 	}
 
+	@Override
+	public String getId() {
+		return "feels-good";
+	}
+
 	public boolean shouldGive(Player player) {
 		if (isPlayerCycleApplicable(player)) {
 			PlayerInventory inventory = player.getInventory();

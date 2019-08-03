@@ -24,7 +24,13 @@ public class Legacy_Icy extends Effect {
 	}
 
 	@Override
+	public String getId() {
+		return "icy";
+	}
+
+	@Override
 	public void onTrigger(World world) {
+
 	}
 
 	@EventHandler

@@ -37,6 +37,26 @@ public abstract class Effect implements Listener {
 	}
 
 	/**
+	 * @return a system friendly id to represent this effect
+	 */
+	public abstract String getId();
+
+	/**
+	 * Retrieves the message from the language configuration to be sent when this effect is triggered then sends it to
+	 * the applicable world. This will do nothing if no trigger message is found.
+	 *
+	 * @param world to send the message to, if found
+	 */
+	public void sendTriggerMessage(World world) {
+		String triggerMessage = Seasons.getInstance().getLanguageConfig().getString("effects.on-trigger." + getId());
+		if (triggerMessage != null) {
+			for (Player player : world.getPlayers()) {
+				player.sendMessage(Seasons.PREFIX + triggerMessage);
+			}
+		}
+	}
+
+	/**
 	 * @return the name of this effect, shown to the player
 	 */
 	public String getName() {
@@ -87,9 +107,11 @@ public abstract class Effect implements Listener {
 	}
 
 	@EventHandler
-	public void onWeatherChange(SeasonsWeatherChangeEvent event){
+	public void onWeatherChange(SeasonsWeatherChangeEvent event) {
 		if (isWeatherApplicable(event.getChangedTo())) {
-			onTrigger(event.getCycle().getWorld());
+			World world = event.getCycle().getWorld();
+			onTrigger(world);
+			sendTriggerMessage(world);
 		}
 	}
 

@@ -30,6 +30,11 @@ public class Legacy_PrimitiveHeating extends SeasonsPotionEffect {
 	}
 
 	@Override
+	public String getId() {
+		return "primitive-heating";
+	}
+
+	@Override
 	public boolean shouldGive(Player player) {
 		if (isPlayerCycleApplicable(player)) {
 			PlayerInventory inventory = player.getInventory();

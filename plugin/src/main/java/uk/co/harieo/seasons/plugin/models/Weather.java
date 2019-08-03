@@ -1,6 +1,5 @@
 package uk.co.harieo.seasons.plugin.models;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import java.util.*;

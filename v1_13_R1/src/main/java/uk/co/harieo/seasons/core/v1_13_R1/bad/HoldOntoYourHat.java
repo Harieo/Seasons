@@ -21,6 +21,11 @@ public class HoldOntoYourHat extends Effect {
 				Collections.singletonList(Weather.BREEZY), false);
 	}
 
+	@Override
+	public String getId() {
+		return "hold-onto-your-hat";
+	}
+
 	/**
 	 * Checks whether a player has a helmet on and that the helmet is leather
 	 * If this condition is met, gives a 10% chance that the helmet will be dropped

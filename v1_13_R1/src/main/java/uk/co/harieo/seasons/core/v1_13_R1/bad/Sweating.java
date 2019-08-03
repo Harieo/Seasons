@@ -24,6 +24,11 @@ public class Sweating extends SeasonsPotionEffect {
 	}
 
 	@Override
+	public String getId() {
+		return "sweating";
+	}
+
+	@Override
 	public boolean shouldGive(Player player) {
 		if (isPlayerCycleApplicable(player)) {
 			PlayerInventory inventory = player.getInventory();

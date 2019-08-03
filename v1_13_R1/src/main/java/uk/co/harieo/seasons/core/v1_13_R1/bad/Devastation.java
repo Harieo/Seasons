@@ -19,12 +19,12 @@ public class Devastation extends Effect {
 	}
 
 	@Override
-	public void onTrigger(World world) {
-		for (Player player : world.getPlayers()) {
-			player.sendMessage(Seasons.PREFIX + ChatColor.RED
-					+ "Your hearts beats rapidly, yours legs tremble and you find you cannot regenerate health until this Devastation passes!");
-		}
+	public String getId() {
+		return "devastation";
 	}
+
+	@Override
+	public void onTrigger(World world) { }
 
 	@EventHandler
 	public void onRegeneration(EntityRegainHealthEvent event) {

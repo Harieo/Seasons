@@ -37,6 +37,11 @@ public class Legacy_SolderingIron extends Effect implements TickableEffect {
 				Collections.singletonList(Weather.SCORCHING), false);
 	}
 
+	@Override
+	public String getId() {
+		return "soldering-iron";
+	}
+
 	/**
 	 * Checks the items in the Player's hands to see if they contain any soldering items If an item is found, they will
 	 * be marked to take damage and visa versa
