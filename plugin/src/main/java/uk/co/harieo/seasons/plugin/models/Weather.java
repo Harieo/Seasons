@@ -68,7 +68,7 @@ public enum Weather {
 	private static final Random random = new Random();
 
 	private String name; // Name shown to players
-	private String message; // Initial broadcast on weather trigger
+	private String message; // Initial broadcast on weather trigger (Now only triggered if lang file is invalid)
 	private boolean catastrophic; // Is there is a high risk of this weather killing a player?
 	private boolean storm;
 	private List<Season> seasons; // List of seasons this weather can be triggered on
@@ -94,7 +94,12 @@ public enum Weather {
 	}
 
 	public String getMessage() {
-		return message;
+		String customMessage = Seasons.getInstance().getLanguageConfig().getString("weathers." + name().toLowerCase());
+		if (customMessage != null) {
+			return customMessage;
+		} else {
+			return message;
+		}
 	}
 
 	public boolean isCatastrophic() {

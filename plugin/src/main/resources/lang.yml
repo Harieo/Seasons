@@ -1,0 +1,31 @@
+weathers:
+    beautiful: "&aThe sun is shining, the grass is green and the weather is &eBeautiful"
+    breezy: "&7A cool breeze touches your skin, it's going to be &2Breezy"
+    chilly: "&3You shiver as frost glistens around you, it's very &9Chilly"
+    rainy: "&3A loud rain falls and wets the ground, it's &9Rainy"
+    scorching: "&eThe sun burns your skin and the ground hurts to touch, it's &6Scorching"
+    hot: "&eIt's going to be very &6Hot &etoday"
+    warm: "&eA soothing warmth hugs you as you move, it's a &6Warm &eday"
+    cold: "&3The water is so very &9Cold &3today"
+    stormy: "&cA great &4Storm &cbrews, the Gods are angry... Brace yourself!"
+    freezing: "&3The water freezes with a sheet of ice and you feel a great cold, it's &9Freezing"
+    snowy: "&7A great white blanket covers the world, it's &fSnowy"
+    night: "&7The world rests with the sun and all is calm... Until the mobs come to eat you!"
+
+seasons:
+    spring: "The sun rises, the flowers smell fresh and there is a Spring in your step... literally!"
+    summer: "Today feels warmer than the others, maybe even too warm... Summer has arrived!"
+    autumn: "A cool breeze whispers to the leaves that fall from the trees, \"it's Autumn!\""
+    winter: "A few snowflakes fall and the world grows cold, time for Winter to make it's mark..."
+
+command:
+    effects-list-title: "&7For the weather &e%weather%, &7the effects are:"
+    effects-list-element: "&6&l%effect%: &7%description%"
+    season-info:
+        - "%season-color%Your world is in %season%"
+        - "&7The weather is currently &2%weather%"
+        - "&eToday is Day %day% of %max-days%"
+    season-info-footer: "&7To see the effects of this weather, use the command &e/seasons effects"
+
+misc:
+    prefix: "&e&lSeasons&7∙ &r"

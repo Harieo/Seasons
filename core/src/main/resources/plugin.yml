@@ -18,6 +18,12 @@ commands:
     description: Changes the season in a world
 
 permissions:
+  seasons.*:
+    description: Use all seasons commands
+    default: op
+    children:
+      seasons.change.*: true
+      seasons.reload: true
   seasons.change.*:
     description: Use all the change commands
     default: op
@@ -33,4 +39,7 @@ permissions:
     default: op
   seasons.change.season:
     description: Change the season in a world
+    default: op
+  seasons.reload:
+    description: Reload the configuration for seasons
     default: op

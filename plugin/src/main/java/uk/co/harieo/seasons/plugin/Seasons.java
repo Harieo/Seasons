@@ -1,4 +1,6 @@
-package uk.co.harieo.seasons.plugin;import org.bukkit.Bukkit;
+package uk.co.harieo.seasons.plugin;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -10,6 +12,7 @@ import org.apache.commons.lang.Validate;
 import uk.co.harieo.seasons.plugin.commands.ChangeCommand;
 import uk.co.harieo.seasons.plugin.commands.SeasonsCommand;
 import uk.co.harieo.seasons.plugin.configuration.SeasonsConfig;
+import uk.co.harieo.seasons.plugin.configuration.SeasonsLanguageConfiguration;
 import uk.co.harieo.seasons.plugin.configuration.SeasonsWorlds;
 import uk.co.harieo.seasons.plugin.models.Cycle;
 import uk.co.harieo.seasons.plugin.models.effect.Effect;
@@ -18,13 +21,13 @@ import uk.co.harieo.seasons.plugin.placeholders.SeasonsPlaceholderExpansion;
 
 public class Seasons {
 
-	public static final String PREFIX =
-			ChatColor.GOLD + ChatColor.BOLD.toString() + "Seasons" + ChatColor.GRAY + "∙ " + ChatColor.RESET;
+	public static String PREFIX;
 	public static final Random RANDOM = new Random();
 	private static Seasons INSTANCE;
 
 	private SeasonsConfig CONFIG;
 	private SeasonsWorlds WORLD_HANDLER;
+	private SeasonsLanguageConfiguration LANGUAGE_CONFIG;
 	private JavaPlugin PLUGIN;
 	private final List<Effect> EFFECTS = new ArrayList<>();
 
@@ -32,9 +35,11 @@ public class Seasons {
 		INSTANCE = this;
 		PLUGIN = plugin;
 		CONFIG = new SeasonsConfig(configuration); // Load settings
+		LANGUAGE_CONFIG = new SeasonsLanguageConfiguration(this);
 	}
 
 	public void startup() {
+		setPrefix();
 		WORLD_HANDLER = new SeasonsWorlds(this); // Load saved worlds
 		new WorldTicker().runTaskTimer(PLUGIN, 0, 20); // Begin the cycles
 
@@ -77,6 +82,15 @@ public class Seasons {
 
 	public SeasonsConfig getSeasonsConfig() {
 		return CONFIG;
+	}
+
+	public SeasonsLanguageConfiguration getLanguageConfig() {
+		return LANGUAGE_CONFIG;
+	}
+
+	public void setPrefix() {
+		PREFIX = LANGUAGE_CONFIG.getStringOrDefault("misc.prefix",
+				ChatColor.GOLD + ChatColor.BOLD.toString() + "Seasons" + ChatColor.GRAY + "∙ " + ChatColor.RESET);
 	}
 
 	public List<Cycle> getCycles() {
