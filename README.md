@@ -1,18 +1,31 @@
 <h1>Seasons v2</h1>
 
-<h3>Seasons 2.1.0 (the latest version when I write this) now implements Maven Modules</h3>
-<p>Please note that this is the first project I've ever used Maven Modules on and it may be messier than others who have loads of experience. With that being said, allow me to explain my thought process!</p>
-<p>There are 2 version specific modules; v1_12_2_R1 (which represents all code that is only compatible with Legacy spigot) and v_1_13_R1 (which represents all code which is specific to 1.13+ versions <b>OR</b> is hybrid between both versions). The 2 other modules are for general code; plugin (which is code that all other modules need to be able to reference) and core (which has the Maven Shade plugin in it)</p>
-<p>If you are compiling the plugin, compile the root module (Seasons-parent) and use the jar generated in the core module (Spigot-Core) as that is a compilation of all other modules (and it is the JavaPlugin part of the project).</p>
+<p>Seasons is a little quirky plugin I made a few years ago to simulate real-life seasons in Minecraft, adding some
+customised effects and weathers to add a new experience to playing survival</p>
 
-<hr />
+<p>You can download the latest release of the plugin via SpigotMC by <a href="https://www.spigotmc.org/resources/seasons.39298/">Clicking Here</a>!
 
-If you aren't a developer but you would like additions to this plugin, please
-go to the tab on the side called Issues and make a suggestion. If I like your
-idea then I will add it to the plugin for everyone!
+<h2>Modules Summary</h2>
 
-Compiled version ready to use available on Spigot: 
-https://www.spigotmc.org/resources/seasons.39298/
+<p>Seasons implements a <i>modular Maven</i> design which allows multiple versions of Spigot to be run with only 1 plugin</p>
+<p>The modules are as follows:</p>
+<ul>
+  <li>Core - Foundation of the plugin which detemines the version, holds the initial JavaPlugin class and runs Maven Shade</li>
+  <li>Plugin - The core functionality of Seasons which is <b>not</b> version-specific</li>
+  <li>v1_12_2_R1 - Implements functionality for Spigot versions 1.9-1.12</li>
+  <li>v1_13_R1 - Implements functionality for Spigot versions 1.13-1.14</li>
+</ul>
 
-Aside from that, enjoy!
+<p>If you are compiling the plugin locally, compile the root module (Seasons-parent) and use the shaded jar generated in the 
+  core module (Spigot-Core) as that is a compilation of all other modules.</p>
+   
+<h2>Contributions</h2>
+
+<p>This project is funded only by generous donations from users of the plugin and <i>all development for the project is volunteered</i>
+  by developers who donate their time <b>free of charge</b>. If you wish to contribute to the development of Seasons, consider donating
+  on <a href="https://www.patreon.com/harieo">Patreon</a> as it goes a long way!</p>
+  
+<p>If you are a Developer and wish to help maintain Seasons, you have the option of donating external Pull Requests or contacting me directly to be added as a maintainer. While the work is unpaid, we aim to have fun and you will be given credit for the work</p>
+
+<p>Thanks to everyone who downloads, enjoys and contributes to the development of Seasons!</p>
 
