@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang.Validate;
+import uk.co.harieo.seasons.plugin.Seasons;
 
 public enum Season {
 
@@ -29,7 +30,12 @@ public enum Season {
 	}
 
 	public String getMessage() {
-		return message;
+		String customMessage = Seasons.getInstance().getLanguageConfig().getString("seasons." + name().toLowerCase());
+		if (customMessage != null) {
+			return customMessage;
+		} else {
+			return message;
+		}
 	}
 
 	public ChatColor getColor() {

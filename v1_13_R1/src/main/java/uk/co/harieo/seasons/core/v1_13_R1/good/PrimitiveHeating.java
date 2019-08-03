@@ -30,6 +30,11 @@ public class PrimitiveHeating extends SeasonsPotionEffect {
 	}
 
 	@Override
+	public String getId() {
+		return "primitive-heating";
+	}
+
+	@Override
 	public boolean shouldGive(Player player) {
 		if (isPlayerCycleApplicable(player)) {
 			PlayerInventory inventory = player.getInventory();
@@ -71,7 +76,7 @@ public class PrimitiveHeating extends SeasonsPotionEffect {
 				}
 			}
 		};
-		runnable.runTaskLater(Seasons.getPlugin(), 10);
+		runnable.runTaskLater(Seasons.getInstance().getPlugin(), 10);
 	}
 
 	@EventHandler
@@ -84,7 +89,7 @@ public class PrimitiveHeating extends SeasonsPotionEffect {
 					giveEffect(player, true);
 				}
 			};
-			runnable.runTaskLater(Seasons.getPlugin(), 10);
+			runnable.runTaskLater(Seasons.getInstance().getPlugin(), 10);
 		}
 	}
 

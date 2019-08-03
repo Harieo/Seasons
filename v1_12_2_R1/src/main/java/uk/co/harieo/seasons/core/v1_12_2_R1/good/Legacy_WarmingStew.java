@@ -24,12 +24,12 @@ public class Legacy_WarmingStew extends Effect {
 	}
 
 	@Override
-	public void onTrigger(World world) {
-		for (Player player : world.getPlayers()) {
-			player.sendMessage(Seasons.PREFIX + ChatColor.GRAY
-					+ "Your stomach starts to grumble and you begin to crave some hearty soup...");
-		}
+	public String getId() {
+		return "warming-stew";
 	}
+
+	@Override
+	public void onTrigger(World world) { }
 
 	@EventHandler
 	public void onConsume(PlayerItemConsumeEvent event) {

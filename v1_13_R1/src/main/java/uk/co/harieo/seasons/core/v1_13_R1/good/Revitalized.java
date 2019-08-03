@@ -25,6 +25,11 @@ public class Revitalized extends SeasonsPotionEffect {
 	}
 
 	@Override
+	public String getId() {
+		return "revitalized";
+	}
+
+	@Override
 	public boolean shouldGive(Player player) {
 		return isPlayerCycleApplicable(player);
 	}
@@ -46,9 +51,6 @@ public class Revitalized extends SeasonsPotionEffect {
 	public void onTrigger(World world) {
 		for (Player player : world.getPlayers()) {
 			giveEffect(player, false);
-			player.sendMessage(Seasons.PREFIX
-					+ ChatColor.GREEN + "As the sun rises, you feel it's Regenerating energy "
-					+ ChatColor.YELLOW + "Revitalise " + ChatColor.GREEN + "you!");
 		}
 	}
 
@@ -60,6 +62,6 @@ public class Revitalized extends SeasonsPotionEffect {
 				giveEffect(event.getPlayer(), true);
 			}
 		};
-		runnable.runTaskLater(Seasons.getPlugin(), 10);
+		runnable.runTaskLater(Seasons.getInstance().getPlugin(), 10);
 	}
 }

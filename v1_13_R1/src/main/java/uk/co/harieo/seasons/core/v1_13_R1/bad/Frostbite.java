@@ -8,7 +8,6 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Arrays;
 import java.util.List;
 import uk.co.harieo.seasons.plugin.Seasons;
-import uk.co.harieo.seasons.plugin.configuration.SeasonsConfig;
 import uk.co.harieo.seasons.plugin.models.Cycle;
 import uk.co.harieo.seasons.plugin.models.Weather;
 import uk.co.harieo.seasons.plugin.models.effect.Effect;
@@ -21,16 +20,17 @@ public class Frostbite extends Effect implements TickableEffect {
 				Arrays.asList(Weather.FREEZING, Weather.SNOWY), false);
 	}
 
+	@Override
+	public String getId() {
+		return "frostbite";
+	}
+
 	private int secondsPast = 0;
 	private boolean active = false;
 
 	@Override
 	public void onTrigger(World world) {
 		secondsPast = 0;
-		for (Player player : world.getPlayers()) {
-			player.sendMessage(Seasons.PREFIX + ChatColor.RED
-					+ "The world is freezing over and so will you if you don't get armour on!");
-		}
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class Frostbite extends Effect implements TickableEffect {
 	@Override
 	public void onTick(Cycle cycle) {
 		if (active) {
-			if (secondsPast >= SeasonsConfig.get().getSecondsPerDamage()) {
+			if (secondsPast >= Seasons.getInstance().getSeasonsConfig().getSecondsPerDamage()) {
 				damage(cycle.getWorld());
 				secondsPast = 0;
 			} else {

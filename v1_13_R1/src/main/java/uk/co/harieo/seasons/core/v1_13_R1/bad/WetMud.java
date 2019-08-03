@@ -25,6 +25,11 @@ public class WetMud extends SeasonsPotionEffect {
 	}
 
 	@Override
+	public String getId() {
+		return "wet-mud";
+	}
+
+	@Override
 	public boolean shouldGive(Player player) {
 		if (isPlayerCycleApplicable(player)) {
 			Block block = player.getLocation().clone().subtract(0, 1, 0).getBlock();

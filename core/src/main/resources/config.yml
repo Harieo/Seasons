@@ -1,5 +1,7 @@
-worlds:
-  world:
-    day: 1
-    season: SPRING
-    weather: BEAUTIFUL
+DaysPerSeason: 30
+SecondsOfDamage: 3
+CustomWeathers: true
+disabled-worlds:
+    - 'world_nether'
+    - 'world_the_end'
+disabled-weathers: []

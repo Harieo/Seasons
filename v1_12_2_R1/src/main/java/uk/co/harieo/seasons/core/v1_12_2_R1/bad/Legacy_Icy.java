@@ -24,7 +24,13 @@ public class Legacy_Icy extends Effect {
 	}
 
 	@Override
+	public String getId() {
+		return "icy";
+	}
+
+	@Override
 	public void onTrigger(World world) {
+
 	}
 
 	@EventHandler
@@ -40,7 +46,7 @@ public class Legacy_Icy extends Effect {
 					}
 				}
 			};
-			runnable.runTaskLater(Seasons.getPlugin(), 10);
+			runnable.runTaskLater(Seasons.getInstance().getPlugin(), 10);
 		}
 	}
 

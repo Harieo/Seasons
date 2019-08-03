@@ -21,10 +21,11 @@ public class ChangeCommand implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
+		Seasons seasons = Seasons.getInstance();
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
 			if (args.length == 1) {
-				Cycle cycle = Seasons.getWorldCycle(player.getWorld());
+				Cycle cycle = seasons.getWorldCycle(player.getWorld());
 				if (cycle == null) {
 					player.sendMessage(
 							Seasons.PREFIX + ChatColor.RED + "You are not in a world that can have it's day changed!");
@@ -48,7 +49,7 @@ public class ChangeCommand implements CommandExecutor {
 			return false;
 		}
 
-		Cycle cycle = Seasons.getWorldCycle(world);
+		Cycle cycle = seasons.getWorldCycle(world);
 		if (cycle == null) {
 			sender.sendMessage(
 					Seasons.PREFIX + ChatColor.RED + "That world is too barren to be affected by Seasons...");
@@ -101,6 +102,10 @@ public class ChangeCommand implements CommandExecutor {
 			if (weather == null) {
 				sender.sendMessage(Seasons.PREFIX + ChatColor.RED + "We couldn't find a weather called " + name);
 				return;
+			} else if (Weather.isManuallyDisabled(weather)) {
+				sender.sendMessage(Seasons.PREFIX + ChatColor.RED
+						+ "That weather has been disabled by a server administrator via the config!");
+				return;
 			}
 
 			// The painful realisation that Java hates you when you have to do this
@@ -145,8 +150,8 @@ public class ChangeCommand implements CommandExecutor {
 	}
 
 	/**
-	 * Checks whether a sender has insufficient permission to perform a command
-	 * Note: Only checks a Player as all other senders have permission
+	 * Checks whether a sender has insufficient permission to perform a command Note: Only checks a Player as all other
+	 * senders have permission
 	 *
 	 * @param sender to check the permissions of
 	 * @param permission that is required

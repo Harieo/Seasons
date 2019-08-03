@@ -1,8 +1,10 @@
 main: uk.co.harieo.seasons.core.SeasonsCore
-version: 2.1.1
+version: 2.1.2
 name: Seasons
 author: Harieo
 api-version: '1.13'
+softdepend:
+  - 'PlaceholderAPI'
 
 commands:
   season:
@@ -16,6 +18,13 @@ commands:
     description: Changes the season in a world
 
 permissions:
+  seasons.*:
+    description: Use all seasons commands
+    default: op
+    children:
+      seasons.change.*: true
+      seasons.reload: true
+      seasons.import: true
   seasons.change.*:
     description: Use all the change commands
     default: op
@@ -31,4 +40,10 @@ permissions:
     default: op
   seasons.change.season:
     description: Change the season in a world
+    default: op
+  seasons.reload:
+    description: Reload the configuration for seasons
+    default: op
+  seasons.import:
+    description: Allows you to import a world into seasons
     default: op

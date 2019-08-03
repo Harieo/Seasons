@@ -3,12 +3,19 @@ package uk.co.harieo.seasons.plugin.configuration;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import javax.annotation.Nullable;
 import uk.co.harieo.seasons.plugin.Seasons;
 import uk.co.harieo.seasons.plugin.models.Cycle;
 import uk.co.harieo.seasons.plugin.models.Season;
@@ -16,27 +23,31 @@ import uk.co.harieo.seasons.plugin.models.Weather;
 
 public class SeasonsWorlds {
 
-	private static final String DEFAULT_PATH = "worlds.";
-
 	// These values will be used when the config contains either invalid values or none of these values
 	private static final Season DEFAULT_SEASON = Season.SPRING;
 	private static final Weather DEFAULT_WEATHER = Weather.BEAUTIFUL;
+	private static final String CHILD_DIRECTORY_PATH = "/worlds";
 
-	private FileConfiguration config;
+	private Seasons core;
+	private JavaPlugin plugin;
 	private List<Cycle> cycles;
 
-	public SeasonsWorlds(FileConfiguration config) {
-		this.config = config;
+	public SeasonsWorlds(Seasons core) {
+		this.core = core;
+		this.plugin = core.getPlugin();
 		this.cycles = new ArrayList<>();
-		parseAll();
+		loadAll();
 	}
 
 	/**
 	 * Loops through all available worlds and performs {@link #addWorld(World)} on them
 	 */
-	private void parseAll() {
+	private void loadAll() {
+		List<String> disabledWorlds = core.getSeasonsConfig().getDisabledWorlds();
 		for (World world : Bukkit.getWorlds()) { // Scan all loaded worlds
-			addWorld(world);
+			if (!disabledWorlds.contains(world.getName())) { // Ensure server owner hasn't specified a manual disable
+				addWorld(world);
+			}
 		}
 	}
 
@@ -47,39 +58,12 @@ public class SeasonsWorlds {
 	public void addWorld(World world) {
 		if (world.getEnvironment() == Environment.NORMAL) { // Only normal worlds are subject to cycles
 			String worldName = world.getName();
-			String path = DEFAULT_PATH + worldName;
+			Logger logger = plugin.getLogger();
 
-			int day = 1;
-			Season season = DEFAULT_SEASON;
-			Weather weather = DEFAULT_WEATHER;
-			boolean save = false;
-
-			Logger logger = Seasons.getPlugin().getLogger();
-
-			if (config.isConfigurationSection(path)) { // Config knows of this world, load settings
-				day = config.getInt(path + ".day");
-				season = Season.fromName(config.getString(path + ".season"));
-				weather = Weather.fromName(config.getString(path + ".weather"));
-
-				if (season == null || weather == null || day < 1) { // One or more saved values are invalid
-					logger.severe("World " + worldName
-							+ " has one or more invalid configuration parameters, world will load from default settings");
-					day = 1;
-					season = DEFAULT_SEASON;
-					weather = DEFAULT_WEATHER;
-				}
-			} else {
-				save = true;
-			}
-
-			Cycle cycle = new Cycle(world, season,
-					world.getTime() > 12400 && world.getTime() < 23850 ? Weather.NIGHT : weather, day);
+			Cycle cycle = parseWorldSave(world);
 			cycles.add(cycle);
-			if (save) {
-				saveWorld(cycle);
-			}
 
-			world.setStorm(weather.isStorm());
+			world.setStorm(cycle.getWeather().isStorm());
 			logger.info("Loaded world '" + worldName + "' into Seasons!");
 		}
 	}
@@ -95,12 +79,58 @@ public class SeasonsWorlds {
 	}
 
 	/**
-	 * Saves all worlds currently stored in the configuration file so they can be loaded on server restart
+	 * Creates a blank cycle with the static default values: {@link #DEFAULT_SEASON} and {@link #DEFAULT_WEATHER} with
+	 * default day as 1
+	 *
+	 * @param world to create the cycle for
+	 * @return a blank, default cycle for the specified world
 	 */
-	public void saveAllWorlds() {
-		for (Cycle cycle : Seasons.getCycles()) {
-			saveWorld(cycle);
+	private Cycle createDefaultCycle(World world) {
+		return new Cycle(world, DEFAULT_SEASON,
+				world.getTime() > 12400 && world.getTime() < 23850 ? Weather.NIGHT : DEFAULT_WEATHER, 1);
+	}
+
+	/**
+	 * Saves all worlds currently stored in the configuration file so they can be loaded on server restart
+	 *
+	 * @return whether the save was successful in its entirety
+	 */
+	public boolean saveAllWorlds() {
+		boolean errorEncountered = false;
+		for (Cycle cycle : core.getCycles()) {
+			try {
+				saveWorld(cycle);
+			} catch (FileAlreadyExistsException e) {
+				e.printStackTrace();
+				errorEncountered = true;
+			}
 		}
+
+		return !errorEncountered; // Returns true for success, false for error
+	}
+
+	/**
+	 * @return the default directory for world data to be saved in
+	 */
+	private File getDefaultDirectory() {
+		File file = new File(plugin.getDataFolder() + CHILD_DIRECTORY_PATH);
+		if (!file.exists()) {
+			if (!file.mkdirs()) {
+				plugin.getLogger()
+						.severe("Failed to create necessary child directories, Seasons will be unable to save files!");
+			}
+		}
+		return file;
+	}
+
+	/**
+	 * Formats a world name into the proper data file name to ensure consistency
+	 *
+	 * @param worldName of the world the data file will represent
+	 * @return the file name that should be assigned to the world
+	 */
+	private String getWorldFileName(String worldName) {
+		return worldName + ".json";
 	}
 
 	/**
@@ -108,14 +138,76 @@ public class SeasonsWorlds {
 	 *
 	 * @param cycle to save to the configuration file
 	 */
-	private void saveWorld(Cycle cycle) {
+	private void saveWorld(Cycle cycle) throws FileAlreadyExistsException {
 		String worldName = cycle.getWorld().getName();
-		ConfigurationSection section = config.createSection(DEFAULT_PATH + worldName);
-		section.set("day", cycle.getDay());
-		section.set("season", cycle.getSeason().getName());
-		section.set("weather", cycle.getWeather().getName());
+		String fileName = getWorldFileName(worldName);
 
-		Seasons.getPlugin().saveConfig();
+		File file = new File(getDefaultDirectory(), fileName);
+		if (file.exists() && !file.delete()) {
+			throw new FileAlreadyExistsException("Cannot overwrite file where necessary: " + fileName);
+		}
+
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("worldName", worldName);
+		jsonObject.addProperty("day", cycle.getDay());
+		jsonObject.addProperty("season", cycle.getSeason().getName());
+		jsonObject.addProperty("weather", cycle.getWeather().getName());
+
+		try (FileWriter writer = new FileWriter(file)) {
+			writer.write(jsonObject.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Checks whether there is a data file saved for the specified world
+	 *
+	 * @param world to check for the data file of
+	 * @return whether the world has a data file
+	 */
+	private boolean isWorldSaved(World world) {
+		return new File(getDefaultDirectory(), getWorldFileName(world.getName())).exists();
+	}
+
+	/**
+	 * Parses a world save file for saved information on the previous instance of seasons that ran on that world. Note:
+	 * This will return default values if no such file exists, which usually means the world didn't have a previous
+	 * version of seasons running on it.
+	 *
+	 * @param world to parse the data file for
+	 * @return the gathered information formatted as {@link Cycle}
+	 */
+	private Cycle parseWorldSave(World world) {
+		int day = 1;
+		Season season = DEFAULT_SEASON;
+		Weather weather = DEFAULT_WEATHER;
+
+		if (isWorldSaved(world)) { // Make sure we're reading from a real file
+			File file = new File(getDefaultDirectory(), getWorldFileName(world.getName()));
+			try (FileReader reader = new FileReader(file)) {
+				JsonObject jsonObject = new JsonParser().parse(reader).getAsJsonObject();
+				day = jsonObject.get("day").getAsInt();
+				season = Season.fromName(jsonObject.get("season").getAsString());
+				weather = Weather.fromName(jsonObject.get("weather").getAsString());
+			} catch (IOException e) {
+				e.printStackTrace();
+				return createDefaultCycle(world);
+			}
+
+			if (season == null || weather == null || day < 1) { // One or more saved values are invalid
+				plugin.getLogger().severe("World " + world.getName()
+						+ " has one or more invalid configuration parameters, world will load from default settings");
+				if (!file.delete()) { // If the file can't be deleted
+					plugin.getLogger().severe("Failed to delete invalid world file: " + file.getName());
+				}
+
+				return createDefaultCycle(world);
+			}
+		}
+
+		return new Cycle(world, season,
+				world.getTime() > 12400 && world.getTime() < 23850 ? Weather.NIGHT : weather, day);
 	}
 
 }

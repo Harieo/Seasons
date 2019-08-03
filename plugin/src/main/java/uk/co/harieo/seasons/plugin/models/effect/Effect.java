@@ -29,9 +29,30 @@ public abstract class Effect implements Listener {
 		this.weathers = weathers;
 		this.isGood = good;
 
-		if (!cache.contains(name) && SeasonsConfig.get().hasEnabledEffects()) {
-			Bukkit.getPluginManager().registerEvents(this, Seasons.getPlugin());
+		Seasons seasons = Seasons.getInstance();
+		if (!cache.contains(name) && seasons.getSeasonsConfig().hasEnabledEffects()) {
+			Bukkit.getPluginManager().registerEvents(this, seasons.getPlugin());
 			cache.add(name);
+		}
+	}
+
+	/**
+	 * @return a system friendly id to represent this effect
+	 */
+	public abstract String getId();
+
+	/**
+	 * Retrieves the message from the language configuration to be sent when this effect is triggered then sends it to
+	 * the applicable world. This will do nothing if no trigger message is found.
+	 *
+	 * @param world to send the message to, if found
+	 */
+	public void sendTriggerMessage(World world) {
+		String triggerMessage = Seasons.getInstance().getLanguageConfig().getString("effects.on-trigger." + getId());
+		if (triggerMessage != null) {
+			for (Player player : world.getPlayers()) {
+				player.sendMessage(Seasons.PREFIX + triggerMessage);
+			}
 		}
 	}
 
@@ -81,14 +102,16 @@ public abstract class Effect implements Listener {
 	 * @return whether the {@link Player} is affected by this effect
 	 */
 	protected boolean isPlayerCycleApplicable(Player player) {
-		Cycle cycle = Seasons.getWorldCycle(player.getWorld());
+		Cycle cycle = Seasons.getInstance().getWorldCycle(player.getWorld());
 		return cycle != null && isWeatherApplicable(cycle.getWeather());
 	}
 
 	@EventHandler
-	public void onWeatherChange(SeasonsWeatherChangeEvent event){
+	public void onWeatherChange(SeasonsWeatherChangeEvent event) {
 		if (isWeatherApplicable(event.getChangedTo())) {
-			onTrigger(event.getCycle().getWorld());
+			World world = event.getCycle().getWorld();
+			onTrigger(world);
+			sendTriggerMessage(world);
 		}
 	}
 
