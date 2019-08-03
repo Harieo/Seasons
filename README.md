@@ -17,7 +17,7 @@ customised effects and weathers to add a new experience to playing survival</p>
 </ul>
 
 <p>If you are compiling the plugin locally, compile the root module (Seasons-parent) and use the shaded jar generated in the 
-  core module (Spigot-Core) as that is a compilation of all other modules.</p>
+  core module (Seasons-Core) as that is a compilation of all other modules.</p>
    
 <h2>Contributions</h2>
 
