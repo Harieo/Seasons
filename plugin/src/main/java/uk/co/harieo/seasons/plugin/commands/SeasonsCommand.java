@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import java.util.List;
 import java.util.stream.Collectors;
 import uk.co.harieo.seasons.plugin.Seasons;
-import uk.co.harieo.seasons.plugin.configuration.SeasonsConfig;
 import uk.co.harieo.seasons.plugin.configuration.SeasonsLanguageConfiguration;
 import uk.co.harieo.seasons.plugin.models.Cycle;
 import uk.co.harieo.seasons.plugin.models.Season;
@@ -144,6 +143,11 @@ public class SeasonsCommand implements CommandExecutor {
 	}
 
 	private void importWorld(Player player, World world) {
+		if (!player.hasPermission("seasons.import")) {
+			player.sendMessage(Seasons.PREFIX + ChatColor.RED + "You do not have permission to do that!");
+			return;
+		}
+
 		Seasons seasons = Seasons.getInstance();
 		if (seasons.getWorldCycle(world) != null) {
 			player.sendMessage(Seasons.PREFIX + ChatColor.RED + "This world has already been imported!");
