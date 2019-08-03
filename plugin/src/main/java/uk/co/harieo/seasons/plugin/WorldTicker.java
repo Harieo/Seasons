@@ -58,7 +58,7 @@ public class WorldTicker extends BukkitRunnable {
 		if (day + 1 > Seasons.getInstance().getSeasonsConfig().getDaysPerSeason()) {
 			cycle.setDay(1);
 			season = Season.next(cycle.getSeason());
-			Bukkit.getPluginManager().callEvent(new SeasonChangeEvent(cycle, cycle.getSeason(), season, true));
+			Bukkit.getPluginManager().callEvent(new SeasonChangeEvent(cycle, season, cycle.getSeason(), true));
 			cycle.setSeason(season);
 		} else {
 			cycle.setDay(day + 1);
