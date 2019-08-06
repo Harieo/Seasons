@@ -1,3 +1,5 @@
+version: 1
+
 weathers:
     beautiful: "&aThe sun is shining, the grass is green and the weather is &eBeautiful"
     breezy: "&7A cool breeze touches your skin, it's going to be &2Breezy"

@@ -3,6 +3,8 @@ package uk.co.harieo.seasons.plugin.configuration;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.List;
+import java.util.logging.Logger;
+import uk.co.harieo.seasons.plugin.Seasons;
 
 public class SeasonsConfig {
 
@@ -18,6 +20,12 @@ public class SeasonsConfig {
 		enableEffects = config.getBoolean("CustomWeathers");
 		disabledWorlds = config.getStringList("disabled-worlds");
 		disabledWeathers = config.getStringList("disabled-weathers");
+
+		// This must be set if the language config is ever updated past v1
+		if (!config.contains("version") || config.getInt("version") != 1) {
+			Seasons.getInstance().getPlugin().getLogger().warning(
+					"WARNING: Your config.yml file is out of date, please backup and delete it to receive this update!");
+		}
 	}
 
 	public int getDaysPerSeason() {
