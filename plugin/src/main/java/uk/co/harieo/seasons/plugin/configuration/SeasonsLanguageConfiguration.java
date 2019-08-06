@@ -9,7 +9,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import uk.co.harieo.seasons.plugin.Seasons;
 

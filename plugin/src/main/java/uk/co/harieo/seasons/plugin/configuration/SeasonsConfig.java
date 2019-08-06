@@ -3,7 +3,6 @@ package uk.co.harieo.seasons.plugin.configuration;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.List;
-import java.util.logging.Logger;
 import uk.co.harieo.seasons.plugin.Seasons;
 
 public class SeasonsConfig {
