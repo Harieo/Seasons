@@ -13,6 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Collections;
 import uk.co.harieo.seasons.plugin.Seasons;
+import uk.co.harieo.seasons.plugin.configuration.SeasonsLanguageConfiguration;
 import uk.co.harieo.seasons.plugin.models.Weather;
 import uk.co.harieo.seasons.plugin.models.effect.Effect;
 
@@ -56,8 +57,8 @@ public class Icy extends Effect {
 			Block block = event.getBlockClicked().getRelative(event.getBlockFace());
 			if (block.getType() == Material.WATER) {
 				event.setItemStack(new ItemStack(Material.BUCKET));
-				player.sendMessage(Seasons.PREFIX + ChatColor.RED
-						+ "The water freezes in the bucket so you decide to throw it away...");
+				sendGiveMessage(player,
+						ChatColor.RED + "The water freezes in the bucket so you decide to throw it away...");
 			}
 		}
 	}

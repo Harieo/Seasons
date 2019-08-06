@@ -84,8 +84,8 @@ public class TheShivers extends Effect implements TickableEffect {
 			if (secondsPast.containsKey(player)) {
 				int seconds = secondsPast.get(player);
 				if (seconds >= 15) {
-					player.sendMessage(Seasons.PREFIX
-							+ ChatColor.RED + "The freezing water is killing you, get out of it if you want to live!");
+					sendGiveMessage(player,
+							ChatColor.RED + "The freezing water is killing you, get out of it if you want to live!");
 					secondsPast.replace(player, 0);
 				} else {
 					secondsPast.replace(player, seconds + 1);

@@ -35,9 +35,8 @@ public class Legacy_TheShivers extends Effect implements TickableEffect {
 	}
 
 	/**
-	 * Checks whether a player is standing in water and is not in a boat
-	 * If this condition is met, they are marked to be damaged
-	 * If this condition is NOT met, the damage marker is removed
+	 * Checks whether a player is standing in water and is not in a boat If this condition is met, they are marked to be
+	 * damaged If this condition is NOT met, the damage marker is removed
 	 *
 	 * @param player to check and mark
 	 */
@@ -84,8 +83,8 @@ public class Legacy_TheShivers extends Effect implements TickableEffect {
 			if (secondsPast.containsKey(player)) {
 				int seconds = secondsPast.get(player);
 				if (seconds >= 15) {
-					player.sendMessage(Seasons.PREFIX
-							+ ChatColor.RED + "The freezing water is killing you, get out of it if you want to live!");
+					sendGiveMessage(player,
+							ChatColor.RED + "The freezing water is killing you, get out of it if you want to live!");
 					secondsPast.replace(player, 0);
 				} else {
 					secondsPast.replace(player, seconds + 1);

@@ -46,7 +46,7 @@ public class HoldOntoYourHat extends Effect {
 				// Remove both to prevent duplication glitches
 				inventory.setHelmet(null);
 				player.setItemOnCursor(null);
-				player.sendMessage(Seasons.PREFIX + ChatColor.YELLOW + "Your hat just blew off, oh dear!");
+				sendGiveMessage(player, ChatColor.YELLOW + "Your hat just blew off, oh dear!");
 			}
 		}
 	}

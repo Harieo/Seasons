@@ -36,14 +36,13 @@ public class Revitalized extends SeasonsPotionEffect {
 
 	@Override
 	public void sendGiveMessage(Player player) {
-		player.sendMessage(Seasons.PREFIX
-				+ ChatColor.GREEN + "The sun from this world is so " + ChatColor.YELLOW + "Revitalising"
+		sendGiveMessage(player, ChatColor.GREEN + "The sun from this world is so " + ChatColor.YELLOW + "Revitalising"
 				+ ChatColor.GREEN + ", it's Regenerating you!");
 	}
 
 	@Override
 	public void sendRemoveMessage(Player player) {
-		player.sendMessage(Seasons.PREFIX + ChatColor.YELLOW + "As the world's light leaves your skin, it's "
+		sendRemoveMessage(player, ChatColor.YELLOW + "As the world's light leaves your skin, it's "
 				+ ChatColor.GOLD + "Revitalising " + ChatColor.YELLOW + "energy leaves too...");
 	}
 

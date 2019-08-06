@@ -31,8 +31,11 @@ public class SeasonalListener implements Listener {
 
 		for (Player player : world.getPlayers()) {
 			if (weather.isCatastrophic()) {
-				player.sendMessage(Seasons.PREFIX + ChatColor.RED + ChatColor.BOLD.toString()
-						+ "CATASTROPHIC WEATHER ALERT - Take care to plan your day");
+				String message = Seasons.getInstance().getLanguageConfig()
+						.getStringOrDefault("misc.catastrophic-alert",
+								ChatColor.RED + ChatColor.BOLD.toString()
+										+ "CATASTROPHIC WEATHER ALERT - Take care to plan your day");
+				player.sendMessage(Seasons.PREFIX + message);
 			}
 
 			player.sendMessage(Seasons.PREFIX + weather.getMessage());

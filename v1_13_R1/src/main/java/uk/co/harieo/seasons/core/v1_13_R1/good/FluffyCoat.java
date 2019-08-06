@@ -11,7 +11,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.Collections;
-import uk.co.harieo.seasons.plugin.Seasons;
 import uk.co.harieo.seasons.plugin.models.Weather;
 import uk.co.harieo.seasons.plugin.models.effect.SeasonsPotionEffect;
 
@@ -46,13 +45,14 @@ public class FluffyCoat extends SeasonsPotionEffect {
 
 	@Override
 	public void sendGiveMessage(Player player) {
-		player.sendMessage(Seasons.PREFIX + ChatColor.GREEN
+		sendGiveMessage(player, ChatColor.GREEN
 				+ "Your armour gives you a soothing warmth and makes you more Resistant to the world");
 	}
 
 	@Override
 	public void sendRemoveMessage(Player player) {
-		player.sendMessage(Seasons.PREFIX + ChatColor.RED + "Without armour, your body feels the cold once again and is no longer resistant to it");
+		sendRemoveMessage(player,
+				ChatColor.RED + "Without armour, your body feels the cold once again and is no longer resistant to it");
 	}
 
 	@Override

@@ -39,14 +39,12 @@ public class StrongCurrent extends SeasonsPotionEffect {
 
 	@Override
 	public void sendGiveMessage(Player player) {
-		player.sendMessage(
-				Seasons.PREFIX + ChatColor.RED + "The current crashes against you and your muscles cry in pain...");
+		sendGiveMessage(player, ChatColor.RED + "The current crashes against you and your muscles cry in pain...");
 	}
 
 	@Override
 	public void sendRemoveMessage(Player player) {
-		player.sendMessage(Seasons.PREFIX + ChatColor.GREEN
-				+ "The waters die down and grow still...");
+		sendRemoveMessage(player, ChatColor.GREEN + "The waters die down and grow still...");
 	}
 
 	@EventHandler
