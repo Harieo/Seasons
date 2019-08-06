@@ -23,7 +23,7 @@ public class SeasonsLanguageConfiguration {
 		loadConfig();
 
 		// This must be set if the language config is ever updated past v1
-		if (!config.contains("version") || config.getInt("version") != 1) {
+		if (!config.contains("version") || config.getInt("version") < 1) {
 			seasons.getPlugin().getLogger().warning(
 					"WARNING: Your lang.yml file is out of date, please backup and delete it to receive this update!");
 		}
