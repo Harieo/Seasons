@@ -1,6 +1,7 @@
 package uk.co.harieo.seasons.plugin.models.effect;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import uk.co.harieo.seasons.plugin.Seasons;
 import uk.co.harieo.seasons.plugin.configuration.SeasonsConfig;
+import uk.co.harieo.seasons.plugin.configuration.SeasonsLanguageConfiguration;
 import uk.co.harieo.seasons.plugin.events.SeasonsWeatherChangeEvent;
 import uk.co.harieo.seasons.plugin.models.Cycle;
 import uk.co.harieo.seasons.plugin.models.Weather;
@@ -47,13 +49,38 @@ public abstract class Effect implements Listener {
 	 *
 	 * @param world to send the message to, if found
 	 */
-	public void sendTriggerMessage(World world) {
-		String triggerMessage = Seasons.getInstance().getLanguageConfig().getString("effects.on-trigger." + getId());
+	private void sendTriggerMessage(World world) {
+		String triggerMessage = getMessageOrDefault("on-trigger", "An language configuration error occurred here...");
 		if (triggerMessage != null) {
 			for (Player player : world.getPlayers()) {
 				player.sendMessage(Seasons.PREFIX + triggerMessage);
 			}
 		}
+	}
+
+	/**
+	 * Sends the on-give message from the language configuration, or the default
+	 *
+	 * @param player to send the message to
+	 * @param orElse the default message
+	 */
+	protected void sendGiveMessage(Player player, String orElse) {
+		player.sendMessage(Seasons.PREFIX + getMessageOrDefault("on-give", orElse));
+	}
+
+	/**
+	 * Sends the on-remove message from the language configuration, or the default
+	 *
+	 * @param player to send the message to
+	 * @param orElse the default message
+	 */
+	protected void sendRemoveMessage(Player player, String orElse) {
+		player.sendMessage(Seasons.PREFIX + getMessageOrDefault("on-remove", orElse));
+	}
+
+	private String getMessageOrDefault(String messageType, String orElse) {
+		SeasonsLanguageConfiguration languageConfiguration = Seasons.getInstance().getLanguageConfig();
+		return languageConfiguration.getStringOrDefault("effects." + messageType + "." + getId(), orElse);
 	}
 
 	/**

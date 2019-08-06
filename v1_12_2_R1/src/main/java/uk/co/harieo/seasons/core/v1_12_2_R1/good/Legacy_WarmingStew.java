@@ -37,7 +37,7 @@ public class Legacy_WarmingStew extends Effect {
 			if (event.getItem().getType() == material) {
 				Player player = event.getPlayer();
 				player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 10, 0));
-				player.sendMessage(Seasons.PREFIX + ChatColor.GREEN
+				sendGiveMessage(player, ChatColor.GREEN
 						+ "That hit the spot, the delicious stew makes your wounds a little more bearable...");
 			}
 		}

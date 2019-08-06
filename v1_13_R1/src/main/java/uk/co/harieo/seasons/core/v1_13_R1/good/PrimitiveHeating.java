@@ -50,14 +50,13 @@ public class PrimitiveHeating extends SeasonsPotionEffect {
 
 	@Override
 	public void sendGiveMessage(Player player) {
-		player.sendMessage(Seasons.PREFIX + ChatColor.GREEN
+		sendGiveMessage(player, ChatColor.GREEN
 				+ "A hot item in your inventory warms your heart and makes you Resistant to the cold world");
 	}
 
 	@Override
 	public void sendRemoveMessage(Player player) {
-		player.sendMessage(
-				Seasons.PREFIX + ChatColor.YELLOW + "Your body is no longer warmed and it's Resistance wears away...");
+		sendRemoveMessage(player, ChatColor.YELLOW + "Your body is no longer warmed and it's Resistance wears away...");
 	}
 
 	@EventHandler

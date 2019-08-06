@@ -1,3 +1,5 @@
+version: 1
+
 weathers:
     beautiful: "&aThe sun is shining, the grass is green and the weather is &eBeautiful"
     breezy: "&7A cool breeze touches your skin, it's going to be &2Breezy"
@@ -36,6 +38,27 @@ effects:
         wet-mud: "&7The dirt coats your boots and becomes hard to move through in this weather..."
         warming-stew: "&7Your stomach starts to grumble and you begin to crave some hearty soup..."
         wind-in-your-boots: "&7You feel the wind in your favour today!"
+    on-give:
+        feels-good: "&aThe sun on your skin without armour gives you energy, Feels Good!"
+        fluffy-coat: "&aYour armour gives you a soothing warmth and makes you more Resistant to the world"
+        hold-onto-your-hat: "&eYour hat just blew off, oh dear!"
+        primitive-heating: "&aA hot item in your inventory warms your heart and makes you Resistant to the cold world"
+        revitalized: "&aThe sun from this world is so &eRevitalising&a, it's Regenerating you!"
+        icy: "&cThe water freezes in your bucket..."
+        soldering-iron: "&cThe iron is soldering hot, don't hold it for too long!"
+        strong-current: "&cThe current crashes against you and your muscles cry in pain..."
+        sweating: "&cSweat drips from your forehead, it is too Hot for armour today..."
+        the-shivers: "&cThe freezing water is killing you, get out of it if you want to live!"
+        warming-stew: "&aThat hit the spot, the delicious stew makes your wounds a little more bearable..."
+        wet-mud: "&eThe mud sticks to your boots, slowing you down..."
+        wind-in-your-boots: "&aYou feel a rush of Wind in your Boots and go hurtling forwards!"
+    on-remove:
+        feels-good: "&eAs you leave the world behind, the energising sunlight wears off..."
+        fluffy-coat: "&cWithout armour, your body feels the cold once again and is no longer resistant to it"
+        primitive-heating: "&eYour body is no longer warmed and its Resistance wears away..."
+        revitalized: "&eAs the world's light leaves your skin, it's &6Revitalising &eenergy leaves too..."
+        strong-current: "&aThe waters die down and grow still..."
+        sweating: "&aThe air turns cooler and you wipe the sweat from your forehead..."
 
 command:
     effects-list-title: "&7For the weather &e%weather%, &7the effects are:"
@@ -48,3 +71,4 @@ command:
 
 misc:
     prefix: "&e&lSeasons&7∙ &r"
+    catastrophic-alert: "&c&lCATASTROPHIC WEATHER ALERT - Take care to plan your day"

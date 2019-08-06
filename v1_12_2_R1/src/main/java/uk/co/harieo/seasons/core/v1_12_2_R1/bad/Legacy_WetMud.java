@@ -47,7 +47,7 @@ public class Legacy_WetMud extends SeasonsPotionEffect {
 
 	@Override
 	public void sendGiveMessage(Player player) {
-		player.sendMessage(Seasons.PREFIX + ChatColor.YELLOW + "The mud sticks to your boots, slowing you down...");
+		sendGiveMessage(player, ChatColor.YELLOW + "The mud sticks to your boots, slowing you down...");
 	}
 
 	@Override

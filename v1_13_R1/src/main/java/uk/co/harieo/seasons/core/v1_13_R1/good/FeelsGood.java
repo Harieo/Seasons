@@ -10,7 +10,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.Collections;
-import uk.co.harieo.seasons.plugin.Seasons;
 import uk.co.harieo.seasons.plugin.models.Weather;
 import uk.co.harieo.seasons.plugin.models.effect.SeasonsPotionEffect;
 
@@ -44,13 +43,13 @@ public class FeelsGood extends SeasonsPotionEffect {
 
 	@Override
 	public void sendGiveMessage(Player player) {
-		player.sendMessage(Seasons.PREFIX + ChatColor.GREEN
+		sendGiveMessage(player, ChatColor.GREEN
 				+ "The sun on your skin without armour gives you energy, Feels Good!");
 	}
 
 	@Override
 	public void sendRemoveMessage(Player player) {
-		player.sendMessage(Seasons.PREFIX + ChatColor.YELLOW
+		sendRemoveMessage(player, ChatColor.YELLOW
 				+ "As you leave the world behind, the energising sunlight wears off...");
 	}
 

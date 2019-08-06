@@ -46,13 +46,12 @@ public class Sweating extends SeasonsPotionEffect {
 
 	@Override
 	public void sendGiveMessage(Player player) {
-		player.sendMessage(
-				Seasons.PREFIX + ChatColor.RED + "Sweat drips from your forehead, it is too Hot for armour today...");
+		sendGiveMessage(player, ChatColor.RED + "Sweat drips from your forehead, it is too Hot for armour today...");
 	}
 
 	@Override
 	public void sendRemoveMessage(Player player) {
-		player.sendMessage(Seasons.PREFIX + ChatColor.GREEN
+		sendRemoveMessage(player, ChatColor.GREEN
 				+ "The air turns cooler and you wipe the sweat from your forehead...");
 	}
 

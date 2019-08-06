@@ -10,7 +10,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.Collections;
-import uk.co.harieo.seasons.plugin.Seasons;
 import uk.co.harieo.seasons.plugin.models.Weather;
 import uk.co.harieo.seasons.plugin.models.effect.SeasonsPotionEffect;
 
@@ -47,7 +46,7 @@ public class WetMud extends SeasonsPotionEffect {
 
 	@Override
 	public void sendGiveMessage(Player player) {
-		player.sendMessage(Seasons.PREFIX + ChatColor.YELLOW + "The mud sticks to your boots, slowing you down...");
+		sendGiveMessage(player, ChatColor.YELLOW + "The mud sticks to your boots, slowing you down...");
 	}
 
 	@Override

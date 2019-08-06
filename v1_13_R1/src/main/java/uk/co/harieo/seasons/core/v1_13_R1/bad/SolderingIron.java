@@ -57,8 +57,7 @@ public class SolderingIron extends Effect implements TickableEffect {
 					|| inventory.getItemInOffHand().getType() == material;
 			if (containsMaterial && !containsKey) { // They are holding a soldering item and weren't last time checked
 				secondsPast.put(player, 0);
-				player.sendMessage(
-						Seasons.PREFIX + ChatColor.RED + "The iron is soldering hot, don't hold it for too long!");
+				sendGiveMessage(player, ChatColor.RED + "The iron is soldering hot, don't hold it for too long!");
 			}
 		}
 
