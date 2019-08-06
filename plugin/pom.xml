@@ -19,6 +19,13 @@
     <artifactId>Seasons-plugin</artifactId>
     <packaging>jar</packaging>
     <version>plugin</version>
+        
+    <repositories>
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
