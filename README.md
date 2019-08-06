@@ -1,5 +1,5 @@
 # Seasons v2 
-[Build Status](https://travis-ci.org/Harieo/Seasons.svg?branch=master)  
+[![Build Status](https://travis-ci.org/Harieo/Seasons.svg?branch=master)](https://travis-ci.org/Harieo/Seasons/)  
 
 Seasons is a little quirky plugin I made a few years ago to simulate real-life seasons in Minecraft, adding some
 customised effects and weathers to add a new experience to playing survival
