@@ -1,4 +1,5 @@
-<h1>Seasons v2</h1>
+<h1>Seasons v2</h1> 
+[Build Status](https://travis-ci.org/Harieo/Seasons.svg?branch=master)
 
 <p>Seasons is a little quirky plugin I made a few years ago to simulate real-life seasons in Minecraft, adding some
 customised effects and weathers to add a new experience to playing survival</p>
