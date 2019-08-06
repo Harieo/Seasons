@@ -8,6 +8,13 @@
     <artifactId>Seasons-parent</artifactId>
     <packaging>pom</packaging>
     <version>parent</version>
+         
+    <repositories>
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
 
     <modules>
         <module>core</module>
