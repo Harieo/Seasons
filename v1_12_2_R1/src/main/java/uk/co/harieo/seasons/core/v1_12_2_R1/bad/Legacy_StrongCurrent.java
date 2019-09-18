@@ -20,6 +20,7 @@ public class Legacy_StrongCurrent extends SeasonsPotionEffect {
 		super("Strong Current", "Receive Slowness 2 for 20 seconds when you enter water",
 				Collections.singletonList(Weather.STORMY), false,
 				new PotionEffect(PotionEffectType.SLOW, 20 * 20, 1));
+		setIgnoreRoof(false);
 	}
 
 	@Override

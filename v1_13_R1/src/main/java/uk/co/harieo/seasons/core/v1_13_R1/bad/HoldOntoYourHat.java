@@ -19,6 +19,7 @@ public class HoldOntoYourHat extends Effect {
 	public HoldOntoYourHat() {
 		super("Hold onto Your Hat", "A small chance that your hat will fall off when you put it on",
 				Collections.singletonList(Weather.BREEZY), false);
+		setIgnoreRoof(false);
 	}
 
 	@Override

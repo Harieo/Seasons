@@ -20,6 +20,7 @@ public class WindInYourBoots extends Effect implements TickableEffect {
 	public WindInYourBoots() {
 		super("Wind in Your Boots", "Random chance to gain Speed 1 for 20 seconds every 2 minutes",
 				Collections.singletonList(Weather.BREEZY), true);
+		setIgnoreRoof(false);
 	}
 
 	@Override
