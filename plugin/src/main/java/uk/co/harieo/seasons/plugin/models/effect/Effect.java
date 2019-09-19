@@ -11,6 +11,7 @@ import org.bukkit.event.Listener;
 import java.util.ArrayList;
 import java.util.List;
 import uk.co.harieo.seasons.plugin.Seasons;
+import uk.co.harieo.seasons.plugin.configuration.SeasonsConfig;
 import uk.co.harieo.seasons.plugin.configuration.SeasonsLanguageConfiguration;
 import uk.co.harieo.seasons.plugin.events.SeasonsWeatherChangeEvent;
 import uk.co.harieo.seasons.plugin.models.Cycle;
@@ -52,7 +53,7 @@ public abstract class Effect implements Listener {
 	 */
 	private void sendTriggerMessage(World world) {
 		String triggerMessage = getMessageOrDefault("on-trigger", "An language configuration error occurred here...");
-		if (triggerMessage != null) {
+		if (triggerMessage != null && isEnabled()) {
 			for (Player player : world.getPlayers()) {
 				player.sendMessage(Seasons.PREFIX + triggerMessage);
 			}
@@ -157,7 +158,7 @@ public abstract class Effect implements Listener {
 	 */
 	protected boolean isPlayerCycleApplicable(Player player) {
 		Cycle cycle = Seasons.getInstance().getWorldCycle(player.getWorld());
-		return cycle != null && isWeatherApplicable(cycle.getWeather()) && !checkRoof(player);
+		return cycle != null && isWeatherApplicable(cycle.getWeather()) && !checkRoof(player) && isEnabled();
 	}
 
 	@EventHandler
@@ -175,6 +176,13 @@ public abstract class Effect implements Listener {
 	 * @param world that this effect is being triggered on
 	 */
 	public abstract void onTrigger(World world);
+
+	/**
+	 * @return whether this effect has been manually disabled via config inverted
+	 */
+	private boolean isEnabled() {
+		return !Seasons.getInstance().getSeasonsConfig().getDisabledEffects().contains(getId());
+	}
 
 	/**
 	 * Checks whether a player is under a roof and verifies whether the effect ignores this.

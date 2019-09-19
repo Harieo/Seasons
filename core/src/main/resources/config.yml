@@ -5,4 +5,5 @@ disabled-worlds:
     - 'world_nether'
     - 'world_the_end'
 disabled-weathers: []
-version: 1
+disabled-effects: []
+version: 2
