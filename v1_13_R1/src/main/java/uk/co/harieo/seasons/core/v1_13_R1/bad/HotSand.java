@@ -17,6 +17,7 @@ public class HotSand extends Effect {
 	public HotSand() {
 		super("Hot Sand", "A moderate chance that you take damage walking on sand",
 				Collections.singletonList(Weather.SCORCHING), false);
+		setIgnoreRoof(false);
 	}
 
 	@Override

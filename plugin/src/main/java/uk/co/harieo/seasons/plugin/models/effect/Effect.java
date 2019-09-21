@@ -1,8 +1,9 @@
 package uk.co.harieo.seasons.plugin.models.effect;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,6 +25,7 @@ public abstract class Effect implements Listener {
 	private String description;
 	private List<Weather> weathers;
 	private boolean isGood;
+	private boolean ignoreRoof = true;
 
 	public Effect(String name, String description, List<Weather> weathers, boolean good) {
 		this.name = name;
@@ -51,7 +53,7 @@ public abstract class Effect implements Listener {
 	 */
 	private void sendTriggerMessage(World world) {
 		String triggerMessage = getMessageOrDefault("on-trigger", "An language configuration error occurred here...");
-		if (triggerMessage != null) {
+		if (triggerMessage != null && isEnabled()) {
 			for (Player player : world.getPlayers()) {
 				player.sendMessage(Seasons.PREFIX + triggerMessage);
 			}
@@ -78,6 +80,14 @@ public abstract class Effect implements Listener {
 		player.sendMessage(Seasons.PREFIX + getMessageOrDefault("on-remove", orElse));
 	}
 
+	/**
+	 * Get a configurable message from the configuration system for this effect, or return a default if the message
+	 * hasn't been configured yet
+	 *
+	 * @param messageType string type to get from config
+	 * @param orElse the default message
+	 * @return the configured message or the default if no configured method exists
+	 */
 	private String getMessageOrDefault(String messageType, String orElse) {
 		SeasonsLanguageConfiguration languageConfiguration = Seasons.getInstance().getLanguageConfig();
 		return languageConfiguration.getStringOrDefault("effects." + messageType + "." + getId(), orElse);
@@ -122,6 +132,24 @@ public abstract class Effect implements Listener {
 	}
 
 	/**
+	 * Show whether this effect ignores whether a player is under a roof. The default value is true.
+	 *
+	 * @return whether this effect ignores any roof over a player
+	 */
+	public boolean isIgnoringRoof() {
+		return ignoreRoof;
+	}
+
+	/**
+	 * Sets whether this effect ignores any roof over a player
+	 *
+	 * @param ignoreRoof to set the value to
+	 */
+	protected void setIgnoreRoof(boolean ignoreRoof) {
+		this.ignoreRoof = ignoreRoof;
+	}
+
+	/**
 	 * Retrieves the {@link Cycle} and, by extension, {@link Weather} that the {@link Player} is currently affected by
 	 * and checks whether the stated {@link Player} is affected by this effect
 	 *
@@ -130,7 +158,7 @@ public abstract class Effect implements Listener {
 	 */
 	protected boolean isPlayerCycleApplicable(Player player) {
 		Cycle cycle = Seasons.getInstance().getWorldCycle(player.getWorld());
-		return cycle != null && isWeatherApplicable(cycle.getWeather());
+		return cycle != null && isWeatherApplicable(cycle.getWeather()) && !checkRoof(player) && isEnabled();
 	}
 
 	@EventHandler
@@ -148,4 +176,40 @@ public abstract class Effect implements Listener {
 	 * @param world that this effect is being triggered on
 	 */
 	public abstract void onTrigger(World world);
+
+	/**
+	 * @return whether this effect has been manually disabled via config inverted
+	 */
+	private boolean isEnabled() {
+		return !Seasons.getInstance().getSeasonsConfig().getDisabledEffects().contains(getId());
+	}
+
+	/**
+	 * Checks whether a player is under a roof and verifies whether the effect ignores this.
+	 *
+	 * @param player to check the roof for
+	 * @return true if there is a roof above the player which will interrupt this effect
+	 */
+	private boolean checkRoof(Player player) {
+		return ignoreRoof || isUnderRoof(player);
+	}
+
+	/**
+	 * Checks whether a player has a block above them, within 20 blocks, which is considered a "roof" by this system.
+	 *
+	 * @param player to check the location of
+	 * @return whether the player is underneath a roof
+	 */
+	private static boolean isUnderRoof(Player player) {
+		Location playerLocation = player.getLocation().clone();
+		SeasonsConfig config = Seasons.getInstance().getSeasonsConfig();
+		for (int i = 1; i < config.getRoofHeight(); i++) { // Scans 20 blocks upwards of the player
+			Block block = playerLocation.add(0, 1, 0).getBlock();
+			if (!block.isEmpty()) { // There is a block within 20 blocks
+				return true;
+			}
+		}
+
+		return false; // There's nothing within 20 blocks
+	}
 }

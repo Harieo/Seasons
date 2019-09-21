@@ -27,10 +27,15 @@ public class SeasonsCommand implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
 		if (!(sender instanceof Player)) {
-			// Adds an exception for the reload command as that can be done via console
-			if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
-				reloadSeasons(sender);
-				return false;
+			// Adds an exceptions for commands which console may perform
+			if (args.length > 0) {
+				if (args[0].equalsIgnoreCase("reload")) {
+					reloadSeasons(sender);
+					return false;
+				} else if (args[0].equalsIgnoreCase("config")) {
+					SeasonsInfoSubcommand.requestConfigurationDetails(sender);
+					return false;
+				}
 			}
 
 			sender.sendMessage("Only players may use this command!");
@@ -49,6 +54,8 @@ public class SeasonsCommand implements CommandExecutor {
 				sendEffectsList(player, cycle, hasEnabledEffects);
 			} else if (args[0].equalsIgnoreCase("reload")) { // This is specified here if in-case it was not console
 				reloadSeasons(player);
+			} else if (args[0].equalsIgnoreCase("config")) {
+				SeasonsInfoSubcommand.requestConfigurationDetails(sender);
 			}
 		} else {
 			player.sendMessage(WATERMARK);
