@@ -20,6 +20,7 @@ class SeasonsInfoSubcommand {
 
 		sender.sendMessage(createOptionMessage("Days per Season", String.valueOf(config.getDaysPerSeason())));
 		sender.sendMessage(createOptionMessage("Seconds per Damage", String.valueOf(config.getSecondsPerDamage())));
+		sender.sendMessage(createOptionMessage("Roof Height", String.valueOf(config.getRoofHeight())));
 		sender.sendMessage(createOptionMessage("Effects are Enabled", String.valueOf(config.hasEnabledEffects())));
 		sender.sendMessage(createOptionMessage("Disabled Worlds", listContentsToString(config.getDisabledWorlds())));
 		sender.sendMessage(createOptionMessage("Disabled Weathers", listContentsToString(config.getDisabledWeathers())));

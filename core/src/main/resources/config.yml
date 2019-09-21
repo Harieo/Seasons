@@ -1,6 +1,7 @@
 DaysPerSeason: 30
 SecondsOfDamage: 3
 CustomWeathers: true
+RoofHeight: 10
 disabled-worlds:
     - 'world_nether'
     - 'world_the_end'

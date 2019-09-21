@@ -11,6 +11,7 @@ public class SeasonsConfig {
 	private int version;
 	private int daysPerSeason; // Days that must go by before the world moves to the next season
 	private int secondsPerDamage; // Whether to activate the effects of the seasonal weathers
+	private int roofHeight; // The height of the roof that would prevent an effect from the sky
 	private boolean enableEffects; // How many ticks per damage dealt to a player on a harmful weather
 	private List<String> disabledWorlds;
 	private List<String> disabledWeathers;
@@ -20,6 +21,7 @@ public class SeasonsConfig {
 		version = config.getInt("version");
 		daysPerSeason = config.getInt("DaysPerSeason");
 		secondsPerDamage = config.getInt("SecondsOfDamage");
+		roofHeight = config.getInt("RoofHeight");
 		enableEffects = config.getBoolean("CustomWeathers");
 		disabledWorlds = config.getStringList("disabled-worlds");
 		disabledWeathers = config.getStringList("disabled-weathers");
@@ -42,6 +44,10 @@ public class SeasonsConfig {
 
 	public int getSecondsPerDamage() {
 		return secondsPerDamage;
+	}
+
+	public int getRoofHeight() {
+		return roofHeight;
 	}
 
 	public boolean hasEnabledEffects() {

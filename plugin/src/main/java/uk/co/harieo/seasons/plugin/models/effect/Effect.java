@@ -202,8 +202,9 @@ public abstract class Effect implements Listener {
 	 */
 	private static boolean isUnderRoof(Player player) {
 		Location playerLocation = player.getLocation().clone();
-		for (int i = 1; i < 20; i++) { // Scans 20 blocks upwards of the player
-			Block block = playerLocation.add(0, i, 0).getBlock();
+		SeasonsConfig config = Seasons.getInstance().getSeasonsConfig();
+		for (int i = 1; i < config.getRoofHeight(); i++) { // Scans 20 blocks upwards of the player
+			Block block = playerLocation.add(0, 1, 0).getBlock();
 			if (!block.isEmpty()) { // There is a block within 20 blocks
 				return true;
 			}
