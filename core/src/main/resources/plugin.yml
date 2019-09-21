@@ -47,3 +47,6 @@ permissions:
   seasons.import:
     description: Allows you to import a world into seasons
     default: op
+  seasons.config:
+    description: Allows you to see your configuration options in-game
+    default: op
