@@ -56,6 +56,23 @@ public class SeasonsCommand implements CommandExecutor {
 				reloadSeasons(player);
 			} else if (args[0].equalsIgnoreCase("config")) {
 				SeasonsInfoSubcommand.requestConfigurationDetails(sender);
+			}else if (args[0].equalsIgnoreCase("list")) {
+			    if(args.length == 1) {
+                    player.sendMessage(ChatColor.GRAY + "Currently you can list: " + ChatColor.YELLOW + "weather");
+                }
+				StringBuilder sb = new StringBuilder();
+				if(args.length > 1) {
+                    if (args[1].equalsIgnoreCase("weather")) {
+                        sb.append(ChatColor.YELLOW);
+                        for (String string : Weather.getWeatherList()) {
+                            sb.append(string).append(", ");
+                        }
+                        sb.delete(sb.length() - 2, sb.length() - 1);//should remove trailing ', ' which includes the space
+                        player.sendMessage(ChatColor.GRAY+ "Weathers available:- " + sb.toString());
+                    }else {
+                        player.sendMessage(ChatColor.GRAY + "That is not something that is listed");
+                    }
+                }
 			}
 		} else {
 			player.sendMessage(WATERMARK);

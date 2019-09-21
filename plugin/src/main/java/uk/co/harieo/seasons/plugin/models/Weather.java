@@ -185,4 +185,12 @@ public enum Weather {
 		return false;
 	}
 
+	public static List<String> getWeatherList(){
+		List<String> list = new ArrayList<>();
+		for(Weather weather : Weather.values()){
+			list.add(weather.getName().toLowerCase());
+		}
+		return list;
+	}
+
 }
