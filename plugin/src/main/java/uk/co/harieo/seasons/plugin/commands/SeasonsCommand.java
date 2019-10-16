@@ -61,6 +61,7 @@ public class SeasonsCommand implements CommandExecutor {
                 if (args.length == 1) {
                     player.sendMessage(ChatColor.GRAY + "Currently you can list: " + ChatColor.YELLOW + "weather");
                 }
+
                 StringBuilder sb = new StringBuilder();
                 if (args.length > 1) {
                     if (args[1].equalsIgnoreCase("weather")) {
