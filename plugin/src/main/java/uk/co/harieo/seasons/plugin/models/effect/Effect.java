@@ -158,7 +158,7 @@ public abstract class Effect implements Listener {
 	 */
 	protected boolean isPlayerCycleApplicable(Player player) {
 		Cycle cycle = Seasons.getInstance().getWorldCycle(player.getWorld());
-		return cycle != null && isWeatherApplicable(cycle.getWeather()) && !checkRoof(player) && isEnabled();
+		return cycle != null && isWeatherApplicable(cycle.getWeather()) && checkRoof(player) && isEnabled();
 	}
 
 	@EventHandler
@@ -191,7 +191,7 @@ public abstract class Effect implements Listener {
 	 * @return true if there is a roof above the player which will interrupt this effect
 	 */
 	private boolean checkRoof(Player player) {
-		return ignoreRoof || isUnderRoof(player);
+		return ignoreRoof || !isUnderRoof(player);
 	}
 
 	/**
