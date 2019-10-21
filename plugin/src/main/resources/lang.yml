@@ -1,4 +1,4 @@
-version: 1
+version: 2
 
 weathers:
     beautiful: "&aThe sun is shining, the grass is green and the weather is &eBeautiful"
@@ -68,6 +68,10 @@ command:
         - "&7The weather is currently &2%weather%"
         - "&eToday is Day %day% of %max-days%"
     season-info-footer: "&7To see the effects of this weather, use the command &e/seasons effects"
+    list-help:
+        - "&7You can currently list: %options%"
+        - "&7Usage: &e/seasons list <option>"
+    list-error: "&cThere are no lists of that type available!"
 
 misc:
     prefix: "&e&lSeasons&7∙ &r"
