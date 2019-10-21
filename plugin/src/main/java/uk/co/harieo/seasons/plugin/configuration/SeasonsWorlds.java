@@ -53,6 +53,8 @@ public class SeasonsWorlds {
 	/**
 	 * Parses the configuration file for previously saved cycles in all applicable worlds. If no saved cycle for a world
 	 * is found, it will be assumed the world is new and set with default values
+	 *
+	 * @param world to be added
 	 */
 	public void addWorld(World world) {
 		if (world.getEnvironment() == Environment.NORMAL) { // Only normal worlds are subject to cycles

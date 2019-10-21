@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 import uk.co.harieo.seasons.plugin.Seasons;
 import uk.co.harieo.seasons.plugin.configuration.SeasonsLanguageConfiguration;
 import uk.co.harieo.seasons.plugin.models.Cycle;
@@ -56,6 +57,8 @@ public class SeasonsCommand implements CommandExecutor {
 				reloadSeasons(player);
 			} else if (args[0].equalsIgnoreCase("config")) {
 				SeasonsInfoSubcommand.requestConfigurationDetails(sender);
+			} else if (args[0].equalsIgnoreCase("list")) {
+				listAvailableModels(player, args);
 			}
 		} else {
 			player.sendMessage(WATERMARK);
@@ -130,7 +133,8 @@ public class SeasonsCommand implements CommandExecutor {
 				replaced = replaced.replace("%season%", season.getName());
 				replaced = replaced.replace("%weather%", cycle.getWeather().getName());
 				replaced = replaced.replace("%day%", String.valueOf(cycle.getDay()));
-				replaced = replaced.replace("%max-days%", String.valueOf(seasons.getSeasonsConfig().getDaysPerSeason()));
+				replaced = replaced
+						.replace("%max-days%", String.valueOf(seasons.getSeasonsConfig().getDaysPerSeason()));
 				return replaced;
 			}).collect(Collectors.toList()).forEach(player::sendMessage);
 		} else {
@@ -164,6 +168,38 @@ public class SeasonsCommand implements CommandExecutor {
 		} else {
 			seasons.getWorldHandler().addWorld(world);
 			player.sendMessage(Seasons.PREFIX + ChatColor.GREEN + "Successfully imported world!");
+		}
+	}
+
+	private void listAvailableModels(Player player, String[] args) {
+		SeasonsLanguageConfiguration languageConfiguration = Seasons.getInstance().getLanguageConfig();
+		if (args.length == 1) {
+			languageConfiguration.getStringList("command.list-help")
+					.stream()
+					.map(string -> string.replaceAll("%options%", "weather, seasons"))
+					.forEach(player::sendMessage);
+		} else {
+			StringBuilder sb = new StringBuilder();
+			if (args[1].equalsIgnoreCase("weather")) {
+				sb.append(ChatColor.YELLOW);
+				for (String string : Weather.getWeatherList()) {
+					sb.append(string).append(", ");
+				}
+				sb.delete(sb.length() - 2,
+						sb.length() - 1); // Should remove trailing ', ' which includes the space
+				player.sendMessage(ChatColor.GRAY + "Weathers available:- " + sb.toString());
+			} else if (args[1].equalsIgnoreCase("seasons")) {
+				sb.append(ChatColor.YELLOW);
+				for (String string : Season.getSeasonsList()) {
+					sb.append(string).append(", ");
+				}
+				sb.delete(sb.length() - 2,
+						sb.length() - 1);
+				player.sendMessage(ChatColor.GRAY + "Seasons available:- " + sb.toString());
+			} else {
+				player.sendMessage(languageConfiguration
+						.getStringOrDefault("list-error", ChatColor.GRAY + "That is not something that is listed"));
+			}
 		}
 	}
 

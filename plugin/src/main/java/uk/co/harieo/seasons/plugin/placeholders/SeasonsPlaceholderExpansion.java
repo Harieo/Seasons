@@ -98,7 +98,7 @@ public class SeasonsPlaceholderExpansion extends PlaceholderExpansion {
 		}
 	}
 
-	private enum RequestType {
+	public enum RequestType {
 		SEASON, WEATHER, DAY
 	}
 
