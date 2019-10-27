@@ -1,5 +1,5 @@
 # Seasons v2 
-[![Build Status](https://travis-ci.org/Harieo/Seasons.svg?branch=master)](https://travis-ci.org/Harieo/Seasons/)  
+[![Build Status](https://travis-ci.org/Harieo/Seasons.svg?branch=master)](https://travis-ci.org/Harieo/Seasons/)
 
 Seasons is a little quirky plugin I made a few years ago to simulate real-life seasons in Minecraft, adding some
 customised effects and weathers to add a new experience to playing survival
@@ -28,3 +28,8 @@ If you are a Developer and wish to help maintain Seasons, you have the option of
 
 Thanks to everyone who downloads, enjoys and contributes to the development of Seasons!
 
+## Extra Support
+
+If you need extra support regarding Seasons or want to get in contact, joining my personal Discord is the best way!  
+
+[![Discord Server](https://discordapp.com/api/guilds/419626137657016351/embed.png?style=banner2)](https://discordapp.com/invite/MhF4aCh)
