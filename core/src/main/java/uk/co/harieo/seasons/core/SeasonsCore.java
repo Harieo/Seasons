@@ -29,14 +29,16 @@ public class SeasonsCore extends JavaPlugin {
 		seasons.startup();
 
 		String version = Bukkit.getVersion();
-		if (version.contains("1.13") || version.contains("1.14")) {
-			getLogger().info("Seasons has detected modern Spigot (1.13+) and will adapt to use 1.13 implementation");
-			seasons.addEffects(new Icy(), new PrimitiveHeating(), new SolderingIron(), new StrongCurrent(), new TheShivers(),
-					new WetMud(), new WarmingStew());
-		} else {
+		if (version.contains("1.12") || version.contains("1.11") || version.contains("1.10") || version
+				.contains("1.9")) {
 			getLogger().info("Seasons has detected legacy Spigot (pre-1.13) and will adapt to use 1.12 implementation");
 			seasons.addEffects(new Legacy_Icy(), new Legacy_PrimitiveHeating(), new Legacy_SolderingIron(),
 					new Legacy_StrongCurrent(), new Legacy_TheShivers(), new Legacy_WetMud(), new Legacy_WarmingStew());
+		} else {
+			getLogger().info("Seasons has detected modern Spigot (1.13+) and will adapt to use 1.13 implementation");
+			seasons.addEffects(new Icy(), new PrimitiveHeating(), new SolderingIron(), new StrongCurrent(),
+					new TheShivers(),
+					new WetMud(), new WarmingStew());
 		}
 
 		// Register effects that are compatible with modern and v1_12_2_R1 spigot
