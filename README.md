@@ -32,4 +32,4 @@ Thanks to everyone who downloads, enjoys and contributes to the development of S
 
 If you need extra support regarding Seasons or want to get in contact, joining my personal Discord is the best way!  
 
-[![Discord Server](https://discordapp.com/api/guilds/419626137657016351/embed.png?style=banner2)](https://discordapp.com/invite/MhF4aCh)
+[![Discord Server](https://discordapp.com/api/guilds/679733506427191330/embed.png?style=banner2)](https://discord.gg/zTwWZAR)
