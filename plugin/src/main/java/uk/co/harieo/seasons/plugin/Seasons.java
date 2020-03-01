@@ -34,7 +34,7 @@ public class Seasons {
 	public Seasons(JavaPlugin plugin, FileConfiguration configuration) {
 		INSTANCE = this;
 		PLUGIN = plugin;
-		CONFIG = new SeasonsConfig(configuration); // Load settings
+		CONFIG = new SeasonsConfig(plugin); // Load settings
 		LANGUAGE_CONFIG = new SeasonsLanguageConfiguration(this);
 	}
 

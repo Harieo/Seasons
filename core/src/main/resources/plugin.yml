@@ -1,5 +1,5 @@
 main: uk.co.harieo.seasons.core.SeasonsCore
-version: 2.3.2
+version: 2.3.3
 name: Seasons
 author: Harieo
 api-version: '1.13'
