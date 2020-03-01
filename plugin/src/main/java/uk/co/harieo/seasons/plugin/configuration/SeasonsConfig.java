@@ -1,12 +1,16 @@
 package uk.co.harieo.seasons.plugin.configuration;
 
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.List;
-import java.util.Optional;
 import uk.co.harieo.seasons.plugin.Seasons;
 
 public class SeasonsConfig {
+
+	private JavaPlugin plugin;
 
 	private int version;
 	private int daysPerSeason; // Days that must go by before the world moves to the next season
@@ -17,7 +21,13 @@ public class SeasonsConfig {
 	private List<String> disabledWeathers;
 	private List<String> disabledEffects;
 
-	public SeasonsConfig(FileConfiguration config) {
+	public SeasonsConfig(JavaPlugin plugin) {
+		this.plugin = plugin;
+		load();
+	}
+
+	public void load() {
+		FileConfiguration config = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "config.yml"));
 		version = config.getInt("version");
 		daysPerSeason = config.getInt("DaysPerSeason");
 		secondsPerDamage = config.getInt("SecondsOfDamage");
