@@ -32,7 +32,7 @@ public class ChangeCommand implements CommandExecutor {
 					return false;
 				}
 
-				change(sender, s, args[0], cycle);
+				change(sender, command, args[0], cycle);
 				return false;
 			}
 		}
@@ -56,7 +56,7 @@ public class ChangeCommand implements CommandExecutor {
 			return false;
 		}
 
-		change(sender, s, args[0], cycle);
+		change(sender, command, args[0], cycle);
 		return false;
 	}
 
@@ -69,10 +69,11 @@ public class ChangeCommand implements CommandExecutor {
 	 * @param name of the value they wish to change, specific to the command executed
 	 * @param cycle that they are attempting to edit
 	 */
-	private void change(CommandSender sender, String command, String name, Cycle cycle) {
+	private void change(CommandSender sender, Command command, String name, Cycle cycle) {
 		World world = cycle.getWorld();
 		PluginManager manager = Bukkit.getPluginManager();
-		if (command.equalsIgnoreCase("changeday")) {
+		String commandLabel = command.getLabel();
+		if (commandLabel.equalsIgnoreCase("changeday")) {
 			if (hasInsufficientPermissions(sender, "seasons.change.day")) {
 				sender.sendMessage(Seasons.PREFIX + ChatColor.RED + "You don't have permission to change the day!");
 				return;
@@ -96,7 +97,7 @@ public class ChangeCommand implements CommandExecutor {
 					Seasons.PREFIX + ChatColor.GREEN + "Successfully " + ChatColor.GRAY + "changed the day to "
 							+ ChatColor.YELLOW + newDay + ChatColor.GRAY + " in " + ChatColor.LIGHT_PURPLE + world
 							.getName());
-		} else if (command.equalsIgnoreCase("changeweather")) {
+		} else if (commandLabel.equalsIgnoreCase("changeweather")) {
 			if (hasInsufficientPermissions(sender, "seasons.change.weather")) {
 				sender.sendMessage(Seasons.PREFIX + ChatColor.RED + "You don't have permission to change the weather!");
 				return;
@@ -124,7 +125,7 @@ public class ChangeCommand implements CommandExecutor {
 							+ world.getName());
 			manager.callEvent(new DayEndEvent(cycle, oldWeather, false));
 			manager.callEvent(new SeasonsWeatherChangeEvent(cycle, oldWeather, weather, false));
-		} else if (command.equalsIgnoreCase("changeseason")) {
+		} else if (commandLabel.equalsIgnoreCase("changeseason")) {
 			if (hasInsufficientPermissions(sender, "seasons.change.season")) {
 				sender.sendMessage(Seasons.PREFIX + ChatColor.RED + "You don't have permission to change the season!");
 				return;
