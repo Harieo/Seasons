@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
+import java.util.logging.Logger;
 import org.apache.commons.lang.Validate;
 import uk.co.harieo.seasons.plugin.commands.ChangeCommand;
 import uk.co.harieo.seasons.plugin.commands.SeasonsCommand;
@@ -25,30 +26,40 @@ public class Seasons {
 	public static final Random RANDOM = new Random();
 	private static Seasons INSTANCE;
 
-	private SeasonsConfig CONFIG;
-	private SeasonsWorlds WORLD_HANDLER;
-	private SeasonsLanguageConfiguration LANGUAGE_CONFIG;
-	private JavaPlugin PLUGIN;
-	private final List<Effect> EFFECTS = new ArrayList<>();
+	private final SeasonsConfig config;
+	private final SeasonsLanguageConfiguration languageConfig;
+	private final JavaPlugin plugin;
+	private final List<Effect> effects = new ArrayList<>();
 
-	public Seasons(JavaPlugin plugin, FileConfiguration configuration) {
+	private SeasonsWorlds worldHandler;
+
+	public Seasons(JavaPlugin plugin) {
 		INSTANCE = this;
-		PLUGIN = plugin;
-		CONFIG = new SeasonsConfig(plugin); // Load settings
-		LANGUAGE_CONFIG = new SeasonsLanguageConfiguration(this);
+		this.plugin = plugin;
+
+		Logger logger = plugin.getLogger();
+		this.config = new SeasonsConfig(); // Load settings
+		if (!config.load(plugin)) {
+			logger.severe("Failed to load settings for " + config.getFileName());
+		}
+
+		this.languageConfig = new SeasonsLanguageConfiguration();
+		if (!languageConfig.load(plugin)) {
+			logger.severe("Failed to load settings for " + languageConfig.getFileName());
+		}
 	}
 
 	public void startup() {
 		setPrefix();
-		WORLD_HANDLER = new SeasonsWorlds(this); // Load saved worlds
-		new WorldTicker().runTaskTimer(PLUGIN, 0, 20); // Begin the cycles
+		this.worldHandler = new SeasonsWorlds(this); // Load saved worlds
+		new WorldTicker().runTaskTimer(plugin, 0, 20); // Begin the cycles
 
 		ChangeCommand changeCommand = new ChangeCommand();
 		Bukkit.getPluginCommand("season").setExecutor(new SeasonsCommand());
 		Bukkit.getPluginCommand("changeday").setExecutor(changeCommand);
 		Bukkit.getPluginCommand("changeweather").setExecutor(changeCommand);
 		Bukkit.getPluginCommand("changeseason").setExecutor(changeCommand);
-		Bukkit.getPluginManager().registerEvents(new SeasonalListener(), PLUGIN);
+		Bukkit.getPluginManager().registerEvents(new SeasonalListener(), plugin);
 
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
 			new SeasonsPlaceholderExpansion(this).register();
@@ -56,12 +67,12 @@ public class Seasons {
 	}
 
 	public void disable() {
-		PLUGIN.getLogger().info("Saving all seasons-enabled worlds...");
+		plugin.getLogger().info("Saving all seasons-enabled worlds...");
 
-		if (WORLD_HANDLER.saveAllWorlds()) {
-			PLUGIN.getLogger().info("Saved all worlds successfully");
+		if (worldHandler.saveAllWorlds()) {
+			plugin.getLogger().info("Saved all worlds successfully");
 		} else {
-			PLUGIN.getLogger().severe("Failed to save all worlds");
+			plugin.getLogger().severe("Failed to save all worlds");
 		}
 
 		for (UUID uuid : SeasonsPotionEffect.PENDING.keySet()) {
@@ -73,28 +84,28 @@ public class Seasons {
 	}
 
 	public void addEffects(Effect... effects) {
-		EFFECTS.addAll(Arrays.asList(effects));
+		this.effects.addAll(Arrays.asList(effects));
 	}
 
 	public JavaPlugin getPlugin() {
-		return PLUGIN;
+		return plugin;
 	}
 
 	public SeasonsConfig getSeasonsConfig() {
-		return CONFIG;
+		return config;
 	}
 
 	public SeasonsLanguageConfiguration getLanguageConfig() {
-		return LANGUAGE_CONFIG;
+		return languageConfig;
 	}
 
 	public void setPrefix() {
-		PREFIX = LANGUAGE_CONFIG.getStringOrDefault("misc.prefix",
+		PREFIX = languageConfig.getStringOrDefault("misc.prefix",
 				ChatColor.GOLD + ChatColor.BOLD.toString() + "Seasons" + ChatColor.GRAY + "∙ " + ChatColor.RESET);
 	}
 
 	public List<Cycle> getCycles() {
-		return WORLD_HANDLER.getParsedCycles();
+		return worldHandler.getParsedCycles();
 	}
 
 	/**
@@ -104,7 +115,7 @@ public class Seasons {
 	 * @return the {@link Cycle} instance or null if none exists
 	 */
 	public Cycle getWorldCycle(World world) {
-		for (Cycle cycle : WORLD_HANDLER.getParsedCycles()) {
+		for (Cycle cycle : worldHandler.getParsedCycles()) {
 			if (cycle.getWorld().equals(world)) {
 				return cycle;
 			}
@@ -114,7 +125,7 @@ public class Seasons {
 	}
 
 	public SeasonsWorlds getWorldHandler() {
-		return WORLD_HANDLER;
+		return worldHandler;
 	}
 
 	/**
@@ -124,11 +135,11 @@ public class Seasons {
 	 */
 	public void addCycle(Cycle cycle) {
 		Validate.notNull(cycle);
-		WORLD_HANDLER.getParsedCycles().add(cycle);
+		worldHandler.getParsedCycles().add(cycle);
 	}
 
 	public List<Effect> getEffects() {
-		return EFFECTS;
+		return effects;
 	}
 
 	public static Seasons getInstance() {

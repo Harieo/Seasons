@@ -7,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -75,8 +76,10 @@ public class SeasonsCommand implements CommandExecutor {
 		}
 
 		Seasons seasons = Seasons.getInstance();
-		seasons.getLanguageConfig().loadConfig(); // Reloads the language file
-		seasons.getSeasonsConfig().load(); // Reload the config.yml settings
+		JavaPlugin plugin = seasons.getPlugin();
+
+		seasons.getLanguageConfig().load(plugin); // Reloads the language file
+		seasons.getSeasonsConfig().load(plugin); // Reload the config.yml settings
 		seasons.setPrefix(); // Reloads the prefix separately as that is static
 		sender.sendMessage(Seasons.PREFIX + ChatColor.GREEN + "Plugin has been reloaded!");
 	}

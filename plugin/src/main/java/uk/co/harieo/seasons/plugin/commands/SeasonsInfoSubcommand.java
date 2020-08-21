@@ -25,7 +25,7 @@ class SeasonsInfoSubcommand {
 		sender.sendMessage(createOptionMessage("Disabled Worlds", listContentsToString(config.getDisabledWorlds())));
 		sender.sendMessage(createOptionMessage("Disabled Weathers", listContentsToString(config.getDisabledWeathers())));
 		sender.sendMessage(createOptionMessage("Disabled Effects", listContentsToString(config.getDisabledEffects())));
-		sender.sendMessage(createOptionMessage("Config Version", String.valueOf(config.getVersion())));
+		sender.sendMessage(createOptionMessage("Config Version", String.valueOf(config.getCurrentVersion())));
 	}
 
 	private static String createOptionMessage(String key, String value) {

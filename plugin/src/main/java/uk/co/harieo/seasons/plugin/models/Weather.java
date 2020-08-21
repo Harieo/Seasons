@@ -67,11 +67,11 @@ public enum Weather {
 
     private static final Random random = new Random();
 
-    private String name; // Name shown to players
-    private String message; // Initial broadcast on weather trigger (Now only triggered if lang file is invalid)
-    private boolean catastrophic; // Is there is a high risk of this weather killing a player?
-    private boolean storm;
-    private List<Season> seasons; // List of seasons this weather can be triggered on
+    private final String name; // Name shown to players
+    private final String message; // Initial broadcast on weather trigger (Now only triggered if lang file is invalid)
+    private final boolean catastrophic; // Is there is a high risk of this weather killing a player?
+    private final boolean storm;
+    private final List<Season> seasons; // List of seasons this weather can be triggered on
 
     Weather(String name, String broadcast, boolean catastrophic, boolean storm, List<Season> seasons) {
         this.name = name;

@@ -21,10 +21,10 @@ public abstract class Effect implements Listener {
 
 	private static final List<String> cache = new ArrayList<>(); // Prevents multiple registrations of 1 listener
 
-	private String name;
-	private String description;
-	private List<Weather> weathers;
-	private boolean isGood;
+	private final String name;
+	private final String description;
+	private final List<Weather> weathers;
+	private final boolean isGood;
 	private boolean ignoreRoof = true;
 
 	public Effect(String name, String description, List<Weather> weathers, boolean good) {
@@ -181,7 +181,13 @@ public abstract class Effect implements Listener {
 	 * @return whether this effect has been manually disabled via config inverted
 	 */
 	private boolean isEnabled() {
-		return !Seasons.getInstance().getSeasonsConfig().getDisabledEffects().contains(getId());
+		for (String disabledEffectName : Seasons.getInstance().getSeasonsConfig().getDisabledEffects()) {
+			if (disabledEffectName.equalsIgnoreCase(getName())) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
