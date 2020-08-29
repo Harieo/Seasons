@@ -11,7 +11,7 @@ import uk.co.harieo.seasons.plugin.models.Season;
 
 public class SeasonsPlaceholderExpansion extends PlaceholderExpansion {
 
-	private Seasons seasons;
+	private final Seasons seasons;
 
 	public SeasonsPlaceholderExpansion(Seasons seasons) {
 		this.seasons = seasons;
@@ -77,11 +77,20 @@ public class SeasonsPlaceholderExpansion extends PlaceholderExpansion {
 		if (split.length < 2) {
 			world = player.getWorld();
 		} else {
-			world = Bukkit.getWorld(split[1]);
+			StringBuilder builder = new StringBuilder();
+			for (int i = 1; i < split.length; i++) {
+				builder.append(split[i]);
+				if (i + 1 < split.length) { // Only add if there is a word after this one
+					builder.append("_");
+				}
+			}
+
+			String worldName = builder.toString();
+			world = Bukkit.getWorld(worldName);
 		}
 
 		if (world == null) {
-			return "Invalid world: " + split[1];
+			return "Invalid world";
 		}
 
 		Cycle cycle = seasons.getWorldCycle(world);

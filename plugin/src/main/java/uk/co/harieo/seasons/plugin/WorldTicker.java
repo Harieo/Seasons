@@ -65,7 +65,7 @@ public class WorldTicker extends BukkitRunnable {
 			season = cycle.getSeason();
 		}
 
-		Weather oldWeather = Weather.fromName(cycle.getWeather().getName());
+		Weather oldWeather = cycle.getWeather();
 		Weather newWeather = Weather.randomWeather(season);
 		cycle.setWeather(newWeather);
 
@@ -79,7 +79,7 @@ public class WorldTicker extends BukkitRunnable {
 	 * @param cycle to enter night for
 	 */
 	private void newNight(Cycle cycle) {
-		Weather oldWeather = Weather.fromName(cycle.getWeather().getName());
+		Weather oldWeather = cycle.getWeather();
 		cycle.setWeather(Weather.NIGHT);
 
 		PluginManager manager = Bukkit.getPluginManager();

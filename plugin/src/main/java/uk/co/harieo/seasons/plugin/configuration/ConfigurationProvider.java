@@ -62,7 +62,14 @@ public interface ConfigurationProvider {
 			}
 		}
 
-		return YamlConfiguration.loadConfiguration(configFile);
+		// If no version is stated, mark it as the latest version
+		FileConfiguration configuration = YamlConfiguration.loadConfiguration(configFile);
+		if (!configuration.isSet("version")) {
+			configuration.set("version", getLatestVersion());
+			configuration.save(configFile);
+		}
+
+		return configuration;
 	}
 
 	/**

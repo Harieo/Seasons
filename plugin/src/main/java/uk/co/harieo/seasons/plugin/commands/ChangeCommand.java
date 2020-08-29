@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
+import java.util.Optional;
 import uk.co.harieo.seasons.plugin.Seasons;
 import uk.co.harieo.seasons.plugin.events.DayEndEvent;
 import uk.co.harieo.seasons.plugin.events.SeasonChangeEvent;
@@ -113,16 +114,19 @@ public class ChangeCommand implements CommandExecutor {
 				return;
 			}
 
-			Weather oldWeather = Weather.fromName(cycle.getWeather().getName());
+			Weather oldWeather = cycle.getWeather();
 			cycle.setWeather(weather);
+
+			String weatherName = weather.getName();
 			broadcast(world, Seasons.PREFIX + ChatColor.GRAY
-					+ "The skies grow silent and with a great rumble the weather turns to " + ChatColor.GREEN + weather
-					.getName());
+					+ "The skies grow silent and with a great rumble the weather turns to " + ChatColor.GREEN
+					+ weatherName);
 			// Confirm to the sender, who may not be in the world
 			sender.sendMessage(
 					Seasons.PREFIX + ChatColor.GREEN + "Successfully " + ChatColor.GRAY + "changed the weather to "
-							+ ChatColor.YELLOW + weather.getName() + ChatColor.GRAY + " in " + ChatColor.LIGHT_PURPLE
+							+ ChatColor.YELLOW + weatherName + ChatColor.GRAY + " in " + ChatColor.LIGHT_PURPLE
 							+ world.getName());
+
 			manager.callEvent(new DayEndEvent(cycle, oldWeather, false));
 			manager.callEvent(new SeasonsWeatherChangeEvent(cycle, oldWeather, weather, false));
 		} else if (commandLabel.equalsIgnoreCase("changeseason")) {
