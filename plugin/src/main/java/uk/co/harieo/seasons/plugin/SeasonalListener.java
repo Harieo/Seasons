@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldLoadEvent;
 
+import java.util.Optional;
 import uk.co.harieo.seasons.plugin.events.DayEndEvent;
 import uk.co.harieo.seasons.plugin.events.SeasonChangeEvent;
 import uk.co.harieo.seasons.plugin.events.SeasonsWeatherChangeEvent;
@@ -31,14 +32,14 @@ public class SeasonalListener implements Listener {
 
 		for (Player player : world.getPlayers()) {
 			if (weather.isCatastrophic()) {
-				String message = Seasons.getInstance().getLanguageConfig()
+				Seasons.getInstance().getLanguageConfig()
 						.getStringOrDefault("misc.catastrophic-alert",
 								ChatColor.RED + ChatColor.BOLD.toString()
-										+ "CATASTROPHIC WEATHER ALERT - Take care to plan your day");
-				player.sendMessage(Seasons.PREFIX + message);
+										+ "CATASTROPHIC WEATHER ALERT - Take care to plan your day")
+						.ifPresent(message -> player.sendMessage(Seasons.PREFIX + message));
 			}
 
-			player.sendMessage(Seasons.PREFIX + weather.getMessage());
+			weather.getMessage().ifPresent(message -> player.sendMessage(Seasons.PREFIX + message));
 		}
 
 		world.setStorm(weather.isStorm());

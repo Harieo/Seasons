@@ -41,7 +41,7 @@ public class Legacy_TheShivers extends Effect implements TickableEffect {
 	 * @param player to check and mark
 	 */
 	private void damage(Player player) {
-		if (isPlayerCycleApplicable(player)) {
+		if (isPlayerCycleApplicable(player) && !player.isInsideVehicle()) {
 			Block block = player.getLocation().getBlock();
 			if (block.getType() == Material.STATIONARY_WATER && !(player.getVehicle() instanceof Boat)) {
 				player.damage(1);

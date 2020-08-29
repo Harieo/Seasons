@@ -6,12 +6,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
  * Loads customisable messages from the language file
  */
 public class SeasonsLanguageConfiguration implements ConfigurationProvider {
+
+	private static final String CANCEL_KEY = "none"; // Used to stop a message being sent
 
 	private FileConfiguration config;
 	private double currentVersion;
@@ -50,8 +53,13 @@ public class SeasonsLanguageConfiguration implements ConfigurationProvider {
 	 * @param key which represents this string in the config file
 	 * @return the found string
 	 */
-	public String getString(String key) {
-		return ChatColor.translateAlternateColorCodes('&', config.getString(key));
+	public Optional<String> getString(String key) {
+		String value = config.getString(key);
+		if (isCancelled(value)) {
+			return Optional.empty();
+		} else {
+			return Optional.of(ChatColor.translateAlternateColorCodes('&', value));
+		}
 	}
 
 	/**
@@ -62,11 +70,11 @@ public class SeasonsLanguageConfiguration implements ConfigurationProvider {
 	 * @param orElse the alternative string which is returned if the main string is null
 	 * @return the found string from the config file or the alternative string if null
 	 */
-	public String getStringOrDefault(String key, String orElse) {
+	public Optional<String> getStringOrDefault(String key, String orElse) {
 		if (config.isSet(key)) {
 			return getString(key);
 		} else {
-			return orElse;
+			return Optional.of(orElse);
 		}
 	}
 
@@ -80,6 +88,16 @@ public class SeasonsLanguageConfiguration implements ConfigurationProvider {
 		return config.getStringList(key).stream()
 				.map(string -> ChatColor.translateAlternateColorCodes('&', string))
 				.collect(Collectors.toList());
+	}
+
+	/**
+	 * Checks whether a value from the configuration file indicates that the message should not be sent
+	 *
+	 * @param value string value from the configuration file
+	 * @return whether to use this value in a message
+	 */
+	private boolean isCancelled(String value) {
+		return value.equalsIgnoreCase(CANCEL_KEY);
 	}
 
 }

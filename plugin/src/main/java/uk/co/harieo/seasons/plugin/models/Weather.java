@@ -93,13 +93,8 @@ public enum Weather {
         return name;
     }
 
-    public String getMessage() {
-        String customMessage = Seasons.getInstance().getLanguageConfig().getString("weathers." + name().toLowerCase());
-        if (customMessage != null) {
-            return customMessage;
-        } else {
-            return message;
-        }
+    public Optional<String> getMessage() {
+        return Seasons.getInstance().getLanguageConfig().getStringOrDefault("weathers." + name().toLowerCase(), message);
     }
 
     public boolean isCatastrophic() {

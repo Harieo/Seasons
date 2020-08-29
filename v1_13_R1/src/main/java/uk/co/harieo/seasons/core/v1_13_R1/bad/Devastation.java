@@ -4,6 +4,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.Collections;
 import uk.co.harieo.seasons.plugin.models.Weather;
@@ -28,7 +29,7 @@ public class Devastation extends Effect {
 	public void onRegeneration(EntityRegainHealthEvent event) {
 		if (event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();
-			if (isPlayerCycleApplicable(player)) {
+			if (isPlayerCycleApplicable(player) && !player.hasPotionEffect(PotionEffectType.REGENERATION)) {
 				event.setCancelled(true);
 			}
 		}

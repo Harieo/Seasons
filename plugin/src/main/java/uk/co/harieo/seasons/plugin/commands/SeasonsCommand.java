@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import uk.co.harieo.seasons.plugin.Seasons;
@@ -96,18 +97,23 @@ public class SeasonsCommand implements CommandExecutor {
 			Weather weather = cycle.getWeather();
 			player.sendMessage("");
 
-			String effectsListTitle = languageConfiguration.getStringOrDefault("command.effects-list-title",
+			languageConfiguration.getStringOrDefault("command.effects-list-title",
 					ChatColor.GRAY + "For the weather " + ChatColor.YELLOW + weather.getName()
-							+ ChatColor.GRAY + " the effects are:");
-			player.sendMessage(Seasons.PREFIX + effectsListTitle.replace("%weather%", weather.getName()));
+							+ ChatColor.GRAY + " the effects are:").ifPresent(
+					message -> player.sendMessage(Seasons.PREFIX + message.replace("%weather%", weather.getName())));
 
-			String effectsListElement = languageConfiguration.getStringOrDefault("command.effects-list-element",
-					ChatColor.GOLD + ChatColor.BOLD.toString() + "%effect%: "
-							+ ChatColor.GRAY + "%description%");
+			Optional<String> potentialEffectsListElement = languageConfiguration
+					.getStringOrDefault("command.effects-list-element",
+							ChatColor.GOLD + ChatColor.BOLD.toString() + "%effect%: "
+									+ ChatColor.GRAY + "%description%");
 
-			for (Effect effect : weather.getEffects()) {
-				player.sendMessage(effectsListElement.replace("%effect%", effect.getName())
-						.replace("%description%", effect.getDescription()));
+			if (potentialEffectsListElement.isPresent()) {
+				String effectsListElement = potentialEffectsListElement.get();
+				for (Effect effect : weather.getEffects()) {
+					player.sendMessage(effectsListElement
+							.replace("%effect%", effect.getName())
+							.replace("%description%", effect.getDescription()));
+				}
 			}
 			player.sendMessage("");
 		} else {
@@ -150,9 +156,9 @@ public class SeasonsCommand implements CommandExecutor {
 		}
 
 		if (hasEnabledEffects) {
-			player.sendMessage(languageConfiguration.getStringOrDefault("command.season-info-footer",
+			languageConfiguration.getStringOrDefault("command.season-info-footer",
 					ChatColor.GRAY + "To see the effects of this weather, use the command " + ChatColor.YELLOW
-							+ "/seasons effects"));
+							+ "/seasons effects").ifPresent(player::sendMessage);
 		}
 		player.sendMessage("");
 	}
@@ -201,8 +207,9 @@ public class SeasonsCommand implements CommandExecutor {
 						sb.length() - 1);
 				player.sendMessage(ChatColor.GRAY + "Seasons available:- " + sb.toString());
 			} else {
-				player.sendMessage(languageConfiguration
-						.getStringOrDefault("list-error", ChatColor.GRAY + "That is not something that is listed"));
+				languageConfiguration
+						.getStringOrDefault("list-error", ChatColor.GRAY + "That is not something that is listed")
+						.ifPresent(player::sendMessage);
 			}
 		}
 	}

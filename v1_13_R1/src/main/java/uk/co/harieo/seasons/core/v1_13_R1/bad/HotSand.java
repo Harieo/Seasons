@@ -32,7 +32,7 @@ public class HotSand extends Effect {
 	@EventHandler
 	public void onMove(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
-		if (isPlayerCycleApplicable(player)) {
+		if (isPlayerCycleApplicable(player) && !player.isInsideVehicle()) {
 			Block block = event.getTo().clone().subtract(0, 1, 0).getBlock();
 			if (block.getType() == Material.SAND) {
 				if (Seasons.RANDOM.nextInt(100) < 25) {

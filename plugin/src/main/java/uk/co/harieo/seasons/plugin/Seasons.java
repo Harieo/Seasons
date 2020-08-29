@@ -101,7 +101,8 @@ public class Seasons {
 
 	public void setPrefix() {
 		PREFIX = languageConfig.getStringOrDefault("misc.prefix",
-				ChatColor.GOLD + ChatColor.BOLD.toString() + "Seasons" + ChatColor.GRAY + "∙ " + ChatColor.RESET);
+				ChatColor.GOLD + ChatColor.BOLD.toString() + "Seasons" + ChatColor.GRAY + "∙ " + ChatColor.RESET)
+				.orElse("");
 	}
 
 	public List<Cycle> getCycles() {

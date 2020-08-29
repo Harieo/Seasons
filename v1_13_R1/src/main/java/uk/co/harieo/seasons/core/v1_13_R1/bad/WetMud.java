@@ -31,18 +31,15 @@ public class WetMud extends SeasonsPotionEffect {
 
 	@Override
 	public boolean shouldGive(Player player) {
-		if (isPlayerCycleApplicable(player)) {
+		if (isPlayerCycleApplicable(player) && !player.isInsideVehicle()) {
 			Block block = player.getLocation().clone().subtract(0, 1, 0).getBlock();
 			for (Material material : MUDDY) {
 				if (block.getType() == material) {
 					return true;
 				}
 			}
-
-			return false;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	@Override

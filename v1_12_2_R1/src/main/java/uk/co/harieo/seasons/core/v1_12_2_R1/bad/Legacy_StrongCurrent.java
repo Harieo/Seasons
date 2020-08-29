@@ -30,7 +30,7 @@ public class Legacy_StrongCurrent extends SeasonsPotionEffect {
 
 	@Override
 	public boolean shouldGive(Player player) {
-		if (isPlayerCycleApplicable(player)) {
+		if (isPlayerCycleApplicable(player) && !player.isInsideVehicle()) {
 			Block block = player.getLocation().getBlock();
 			return block.getType() == Material.STATIONARY_WATER;
 		} else {
