@@ -39,7 +39,7 @@ seasons:
         spring: 'The sun rises, the flowers smell fresh and there is a %season% in your step... literally!'
         summer: 'Today feels warmer than the others, maybe even too warm... %season% has arrived!'
         autumn: 'A cool breeze whispers to the leaves that fall from the trees, it is %season%!'
-        winter: 'A few snowflakes fall and the world grows cold, time for %season% to make it is mark...'
+        winter: 'A few snowflakes fall and the world grows cold, time for %season% to make its mark...'
 
 effects:
     on-trigger:

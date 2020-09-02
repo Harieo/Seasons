@@ -5,9 +5,9 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.jetbrains.annotations.NotNull;
 import uk.co.harieo.seasons.plugin.Seasons;
 import uk.co.harieo.seasons.plugin.models.Cycle;
-import uk.co.harieo.seasons.plugin.models.Season;
 
 public class SeasonsPlaceholderExpansion extends PlaceholderExpansion {
 
@@ -28,22 +28,22 @@ public class SeasonsPlaceholderExpansion extends PlaceholderExpansion {
 	}
 
 	@Override
-	public String getAuthor() {
+	public @NotNull String getAuthor() {
 		return "Harieo";
 	}
 
 	@Override
-	public String getIdentifier() {
+	public @NotNull String getIdentifier() {
 		return "seasons";
 	}
 
 	@Override
-	public String getVersion() {
+	public @NotNull String getVersion() {
 		return seasons.getPlugin().getDescription().getVersion();
 	}
 
 	@Override
-	public String onPlaceholderRequest(Player player, String identifier) {
+	public String onPlaceholderRequest(Player player, @NotNull String identifier) {
 		if (player == null) {
 			return "";
 		}

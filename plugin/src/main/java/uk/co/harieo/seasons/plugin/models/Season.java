@@ -59,7 +59,7 @@ public enum Season {
 	 */
 	public Optional<String> getMessage() {
 		return Seasons.getInstance().getLanguageConfig()
-				.getStringOrDefault("seasons.om-trigger." + name().toLowerCase(), message)
+				.getStringOrDefault("seasons.on-trigger." + name().toLowerCase(), message)
 				.map(message -> message.replaceAll(StaticPlaceholders.SEASON.toString(), getName()));
 	}
 
