@@ -182,7 +182,7 @@ public abstract class Effect implements Listener {
 	/**
 	 * @return whether this effect has been manually disabled via config inverted
 	 */
-	private boolean isEnabled() {
+	public boolean isEnabled() {
 		for (String disabledEffectName : Seasons.getInstance().getSeasonsConfig().getDisabledEffects()) {
 			if (disabledEffectName.equalsIgnoreCase(getName())) {
 				return false;

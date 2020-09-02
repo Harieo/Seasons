@@ -33,12 +33,14 @@ public class WarmingStew extends Effect {
 
 	@EventHandler
 	public void onConsume(PlayerItemConsumeEvent event) {
-		for (Material material : STEWS) {
-			if (event.getItem().getType() == material) {
-				Player player = event.getPlayer();
-				player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 10, 0));
-				sendGiveMessage(player, ChatColor.GREEN
-						+ "That hit the spot, the delicious stew makes your wounds a little more bearable...");
+		Player player = event.getPlayer();
+		if (isEnabled()) {
+			for (Material material : STEWS) {
+				if (event.getItem().getType() == material) {
+					player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 10, 0));
+					sendGiveMessage(player, ChatColor.GREEN
+							+ "That hit the spot, the delicious stew makes your wounds a little more bearable...");
+				}
 			}
 		}
 	}

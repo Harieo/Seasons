@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import java.util.Optional;
 import org.apache.commons.lang.Validate;
 import uk.co.harieo.seasons.plugin.Seasons;
+import uk.co.harieo.seasons.plugin.configuration.StaticPlaceholders;
 
 public enum Season {
 
@@ -23,24 +25,47 @@ public enum Season {
 	private final String message;
 	private final ChatColor color; // Color to be used when the season is referenced
 
+	/**
+	 * A season which has the possibility of multiple different weathers happening each day
+	 *
+	 * @param name default name of the season
+	 * @param message which is broadcast when this season is activated
+	 * @param seasonColor the colour to format this season as in chat
+	 */
 	Season(String name, String message, ChatColor seasonColor) {
 		this.name = name;
 		this.message = message;
 		this.color = seasonColor;
 	}
 
+	/**
+	 * @return the formatted name of this season
+	 */
 	public String getName() {
 		return Seasons.getInstance().getLanguageConfig()
 				.getStringOrDefault("seasons.name." + name().toLowerCase(), name)
 				.orElse("");
 	}
 
-	public String getMessage() {
-		return Seasons.getInstance().getLanguageConfig()
-				.getStringOrDefault("seasons.om-trigger." + name().toLowerCase(), message)
-				.orElse("");
+	/**
+	 * @return the name of this season stripped of formatting
+	 */
+	public String getRawName() {
+		return ChatColor.stripColor(getName());
 	}
 
+	/**
+	 * @return the possible message which should be broadcast when this season is activated
+	 */
+	public Optional<String> getMessage() {
+		return Seasons.getInstance().getLanguageConfig()
+				.getStringOrDefault("seasons.om-trigger." + name().toLowerCase(), message)
+				.map(message -> message.replaceAll(StaticPlaceholders.SEASON.toString(), getName()));
+	}
+
+	/**
+	 * @return the colour to format this season as in chat
+	 */
 	public ChatColor getColor() {
 		return color;
 	}
@@ -58,7 +83,7 @@ public enum Season {
 	 */
 	public static Season fromName(String name) {
 		for (Season season : values()) {
-			if (season.getName().equalsIgnoreCase(name.toLowerCase())) {
+			if (season.getRawName().equalsIgnoreCase(name.toLowerCase())) {
 				return season;
 			}
 		}
@@ -85,6 +110,9 @@ public enum Season {
 		}
 	}
 
+	/**
+	 * @return a list of all of the available seasons' names
+	 */
 	public static List<String> getSeasonsList() {
 		List<String> list = new ArrayList<>();
 		for (Season season : Season.values()) {

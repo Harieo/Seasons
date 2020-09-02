@@ -30,7 +30,7 @@ public class Legacy_SolderingIron extends Effect implements TickableEffect {
 			Material.CHAINMAIL_HELMET, Material.CHAINMAIL_CHESTPLATE, Material.CHAINMAIL_LEGGINGS,
 			Material.CHAINMAIL_BOOTS, Material.WATER_BUCKET, Material.LAVA_BUCKET};
 
-	private Map<Player, Integer> secondsPast = new HashMap<>();
+	private final Map<Player, Integer> secondsPast = new HashMap<>();
 
 	public Legacy_SolderingIron() {
 		super("Soldering Iron", "Take damage if you hold a primarily iron item",

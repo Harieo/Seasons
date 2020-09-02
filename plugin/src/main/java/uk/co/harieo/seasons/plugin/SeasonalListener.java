@@ -7,7 +7,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldLoadEvent;
 
-import java.util.Optional;
 import uk.co.harieo.seasons.plugin.events.DayEndEvent;
 import uk.co.harieo.seasons.plugin.events.SeasonChangeEvent;
 import uk.co.harieo.seasons.plugin.events.SeasonsWeatherChangeEvent;
@@ -20,9 +19,11 @@ public class SeasonalListener implements Listener {
 	public void onSeasonChange(SeasonChangeEvent event) {
 		Season season = event.getChangedTo();
 		World world = event.getCycle().getWorld();
-		for (Player player : world.getPlayers()) {
-			player.sendMessage(Seasons.PREFIX + season.getColor() + season.getMessage());
-		}
+		season.getMessage().ifPresent(message -> {
+			for (Player player : world.getPlayers()) {
+				player.sendMessage(Seasons.PREFIX + season.getColor() + message);
+			}
+		});
 	}
 
 	@EventHandler
@@ -49,9 +50,11 @@ public class SeasonalListener implements Listener {
 	public void onDayEnd(DayEndEvent event) {
 		if (event.isNatural()) {
 			World world = event.getCycle().getWorld();
-			for (Player player : world.getPlayers()) {
-				player.sendMessage(Seasons.PREFIX + Weather.NIGHT.getMessage());
-			}
+			Weather.NIGHT.getMessage().ifPresent(message -> {
+				for (Player player : world.getPlayers()) {
+					player.sendMessage(Seasons.PREFIX + message);
+				}
+			});
 		}
 	}
 

@@ -6,6 +6,7 @@ import java.util.*;
 
 import uk.co.harieo.seasons.plugin.Seasons;
 import uk.co.harieo.seasons.plugin.configuration.SeasonsConfig;
+import uk.co.harieo.seasons.plugin.configuration.StaticPlaceholders;
 import uk.co.harieo.seasons.plugin.models.effect.Effect;
 
 public enum Weather {
@@ -73,6 +74,15 @@ public enum Weather {
 	private final boolean storm;
 	private final List<Season> seasons; // List of seasons this weather can be triggered on
 
+	/**
+	 * A weather which comes with certain effects
+	 *
+	 * @param name default name of the weather
+	 * @param broadcast the message which is broadcast when this weather is chosen
+	 * @param catastrophic whether this weather has a high chance to kill players
+	 * @param storm whether this weather should make the world rain
+	 * @param seasons the list of seasons in which this weather can appear
+	 */
 	Weather(String name, String broadcast, boolean catastrophic, boolean storm, List<Season> seasons) {
 		this.name = name;
 		this.message = broadcast;
@@ -81,36 +91,66 @@ public enum Weather {
 		this.seasons = seasons;
 	}
 
+	/**
+	 * An overload of {@link Weather} where the list of seasons is empty
+	 *
+	 * @param name default name of the weather
+	 * @param broadcast the message which is broadcast when this weather is chosen
+	 * @param catastrophic whether this weather has a high chance to kill players
+	 * @param storm whether this weather should make the world rain
+	 */
 	Weather(String name, String broadcast, boolean catastrophic, boolean storm) {
-		this.name = name;
-		this.message = broadcast;
-		this.catastrophic = catastrophic;
-		this.storm = storm;
-		this.seasons = Collections.emptyList();
+		this(name, broadcast, catastrophic, storm, Collections.emptyList());
 	}
 
+	/**
+	 * @return the formatted name of this weather
+	 */
 	public String getName() {
 		return Seasons.getInstance().getLanguageConfig().getString("weathers.name." + name().toLowerCase())
 				.orElse(name);
 	}
 
-	public Optional<String> getMessage() {
-		return Seasons.getInstance().getLanguageConfig()
-				.getStringOrDefault("weathers.on-trigger." + name().toLowerCase(), message);
+	/**
+	 * @return the name of this weather stripped of formatting
+	 */
+	public String getRawName() {
+		return ChatColor.stripColor(getName()).toLowerCase();
 	}
 
+	/**
+	 * @return the formatted message which will appear when this weather is chosen
+	 */
+	public Optional<String> getMessage() {
+		return Seasons.getInstance().getLanguageConfig()
+				.getStringOrDefault("weathers.on-trigger." + name().toLowerCase(), message)
+				.map(message -> message.replaceAll(StaticPlaceholders.WEATHER.toString(), getName()));
+	}
+
+	/**
+	 * @return whether this weather has a high chance to kill a player
+	 */
 	public boolean isCatastrophic() {
 		return catastrophic;
 	}
 
+	/**
+	 * @return whether this weather involves rain/snow
+	 */
 	public boolean isStorm() {
 		return storm;
 	}
 
+	/**
+	 * @return the seasons in which this weather can appear
+	 */
 	public List<Season> getAffectedSeasons() {
 		return seasons;
 	}
 
+	/**
+	 * @return the effects which can come with this weather
+	 */
 	public List<Effect> getEffects() {
 		List<Effect> effects = new ArrayList<>();
 
@@ -132,7 +172,7 @@ public enum Weather {
 	 */
 	public static Weather fromName(String name) {
 		for (Weather weather : values()) {
-			if (weather.getName().equalsIgnoreCase(name.toLowerCase())) {
+			if (weather.getRawName().equalsIgnoreCase(name)) {
 				return weather;
 			}
 		}
@@ -158,8 +198,8 @@ public enum Weather {
 	public static Weather randomWeather(Season season) {
 		List<Weather> applicableWeathers = new ArrayList<>();
 		for (Weather weather : values()) {
-			if (weather.seasons.contains(season) && !isManuallyDisabled(
-					weather)) { // Whether the weather can be used with the season
+			// Check whether the weather can be used with the season
+			if (weather.getAffectedSeasons().contains(season) && !isManuallyDisabled(weather)) {
 				applicableWeathers.add(weather);
 			}
 		}
@@ -176,7 +216,7 @@ public enum Weather {
 	public static boolean isManuallyDisabled(Weather weather) {
 		SeasonsConfig config = Seasons.getInstance().getSeasonsConfig();
 		for (String weatherName : config.getDisabledWeathers()) {
-			if (weatherName.equalsIgnoreCase(weather.getName().toLowerCase())) {
+			if (weatherName.equalsIgnoreCase(weather.getRawName())) {
 				return true;
 			}
 		}
@@ -184,10 +224,13 @@ public enum Weather {
 		return false;
 	}
 
+	/**
+	 * @return a list of weathers by their name
+	 */
 	public static List<String> getWeatherList() {
 		List<String> list = new ArrayList<>();
 		for (Weather weather : Weather.values()) {
-			list.add(weather.getName().toLowerCase());
+			list.add(weather.getName());
 		}
 		return list;
 	}

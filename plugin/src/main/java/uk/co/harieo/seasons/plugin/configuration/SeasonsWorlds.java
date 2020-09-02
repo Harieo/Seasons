@@ -27,9 +27,9 @@ public class SeasonsWorlds {
 	private static final Weather DEFAULT_WEATHER = Weather.BEAUTIFUL;
 	private static final String CHILD_DIRECTORY_PATH = "/worlds";
 
-	private Seasons core;
-	private JavaPlugin plugin;
-	private List<Cycle> cycles;
+	private final Seasons core;
+	private final JavaPlugin plugin;
+	private final List<Cycle> cycles;
 
 	public SeasonsWorlds(Seasons core) {
 		this.core = core;
@@ -151,8 +151,8 @@ public class SeasonsWorlds {
 		JsonObject jsonObject = new JsonObject();
 		jsonObject.addProperty("worldName", worldName);
 		jsonObject.addProperty("day", cycle.getDay());
-		jsonObject.addProperty("season", cycle.getSeason().getName());
-		jsonObject.addProperty("weather", cycle.getWeather().getName());
+		jsonObject.addProperty("season", cycle.getSeason().name());
+		jsonObject.addProperty("weather", cycle.getWeather().name());
 
 		try (FileWriter writer = new FileWriter(file)) {
 			writer.write(jsonObject.toString());
@@ -189,20 +189,11 @@ public class SeasonsWorlds {
 			try (FileReader reader = new FileReader(file)) {
 				JsonObject jsonObject = new JsonParser().parse(reader).getAsJsonObject();
 				day = jsonObject.get("day").getAsInt();
-				season = Season.fromName(jsonObject.get("season").getAsString());
-				weather = Weather.fromName(jsonObject.get("weather").getAsString());
-			} catch (IOException e) {
+				season = Season.valueOf(jsonObject.get("season").getAsString());
+				weather = Weather.valueOf(jsonObject.get("weather").getAsString());
+			} catch (IOException | IllegalArgumentException e) {
 				e.printStackTrace();
-				return createDefaultCycle(world);
-			}
-
-			if (season == null || weather == null || day < 1) { // One or more saved values are invalid
-				plugin.getLogger().severe("World " + world.getName()
-						+ " has one or more invalid configuration parameters, world will load from default settings");
-				if (!file.delete()) { // If the file can't be deleted
-					plugin.getLogger().severe("Failed to delete invalid world file: " + file.getName());
-				}
-
+				plugin.getLogger().severe("World data was invalid in file " + file.getName());
 				return createDefaultCycle(world);
 			}
 		}

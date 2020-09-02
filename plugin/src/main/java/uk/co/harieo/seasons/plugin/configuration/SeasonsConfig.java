@@ -38,6 +38,8 @@ public class SeasonsConfig implements ConfigurationProvider {
 		disabledWorlds = config.getStringList("disabled-worlds");
 		disabledWeathers = config.getStringList("disabled-weathers");
 		disabledEffects = config.getStringList("disabled-effects");
+		plugin.getLogger().info(disabledWorlds.size() + " worlds have been disabled, " + disabledWeathers.size()
+				+ " weathers have been disabled and " + disabledEffects.size() + " have been disabled");
 		verifyVersion();
 
 		return true;
