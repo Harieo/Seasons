@@ -5,6 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
 import java.util.List;
+import uk.co.harieo.seasons.plugin.actionbar.SeasonsActionBar;
 
 /**
  * Loads the plugin's settings from the configuration file
@@ -35,6 +36,11 @@ public class SeasonsConfig implements ConfigurationProvider {
 		secondsPerDamage = config.getInt("SecondsOfDamage");
 		roofHeight = config.getInt("RoofHeight");
 		enableEffects = config.getBoolean("CustomWeathers");
+		if (config.getBoolean("ActionBar")) {
+			SeasonsActionBar.start();
+		} else {
+			SeasonsActionBar.stop();
+		}
 		disabledWorlds = config.getStringList("disabled-worlds");
 		disabledWeathers = config.getStringList("disabled-weathers");
 		disabledEffects = config.getStringList("disabled-effects");
