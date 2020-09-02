@@ -13,7 +13,7 @@ The modules are as follows:
 * Core - Foundation of the plugin which detemines the version, holds the initial JavaPlugin class and runs Maven Shade
 * Plugin - The core functionality of Seasons which is **not** version-specific
 * v1_12_2_R1 - Implements functionality for Spigot versions 1.9-1.12
-* v1_13_R1 - Implements functionality for Spigot versions 1.13-1.14
+* v1_13_R1 - Implements functionality for Spigot versions 1.13-latest
 
 If you are compiling the plugin locally, compile the root module (Seasons-parent) and use the shaded jar generated in the 
   core module (Seasons-Core) as that is a compilation of all other modules.
