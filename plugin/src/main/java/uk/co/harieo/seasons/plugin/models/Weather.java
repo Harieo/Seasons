@@ -14,53 +14,53 @@ public enum Weather {
 	BEAUTIFUL("Beautiful",
 			ChatColor.GREEN + "The sun in shining, the grass is green and the weather is " + ChatColor.YELLOW
 					+ "Beautiful",
-			false, false,
+			false, false, 20,
 			Arrays.asList(Season.SPRING, Season.SUMMER)),
 	BREEZY("Breezy",
 			ChatColor.GRAY + "A cool breeze touches your skin, it's going to be " + ChatColor.GREEN + "Breezy",
-			false, false,
+			false, false, 15,
 			Arrays.asList(Season.SPRING, Season.AUTUMN)),
 	CHILLY("Chilly",
 			ChatColor.BLUE + "You shiver as frost glistens around you, it's very " + ChatColor.DARK_BLUE + "Chilly "
 					+ ChatColor.BLUE + "today",
-			false, false,
+			false, false, 15,
 			Collections.singletonList(Season.SPRING)),
 	RAINY("Rainy",
 			ChatColor.BLUE + "A loud rain falls and wets the ground, it's " + ChatColor.DARK_BLUE + "Rainy",
-			false, true,
+			false, true, 10,
 			Arrays.asList(Season.SPRING, Season.AUTUMN, Season.WINTER)),
 	SCORCHING("Scorching",
 			ChatColor.YELLOW + "The sun burns your skin and the ground hurts to touch, it's " + ChatColor.GOLD
 					+ "Scorching",
-			false, false,
+			false, false, 10,
 			Collections.singletonList(Season.SUMMER)),
 	HOT("Hot",
 			ChatColor.YELLOW + "It's going to be very " + ChatColor.GOLD + "Hot " + ChatColor.YELLOW
 					+ "today",
-			false, false,
+			false, false, 20,
 			Collections.singletonList(Season.SUMMER)),
 	WARM("Warm",
 			ChatColor.YELLOW + "A soothing warmth hugs you as you move, it's a " + ChatColor.GOLD + "Warm "
 					+ ChatColor.YELLOW + "day",
-			false, false,
+			false, false, 25,
 			Collections.singletonList(Season.SUMMER)),
 	COLD("Cold",
 			ChatColor.BLUE + "The water is so very " + ChatColor.DARK_BLUE + "Cold " + ChatColor.BLUE + "today",
-			false, false,
+			false, false, 40,
 			Arrays.asList(Season.AUTUMN, Season.WINTER)),
 	STORMY("Stormy",
 			ChatColor.RED + "A great " + ChatColor.DARK_RED + "Storm " + ChatColor.RED
 					+ "brews, the Gods in this place are angry... Brace yourself!",
-			true, true,
+			true, true, 10,
 			Collections.singletonList(Season.AUTUMN)),
 	FREEZING("Freezing",
 			ChatColor.BLUE + "The water freezes with a sheet of ice and you feel a great cold, it's "
 					+ ChatColor.DARK_BLUE + "Freezing",
-			true, false,
+			true, false, 15,
 			Collections.singletonList(Season.WINTER)),
 	SNOWY("Snowy",
 			ChatColor.GRAY + "A great white blanket covers the world, it's " + ChatColor.WHITE + "Snowy",
-			false, true,
+			false, true, 15,
 			Collections.singletonList(Season.WINTER)),
 	NIGHT("Calm", // Night is a weather with no effect, to give people a break
 			ChatColor.GRAY + "The world rests with the sun and all is calm... Until the mobs come to eat you!",
@@ -72,6 +72,7 @@ public enum Weather {
 	private final String message; // Default message to show the weather changing
 	private final boolean catastrophic; // Is there is a high risk of this weather killing a player?
 	private final boolean storm;
+	private final int defaultChance;
 	private final List<Season> seasons; // List of seasons this weather can be triggered on
 
 	/**
@@ -83,16 +84,17 @@ public enum Weather {
 	 * @param storm whether this weather should make the world rain
 	 * @param seasons the list of seasons in which this weather can appear
 	 */
-	Weather(String name, String broadcast, boolean catastrophic, boolean storm, List<Season> seasons) {
+	Weather(String name, String broadcast, boolean catastrophic, boolean storm, int defaultChance, List<Season> seasons) {
 		this.name = name;
 		this.message = broadcast;
 		this.catastrophic = catastrophic;
 		this.storm = storm;
+		this.defaultChance = defaultChance;
 		this.seasons = seasons;
 	}
 
 	/**
-	 * An overload of {@link Weather} where the list of seasons is empty
+	 * An overload of {@link Weather} where the list of seasons is empty and the chance of it spawning is 0
 	 *
 	 * @param name default name of the weather
 	 * @param broadcast the message which is broadcast when this weather is chosen
@@ -100,7 +102,7 @@ public enum Weather {
 	 * @param storm whether this weather should make the world rain
 	 */
 	Weather(String name, String broadcast, boolean catastrophic, boolean storm) {
-		this(name, broadcast, catastrophic, storm, Collections.emptyList());
+		this(name, broadcast, catastrophic, storm, 0, Collections.emptyList());
 	}
 
 	/**
@@ -139,6 +141,13 @@ public enum Weather {
 	 */
 	public boolean isStorm() {
 		return storm;
+	}
+
+	/**
+	 * @return the default chance that this weather will be chosen compared to others
+	 */
+	public int getDefaultChance() {
+		return defaultChance;
 	}
 
 	/**
@@ -196,7 +205,7 @@ public enum Weather {
 	 * @return a random {@link Weather} that can be used in the stated {@link Season}
 	 */
 	public static Weather randomWeather(Season season) {
-		List<Weather> applicableWeathers = new ArrayList<>();
+		Set<Weather> applicableWeathers = new HashSet<>();
 		for (Weather weather : values()) {
 			// Check whether the weather can be used with the season
 			if (weather.getAffectedSeasons().contains(season) && !isManuallyDisabled(weather)) {
@@ -204,7 +213,7 @@ public enum Weather {
 			}
 		}
 
-		return applicableWeathers.get(random.nextInt(applicableWeathers.size()));
+		return Seasons.getInstance().getWeatherChanceConfiguration().pickRandomWeather(applicableWeathers);
 	}
 
 	/**

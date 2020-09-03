@@ -1,0 +1,2 @@
+# These are the fractional chances of each weather occurring on a new day. They do not need to add up to 100 but there
+# may be efficiency problems if the total is too high (recommended less than 1000 between all chances)

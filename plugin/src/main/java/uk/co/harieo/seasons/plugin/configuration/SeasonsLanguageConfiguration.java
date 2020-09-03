@@ -27,7 +27,7 @@ public class SeasonsLanguageConfiguration implements ConfigurationProvider {
 	@Override
 	public boolean load(JavaPlugin plugin) {
 		try {
-			config = getConfigurationFile(plugin);
+			config = getConfiguration(plugin);
 			currentVersion = config.getDouble("version");
 			verifyVersion();
 			return true;
@@ -55,7 +55,7 @@ public class SeasonsLanguageConfiguration implements ConfigurationProvider {
 	 */
 	public Optional<String> getString(String key) {
 		String value = config.getString(key);
-		if (isCancelled(value)) {
+		if (value == null || isCancelled(value)) {
 			return Optional.empty();
 		} else {
 			return Optional.of(ChatColor.translateAlternateColorCodes('&', value));

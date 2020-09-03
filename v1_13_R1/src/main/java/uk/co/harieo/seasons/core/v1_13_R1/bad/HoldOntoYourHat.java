@@ -6,15 +6,24 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import java.time.LocalTime;
 import java.util.Collections;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import uk.co.harieo.seasons.plugin.Seasons;
 import uk.co.harieo.seasons.plugin.models.Weather;
 import uk.co.harieo.seasons.plugin.models.effect.Effect;
 
 public class HoldOntoYourHat extends Effect {
+
+	private static final Cache<Player, LocalTime> buffer = CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.MINUTES)
+			.build();
 
 	public HoldOntoYourHat() {
 		super("Hold onto Your Hat", "A small chance that your hat will fall off when you put it on",
@@ -28,26 +37,27 @@ public class HoldOntoYourHat extends Effect {
 	}
 
 	/**
-	 * Checks whether a player has a helmet on and that the helmet is leather
-	 * If this condition is met, gives a 10% chance that the helmet will be dropped
+	 * Checks whether a player has a helmet on and that the helmet is leather If this condition is met, gives a 10%
+	 * chance that the helmet will be dropped
 	 *
 	 * @param player to randomise for
 	 */
 	private void chanceHat(Player player) {
-		PlayerInventory inventory = player.getInventory();
-		ItemStack helmet = inventory.getHelmet();
-		if (helmet == null) {
-			return;
-		}
+		if (isPlayerCycleApplicable(player)) {
+			PlayerInventory inventory = player.getInventory();
+			ItemStack helmet = inventory.getHelmet();
+			if (helmet == null) {
+				return;
+			}
 
-		if (helmet.getType() == Material.LEATHER_HELMET) {
-			int random = Seasons.RANDOM.nextInt(100);
-			if (random < 10) { // 10% chance
-				player.getWorld().dropItem(player.getLocation(), helmet);
-				// Remove both to prevent duplication glitches
-				inventory.setHelmet(null);
-				player.setItemOnCursor(null);
-				sendGiveMessage(player, ChatColor.YELLOW + "Your hat just blew off, oh dear!");
+			if (helmet.getType() == Material.LEATHER_HELMET) {
+				int random = Seasons.RANDOM.nextInt(100);
+				if (random < 25) { // 10% chance
+					player.getWorld().dropItem(player.getLocation(), helmet);
+					// Remove both to prevent duplication glitches
+					inventory.setHelmet(null);
+					sendGiveMessage(player, ChatColor.YELLOW + "Your hat just blew off, oh dear!");
+				}
 			}
 		}
 	}
@@ -60,12 +70,11 @@ public class HoldOntoYourHat extends Effect {
 	}
 
 	@EventHandler
-	public void onInventoryClick(InventoryClickEvent event) {
-		if (event.getWhoClicked() instanceof Player) {
-			Player player = (Player) event.getWhoClicked();
-			if (isPlayerCycleApplicable(player)) {
-				chanceHat(player);
-			}
+	public void onPlayerMove(PlayerMoveEvent event) {
+		Player player = event.getPlayer();
+		if (buffer.getIfPresent(player) == null) {
+			chanceHat(player);
+			buffer.put(player, LocalTime.now());
 		}
 	}
 

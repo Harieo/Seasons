@@ -39,6 +39,16 @@ public interface ConfigurationProvider {
 	double getCurrentVersion();
 
 	/**
+	 * Creates an instance of {@link File} inside the provided plugin's data folder with {@link #getFileName()}
+	 *
+	 * @param plugin which handles the file
+	 * @return the configuration file
+	 */
+	default File getFile(JavaPlugin plugin) {
+		return new File(plugin.getDataFolder(), getFileName());
+	}
+
+	/**
 	 * Retrieves a {@link FileConfiguration} from the provided plugin and creates the file from a resource, matching the file name, if it does
 	 * not exist
 	 *
@@ -46,7 +56,7 @@ public interface ConfigurationProvider {
 	 * @return the parsed configuration file
 	 * @throws IOException if a file error occurs attempting to write data
 	 */
-	default FileConfiguration getConfigurationFile(JavaPlugin plugin) throws IOException {
+	default FileConfiguration getConfiguration(JavaPlugin plugin) throws IOException {
 		File dataFolder = plugin.getDataFolder();
 		if (!dataFolder.exists()) {
 			if (!dataFolder.mkdir()) {
@@ -55,10 +65,14 @@ public interface ConfigurationProvider {
 		}
 
 		String fileName = getFileName();
-		File configFile = new File(dataFolder, fileName);
+		File configFile = getFile(plugin);
 		if (!configFile.exists()) {
 			try (InputStream stream = plugin.getResource(fileName)) {
-				Files.copy(stream, configFile.toPath());
+				if (stream != null) {
+					Files.copy(stream, configFile.toPath());
+				} else {
+					throw new IOException("Failed to get resource stream for " + fileName);
+				}
 			}
 		}
 

@@ -25,7 +25,7 @@ public class SeasonsConfig implements ConfigurationProvider {
 	public boolean load(JavaPlugin plugin) {
 		FileConfiguration config;
 		try {
-			config = getConfigurationFile(plugin);
+			config = getConfiguration(plugin);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
