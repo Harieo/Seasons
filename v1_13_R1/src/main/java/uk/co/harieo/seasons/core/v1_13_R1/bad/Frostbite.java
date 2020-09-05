@@ -26,7 +26,7 @@ public class Frostbite extends Effect implements TickableEffect {
 	}
 
 	private int secondsPast = 0;
-	private boolean active = false;
+	private boolean active = false; // Allows grace period when frostbite first turns on
 
 	@Override
 	public void onTrigger(World world) {
@@ -40,7 +40,7 @@ public class Frostbite extends Effect implements TickableEffect {
 	 */
 	private void damage(World world) {
 		for (Player player : world.getPlayers()) {
-			if (player.getHealth() > 1) {
+			if (isPlayerCycleApplicable(player) && player.getHealth() > 1) {
 				List<ItemStack> armour = Arrays.asList(player.getInventory().getArmorContents());
 				if (armour.contains(null)) {
 					player.damage(1);

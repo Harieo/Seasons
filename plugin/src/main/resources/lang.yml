@@ -1,78 +1,105 @@
-version: 2
+# To stop a message from appearing, set the value to 'none'
+# Some names cannot be disabled, such as weather names, because the plugin cannot run without them
 
 weathers:
-    beautiful: "&aThe sun is shining, the grass is green and the weather is &eBeautiful"
-    breezy: "&7A cool breeze touches your skin, it's going to be &2Breezy"
-    chilly: "&3You shiver as frost glistens around you, it's very &9Chilly"
-    rainy: "&3A loud rain falls and wets the ground, it's &9Rainy"
-    scorching: "&eThe sun burns your skin and the ground hurts to touch, it's &6Scorching"
-    hot: "&eIt's going to be very &6Hot &etoday"
-    warm: "&eA soothing warmth hugs you as you move, it's a &6Warm &eday"
-    cold: "&3The water is so very &9Cold &3today"
-    stormy: "&cA great &4Storm &cbrews, the Gods are angry... Brace yourself!"
-    freezing: "&3The water freezes with a sheet of ice and you feel a great cold, it's &9Freezing"
-    snowy: "&7A great white blanket covers the world, it's &fSnowy"
-    night: "&7The world rests with the sun and all is calm... Until the mobs come to eat you!"
+    name:
+        beautiful: '&aBeautiful'
+        breezy: '&7Breezy'
+        chilly: '&9Chilly'
+        rainy: '&9Rainy'
+        scorching: '&eScorching'
+        hot: '&eHot'
+        warm: '&eWarm'
+        cold: '&9Cold'
+        stormy: '&cStormy'
+        freezing: '&9Freezing'
+        snowy: '&7Snowy'
+        night: '&7Calm'
+    on-trigger:
+        beautiful: '&aThe sun is shining, the grass is green and the weather is %weather%'
+        breezy: '&7A cool breeze touches your skin, it is going to be %weather%'
+        chilly: '&3You shiver as frost glistens around you, it is very %weather%'
+        rainy: '&3A loud rain falls and wets the ground, it is %weather%'
+        scorching: '&eThe sun burns your skin and the ground hurts to touch, it is %weather%'
+        hot: '&eIt is going to be very %weather% &etoday'
+        warm: '&eA soothing warmth hugs you as you move, it is a %weather% &eday'
+        cold: '&3The water is so very %weather% &3today'
+        stormy: '&cA great %weather% &cbrews, the Gods are angry... Brace yourself!'
+        freezing: '&3The water freezes with a sheet of ice and you feel a great cold, it is %weather%'
+        snowy: '&7A great white blanket covers the world, it is %weather%'
+        night: '&7The world rests with the sun and all is calm... Until the mobs come to eat you!'
 
 seasons:
-    spring: "The sun rises, the flowers smell fresh and there is a Spring in your step... literally!"
-    summer: "Today feels warmer than the others, maybe even too warm... Summer has arrived!"
-    autumn: "A cool breeze whispers to the leaves that fall from the trees, \"it's Autumn!\""
-    winter: "A few snowflakes fall and the world grows cold, time for Winter to make it's mark..."
+    name:
+        spring: '&eSpring'
+        summer: '&6Summer'
+        autumn: '&2Autumn'
+        winter: '&9Winter'
+    on-trigger:
+        spring: 'The sun rises, the flowers smell fresh and there is a %season% in your step... literally!'
+        summer: 'Today feels warmer than the others, maybe even too warm... %season% has arrived!'
+        autumn: 'A cool breeze whispers to the leaves that fall from the trees, it is %season%!'
+        winter: 'A few snowflakes fall and the world grows cold, time for %season% to make its mark...'
 
 effects:
     on-trigger:
-        devastation: "&cYour hearts beats rapidly, yours legs tremble and you find you cannot regenerate health until this Devastation passes!"
-        feels-good: "&aThe breeze feels so good on your skin, armour would just ruin the effect..."
-        fluffy-coat: "&aYour armour gives you a soothing warmth, making you resistant to the harsh cold!"
-        frostbite: "&cThe world is freezing over and so will you if you don't get armour on!"
-        hold-onto-your-hat: "&7Be careful with your hat, the wind is getting up..."
-        hot-sand: "&eWalking on sand in this heat must be painful!"
-        icy: "&9A chill runs down your spine as water turns to ice!"
-        primitive-heating: "&9A source of heat would be great to carry around in this cold!"
-        revitalized: "&aThis weather is so revitalizing!"
-        soldering-iron: "&eThe nearby iron starts to sizzle, better put it down for now..."
-        strong-current: "&9The water flows with a strong current, it'll be hard to wade through!"
-        sweating: "&eThis is most definitely NOT the weather for full armour..."
-        the-shivers: "&cThe water is near ice and dangerously cold to the touch..."
-        wet-mud: "&7The dirt coats your boots and becomes hard to move through in this weather..."
-        warming-stew: "&7Your stomach starts to grumble and you begin to crave some hearty soup..."
-        wind-in-your-boots: "&7You feel the wind in your favour today!"
+        devastation: '&cYour hearts beats rapidly, yours legs tremble and you find you cannot regenerate health until this Devastation passes!'
+        feels-good: '&aThe breeze feels so good on your skin, armour would just ruin the effect...'
+        fluffy-coat: '&aYour armour gives you a soothing warmth, making you resistant to the harsh cold!'
+        frostbite: '&cThe world is freezing over and so will you if you fail to get armour on!'
+        hold-onto-your-hat: '&7Be careful with your hat, the wind is getting up...'
+        hot-sand: '&eWalking on sand in this heat must be painful!'
+        icy: '&9A chill runs down your spine as water turns to ice!'
+        primitive-heating: '&9A source of heat would be great to carry around in this cold!'
+        revitalized: '&aThis weather is so revitalizing!'
+        soldering-iron: '&eThe nearby iron starts to sizzle, better put it down for now...'
+        strong-current: '&9The water flows with a strong current, it will be hard to wade through!'
+        sweating: '&eThis is most definitely NOT the weather for full armour...'
+        the-shivers: '&cThe water is near ice and dangerously cold to the touch...'
+        wet-mud: '&7The dirt coats your boots and becomes hard to move through in this weather...'
+        warming-stew: '&7Your stomach starts to grumble and you begin to crave some hearty soup...'
+        wind-in-your-boots: '&7You feel the wind in your favour today!'
     on-give:
-        feels-good: "&aThe sun on your skin without armour gives you energy, Feels Good!"
-        fluffy-coat: "&aYour armour gives you a soothing warmth and makes you more Resistant to the world"
-        hold-onto-your-hat: "&eYour hat just blew off, oh dear!"
-        primitive-heating: "&aA hot item in your inventory warms your heart and makes you Resistant to the cold world"
-        revitalized: "&aThe sun from this world is so &eRevitalising&a, it's Regenerating you!"
-        icy: "&cThe water freezes in your bucket..."
-        soldering-iron: "&cThe iron is soldering hot, don't hold it for too long!"
-        strong-current: "&cThe current crashes against you and your muscles cry in pain..."
-        sweating: "&cSweat drips from your forehead, it is too Hot for armour today..."
-        the-shivers: "&cThe freezing water is killing you, get out of it if you want to live!"
-        warming-stew: "&aThat hit the spot, the delicious stew makes your wounds a little more bearable..."
-        wet-mud: "&eThe mud sticks to your boots, slowing you down..."
-        wind-in-your-boots: "&aYou feel a rush of Wind in your Boots and go hurtling forwards!"
+        feels-good: '&aThe sun on your skin without armour gives you energy, Feels Good!'
+        fluffy-coat: '&aYour armour gives you a soothing warmth and makes you more Resistant to the world'
+        hold-onto-your-hat: '&eYour hat just blew off, oh dear!'
+        primitive-heating: '&aA hot item in your inventory warms your heart and makes you Resistant to the cold world'
+        revitalized: '&aThe sun from this world is so &eRevitalising&a, it is Regenerating you!'
+        icy: '&cThe water freezes in your bucket...'
+        soldering-iron: '&cThe iron is soldering hot, try not to hold it for too long!'
+        strong-current: '&cThe current crashes against you and your muscles cry in pain...'
+        sweating: '&cSweat drips from your forehead, it is too Hot for armour today...'
+        the-shivers: '&cThe freezing water is killing you, get out of it if you want to live!'
+        warming-stew: '&aThat hit the spot, the delicious stew makes your wounds a little more bearable...'
+        wet-mud: '&eThe mud sticks to your boots, slowing you down...'
+        wind-in-your-boots: '&aYou feel a rush of Wind in your Boots and go hurtling forwards!'
     on-remove:
-        feels-good: "&eAs you leave the world behind, the energising sunlight wears off..."
-        fluffy-coat: "&cWithout armour, your body feels the cold once again and is no longer resistant to it"
-        primitive-heating: "&eYour body is no longer warmed and its Resistance wears away..."
-        revitalized: "&eAs the world's light leaves your skin, it's &6Revitalising &eenergy leaves too..."
-        strong-current: "&aThe waters die down and grow still..."
-        sweating: "&aThe air turns cooler and you wipe the sweat from your forehead..."
+        feels-good: '&eAs you leave the world behind, the energising sunlight wears off...'
+        fluffy-coat: '&cWithout armour, your body feels the cold once again and is no longer resistant to it'
+        primitive-heating: '&eYour body is no longer warmed and its Resistance wears away...'
+        revitalized: '&eAs the light of the world light leaves your skin, the &6Revitalising &eenergy leaves too...'
+        strong-current: '&aThe waters die down and grow still...'
+        sweating: '&aThe air turns cooler and you wipe the sweat from your forehead...'
 
 command:
-    effects-list-title: "&7For the weather &e%weather%, &7the effects are:"
-    effects-list-element: "&6&l%effect%: &7%description%"
+    effects-list-title: '&7For the weather &e%weather%, &7the effects are:'
+    effects-list-element: '&6&l%effect%: &7%description%'
     season-info:
-        - "%season-color%Your world is in %season%"
-        - "&7The weather is currently &2%weather%"
-        - "&eToday is Day %day% of %max-days%"
-    season-info-footer: "&7To see the effects of this weather, use the command &e/seasons effects"
+        - '%season-color%Your world is in %season%'
+        - '&7The weather is currently &2%weather%'
+        - '&eToday is Day %day% of %max-days%'
+    season-info-footer: '&7To see the effects of this weather, use the command &e/seasons effects'
     list-help:
-        - "&7You can currently list: %options%"
-        - "&7Usage: &e/seasons list <option>"
-    list-error: "&cThere are no lists of that type available!"
+        - '&7You can currently list: %options%'
+        - '&7Usage: &e/seasons list <option>'
+    list-error: '&cThere are no lists of that type available!'
+    permission-denied: '&cYou do not have permission to do that!'
+    all-effects-disabled: '&cThe server administrator has disabled all effects!'
+    barren-world: '&cThis world is barren and full of darkness... There are no seasons here.'
+    force-day: '&7Time shatters before you and now it is &bDay %day%'
+    force-weather: '&7The skies grow silent and with a great rumble, the weather is now %weather%'
+    force-season: '&7The air around you changes mystically and becomes %season%'
 
 misc:
-    prefix: "&e&lSeasons&7∙ &r"
-    catastrophic-alert: "&c&lCATASTROPHIC WEATHER ALERT - Take care to plan your day"
+    prefix: '&e&lSeasons&7∙ &r'
+    catastrophic-alert: '&c&lCATASTROPHIC WEATHER ALERT - Take care to plan your day'

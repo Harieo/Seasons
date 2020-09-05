@@ -19,9 +19,11 @@ public class SeasonalListener implements Listener {
 	public void onSeasonChange(SeasonChangeEvent event) {
 		Season season = event.getChangedTo();
 		World world = event.getCycle().getWorld();
-		for (Player player : world.getPlayers()) {
-			player.sendMessage(Seasons.PREFIX + season.getColor() + season.getMessage());
-		}
+		season.getMessage().ifPresent(message -> {
+			for (Player player : world.getPlayers()) {
+				player.sendMessage(Seasons.PREFIX + season.getColor() + message);
+			}
+		});
 	}
 
 	@EventHandler
@@ -31,14 +33,14 @@ public class SeasonalListener implements Listener {
 
 		for (Player player : world.getPlayers()) {
 			if (weather.isCatastrophic()) {
-				String message = Seasons.getInstance().getLanguageConfig()
+				Seasons.getInstance().getLanguageConfig()
 						.getStringOrDefault("misc.catastrophic-alert",
 								ChatColor.RED + ChatColor.BOLD.toString()
-										+ "CATASTROPHIC WEATHER ALERT - Take care to plan your day");
-				player.sendMessage(Seasons.PREFIX + message);
+										+ "CATASTROPHIC WEATHER ALERT - Take care to plan your day")
+						.ifPresent(message -> player.sendMessage(Seasons.PREFIX + message));
 			}
 
-			player.sendMessage(Seasons.PREFIX + weather.getMessage());
+			weather.getMessage().ifPresent(message -> player.sendMessage(Seasons.PREFIX + message));
 		}
 
 		world.setStorm(weather.isStorm());
@@ -48,9 +50,11 @@ public class SeasonalListener implements Listener {
 	public void onDayEnd(DayEndEvent event) {
 		if (event.isNatural()) {
 			World world = event.getCycle().getWorld();
-			for (Player player : world.getPlayers()) {
-				player.sendMessage(Seasons.PREFIX + Weather.NIGHT.getMessage());
-			}
+			Weather.NIGHT.getMessage().ifPresent(message -> {
+				for (Player player : world.getPlayers()) {
+					player.sendMessage(Seasons.PREFIX + message);
+				}
+			});
 		}
 	}
 

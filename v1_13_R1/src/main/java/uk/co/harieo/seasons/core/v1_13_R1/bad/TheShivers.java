@@ -14,7 +14,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import uk.co.harieo.seasons.plugin.Seasons;
 import uk.co.harieo.seasons.plugin.models.Cycle;
 import uk.co.harieo.seasons.plugin.models.Weather;
 import uk.co.harieo.seasons.plugin.models.effect.Effect;
@@ -42,7 +41,7 @@ public class TheShivers extends Effect implements TickableEffect {
 	 * @param player to check and mark
 	 */
 	private void damage(Player player) {
-		if (isPlayerCycleApplicable(player)) {
+		if (isPlayerCycleApplicable(player) && !player.isInsideVehicle()) {
 			Block block = player.getLocation().getBlock();
 			if (block.getType() == Material.WATER && !(player.getVehicle() instanceof Boat)) {
 				player.damage(1);

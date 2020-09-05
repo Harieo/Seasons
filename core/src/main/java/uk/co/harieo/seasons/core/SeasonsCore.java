@@ -17,15 +17,7 @@ public class SeasonsCore extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		FileConfiguration config = getConfig();
-		config.addDefault("DaysPerSeason", 30);
-		config.addDefault("SecondsOfDamage", 3);
-		config.addDefault("CustomWeathers", true);
-
-		getConfig().options().copyDefaults(true);
-		saveConfig();
-
-		seasons = new Seasons(this, config);
+		seasons = new Seasons(this);
 		seasons.startup();
 
 		String version = Bukkit.getVersion();
@@ -41,7 +33,7 @@ public class SeasonsCore extends JavaPlugin {
 					new WetMud(), new WarmingStew());
 		}
 
-		// Register effects that are compatible with modern and v1_12_2_R1 spigot
+		// Register effects that are compatible with modern and legacy spigot
 		seasons.addEffects(new Devastation(), new FeelsGood(), new FluffyCoat(), new Frostbite(), new HoldOntoYourHat(),
 				new HotSand(), new Revitalized(), new Sweating(), new WindInYourBoots());
 	}

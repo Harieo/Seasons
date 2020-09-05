@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import uk.co.harieo.seasons.plugin.Seasons;
 import uk.co.harieo.seasons.plugin.configuration.SeasonsConfig;
 import uk.co.harieo.seasons.plugin.configuration.SeasonsLanguageConfiguration;
@@ -21,10 +22,10 @@ public abstract class Effect implements Listener {
 
 	private static final List<String> cache = new ArrayList<>(); // Prevents multiple registrations of 1 listener
 
-	private String name;
-	private String description;
-	private List<Weather> weathers;
-	private boolean isGood;
+	private final String name;
+	private final String description;
+	private final List<Weather> weathers;
+	private final boolean isGood;
 	private boolean ignoreRoof = true;
 
 	public Effect(String name, String description, List<Weather> weathers, boolean good) {
@@ -52,10 +53,11 @@ public abstract class Effect implements Listener {
 	 * @param world to send the message to, if found
 	 */
 	private void sendTriggerMessage(World world) {
-		String triggerMessage = getMessageOrDefault("on-trigger", "An language configuration error occurred here...");
-		if (triggerMessage != null && isEnabled()) {
+		Optional<String> triggerMessage = getMessageOrDefault("on-trigger",
+				"A language configuration error occurred here...");
+		if (triggerMessage.isPresent() && isEnabled()) {
 			for (Player player : world.getPlayers()) {
-				player.sendMessage(Seasons.PREFIX + triggerMessage);
+				player.sendMessage(Seasons.PREFIX + triggerMessage.get());
 			}
 		}
 	}
@@ -67,7 +69,7 @@ public abstract class Effect implements Listener {
 	 * @param orElse the default message
 	 */
 	protected void sendGiveMessage(Player player, String orElse) {
-		player.sendMessage(Seasons.PREFIX + getMessageOrDefault("on-give", orElse));
+		getMessageOrDefault("on-give", orElse).ifPresent(message -> player.sendMessage(Seasons.PREFIX + message));
 	}
 
 	/**
@@ -77,7 +79,7 @@ public abstract class Effect implements Listener {
 	 * @param orElse the default message
 	 */
 	protected void sendRemoveMessage(Player player, String orElse) {
-		player.sendMessage(Seasons.PREFIX + getMessageOrDefault("on-remove", orElse));
+		getMessageOrDefault("on-remove", orElse).ifPresent(message -> player.sendMessage(Seasons.PREFIX + message));
 	}
 
 	/**
@@ -88,7 +90,7 @@ public abstract class Effect implements Listener {
 	 * @param orElse the default message
 	 * @return the configured message or the default if no configured method exists
 	 */
-	private String getMessageOrDefault(String messageType, String orElse) {
+	private Optional<String> getMessageOrDefault(String messageType, String orElse) {
 		SeasonsLanguageConfiguration languageConfiguration = Seasons.getInstance().getLanguageConfig();
 		return languageConfiguration.getStringOrDefault("effects." + messageType + "." + getId(), orElse);
 	}
@@ -180,8 +182,14 @@ public abstract class Effect implements Listener {
 	/**
 	 * @return whether this effect has been manually disabled via config inverted
 	 */
-	private boolean isEnabled() {
-		return !Seasons.getInstance().getSeasonsConfig().getDisabledEffects().contains(getId());
+	public boolean isEnabled() {
+		for (String disabledEffectName : Seasons.getInstance().getSeasonsConfig().getDisabledEffects()) {
+			if (disabledEffectName.equalsIgnoreCase(getName())) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**

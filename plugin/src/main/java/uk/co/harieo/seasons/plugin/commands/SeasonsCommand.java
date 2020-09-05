@@ -7,12 +7,16 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import uk.co.harieo.seasons.plugin.Seasons;
 import uk.co.harieo.seasons.plugin.configuration.SeasonsLanguageConfiguration;
+import uk.co.harieo.seasons.plugin.configuration.StaticPlaceholders;
 import uk.co.harieo.seasons.plugin.models.Cycle;
 import uk.co.harieo.seasons.plugin.models.Season;
 import uk.co.harieo.seasons.plugin.models.Weather;
@@ -68,19 +72,33 @@ public class SeasonsCommand implements CommandExecutor {
 		return false;
 	}
 
+	/**
+	 * Allows the sender to reload all the plugin's configuration files
+	 *
+	 * @param sender which has requested this reload
+	 */
 	private void reloadSeasons(CommandSender sender) {
 		if (!sender.hasPermission("seasons.reload")) {
-			sender.sendMessage(Seasons.PREFIX + ChatColor.RED + "You do not have permission to do that!");
+			sendPermissionDenied(sender);
 			return;
 		}
 
 		Seasons seasons = Seasons.getInstance();
-		seasons.getLanguageConfig().loadConfig(); // Reloads the language file
-		seasons.getSeasonsConfig().load(); // Reload the config.yml settings
+		JavaPlugin plugin = seasons.getPlugin();
+
+		seasons.getLanguageConfig().load(plugin); // Reloads the language file
+		seasons.getSeasonsConfig().load(plugin); // Reload the config.yml settings
 		seasons.setPrefix(); // Reloads the prefix separately as that is static
 		sender.sendMessage(Seasons.PREFIX + ChatColor.GREEN + "Plugin has been reloaded!");
 	}
 
+	/**
+	 * Sends a list of all effects which are currently active in a player's world
+	 *
+	 * @param player which has requested the information
+	 * @param cycle of the world which the player is currently in
+	 * @param hasEnabledEffects whether effects are enabled in the first place
+	 */
 	private void sendEffectsList(Player player, Cycle cycle, boolean hasEnabledEffects) {
 		if (cycle == null) {
 			sendBarrenWorldError(player);
@@ -93,26 +111,42 @@ public class SeasonsCommand implements CommandExecutor {
 			Weather weather = cycle.getWeather();
 			player.sendMessage("");
 
-			String effectsListTitle = languageConfiguration.getStringOrDefault("command.effects-list-title",
+			languageConfiguration.getStringOrDefault("command.effects-list-title",
 					ChatColor.GRAY + "For the weather " + ChatColor.YELLOW + weather.getName()
-							+ ChatColor.GRAY + " the effects are:");
-			player.sendMessage(Seasons.PREFIX + effectsListTitle.replace("%weather%", weather.getName()));
+							+ ChatColor.GRAY + " the effects are:").ifPresent(
+					message -> player.sendMessage(Seasons.PREFIX + message
+							.replace(StaticPlaceholders.WEATHER.toString(), weather.getName())));
 
-			String effectsListElement = languageConfiguration.getStringOrDefault("command.effects-list-element",
-					ChatColor.GOLD + ChatColor.BOLD.toString() + "%effect%: "
-							+ ChatColor.GRAY + "%description%");
+			Optional<String> potentialEffectsListElement = languageConfiguration
+					.getStringOrDefault("command.effects-list-element",
+							ChatColor.GOLD + ChatColor.BOLD.toString() + "%effect%: "
+									+ ChatColor.GRAY + "%description%");
 
-			for (Effect effect : weather.getEffects()) {
-				player.sendMessage(effectsListElement.replace("%effect%", effect.getName())
-						.replace("%description%", effect.getDescription()));
+			if (potentialEffectsListElement.isPresent()) {
+				String effectsListElement = potentialEffectsListElement.get();
+				for (Effect effect : weather.getEffects()) {
+					String effectName = effect.getName();
+					player.sendMessage(effectsListElement
+							.replace("%effect%", effect.isEnabled() ? effectName
+									: ChatColor.RED + ChatColor.BOLD.toString() + effectName)
+							.replace("%description%", effect.getDescription()));
+				}
 			}
 			player.sendMessage("");
 		} else {
-			player.sendMessage(
-					ChatColor.RED + "Your server administrator has decreed that all effects be disabled...");
+			languageConfiguration.getStringOrDefault("command.all-effects-disabled",
+					ChatColor.RED + "Your administrator has disabled all effects!")
+					.ifPresent(message -> player.sendMessage(Seasons.PREFIX + message));
 		}
 	}
 
+	/**
+	 * Sends information about the season, weather and day of the world a player is in
+	 *
+	 * @param player who has requested the information
+	 * @param cycle of the world the player is currently in
+	 * @param hasEnabledEffects whether effects are enabled in the player's world
+	 */
 	private void sendSeasonInfo(Player player, Cycle cycle, boolean hasEnabledEffects) {
 		if (cycle == null) {
 			sendBarrenWorldError(player);
@@ -130,12 +164,14 @@ public class SeasonsCommand implements CommandExecutor {
 		if (seasonInfo != null && !seasonInfo.isEmpty()) {
 			// Need to replace the placeholders, collect them as a new list and send them all to the player
 			seasonInfo.stream().map(string -> {
-				String replaced = string.replace("%season-color%", season.getColor().toString());
-				replaced = replaced.replace("%season%", season.getName());
-				replaced = replaced.replace("%weather%", cycle.getWeather().getName());
-				replaced = replaced.replace("%day%", String.valueOf(cycle.getDay()));
+				String replaced = string
+						.replace(StaticPlaceholders.SEASON_COLOR.toString(), season.getColor().toString());
+				replaced = replaced.replace(StaticPlaceholders.SEASON.toString(), season.getName());
+				replaced = replaced.replace(StaticPlaceholders.WEATHER.toString(), cycle.getWeather().getName());
+				replaced = replaced.replace(StaticPlaceholders.DAY.toString(), String.valueOf(cycle.getDay()));
 				replaced = replaced
-						.replace("%max-days%", String.valueOf(seasons.getSeasonsConfig().getDaysPerSeason()));
+						.replace(StaticPlaceholders.MAX_DAYS.toString(),
+								String.valueOf(seasons.getSeasonsConfig().getDaysPerSeason()));
 				return replaced;
 			}).collect(Collectors.toList()).forEach(player::sendMessage);
 		} else {
@@ -147,16 +183,22 @@ public class SeasonsCommand implements CommandExecutor {
 		}
 
 		if (hasEnabledEffects) {
-			player.sendMessage(languageConfiguration.getStringOrDefault("command.season-info-footer",
+			languageConfiguration.getStringOrDefault("command.season-info-footer",
 					ChatColor.GRAY + "To see the effects of this weather, use the command " + ChatColor.YELLOW
-							+ "/seasons effects"));
+							+ "/seasons effects").ifPresent(player::sendMessage);
 		}
 		player.sendMessage("");
 	}
 
+	/**
+	 * Imports a new world into seasons by force, creating data for it
+	 *
+	 * @param player which has requested the import
+	 * @param world which the player has requested be imported
+	 */
 	private void importWorld(Player player, World world) {
 		if (!player.hasPermission("seasons.import")) {
-			player.sendMessage(Seasons.PREFIX + ChatColor.RED + "You do not have permission to do that!");
+			sendPermissionDenied(player);
 			return;
 		}
 
@@ -172,40 +214,79 @@ public class SeasonsCommand implements CommandExecutor {
 		}
 	}
 
+	/**
+	 * Lists all the available weathers and seasons which a player can pick from
+	 *
+	 * @param player who is requesting the information
+	 * @param args the arguments which came with the command
+	 */
 	private void listAvailableModels(Player player, String[] args) {
 		SeasonsLanguageConfiguration languageConfiguration = Seasons.getInstance().getLanguageConfig();
 		if (args.length == 1) {
 			languageConfiguration.getStringList("command.list-help")
 					.stream()
-					.map(string -> string.replaceAll("%options%", "weather, seasons"))
+					.map(string -> string.replaceAll(StaticPlaceholders.OPTIONS.toString(), "weather, seasons"))
 					.forEach(player::sendMessage);
 		} else {
-			StringBuilder sb = new StringBuilder();
+			StringBuilder builder = new StringBuilder();
+			builder.append(ChatColor.YELLOW);
+
+			String modelName;
+			List<String> allModelNames;
 			if (args[1].equalsIgnoreCase("weather")) {
-				sb.append(ChatColor.YELLOW);
-				for (String string : Weather.getWeatherList()) {
-					sb.append(string).append(", ");
-				}
-				sb.delete(sb.length() - 2,
-						sb.length() - 1); // Should remove trailing ', ' which includes the space
-				player.sendMessage(ChatColor.GRAY + "Weathers available:- " + sb.toString());
+				allModelNames = Weather.getWeatherList();
+				modelName = "Weathers";
 			} else if (args[1].equalsIgnoreCase("seasons")) {
-				sb.append(ChatColor.YELLOW);
-				for (String string : Season.getSeasonsList()) {
-					sb.append(string).append(", ");
-				}
-				sb.delete(sb.length() - 2,
-						sb.length() - 1);
-				player.sendMessage(ChatColor.GRAY + "Seasons available:- " + sb.toString());
+				allModelNames = Season.getSeasonsList();
+				modelName = "Seasons";
 			} else {
-				player.sendMessage(languageConfiguration
-						.getStringOrDefault("list-error", ChatColor.GRAY + "That is not something that is listed"));
+				languageConfiguration
+						.getStringOrDefault("list-error", ChatColor.GRAY + "That is not something that is listed")
+						.ifPresent(player::sendMessage);
+				return;
 			}
+
+			for (int i = 0; i < allModelNames.size(); i++) {
+				builder.append(allModelNames.get(i));
+				if (i + 1 < allModelNames.size()) { // Only if there is a name after this one
+					builder.append(", ");
+				}
+			}
+			player.sendMessage(ChatColor.GRAY + modelName + " available: " + builder.toString());
 		}
 	}
 
-	private void sendBarrenWorldError(Player player) {
-		player.sendMessage(ChatColor.RED + "This world is barren and full of darkness... It has no season!");
+	/**
+	 * Sends a message to the sender that the world they are requesting information on is not managed by seasons
+	 *
+	 * @param sender to send the message to
+	 */
+	public static void sendBarrenWorldError(CommandSender sender) {
+		Seasons.getInstance().getLanguageConfig().getStringOrDefault("command.barren-world",
+				ChatColor.RED + "This world is barren and full of darkness... It has no season!")
+				.ifPresent(message -> sendWithPrefix(message, sender));
+	}
+
+	/**
+	 * Sends a message to the sender that they do not have permission to run the command
+	 *
+	 * @param sender to send the message to
+	 */
+	public static void sendPermissionDenied(CommandSender sender) {
+		SeasonsLanguageConfiguration languageConfiguration = Seasons.getInstance().getLanguageConfig();
+		languageConfiguration.getStringOrDefault("command.permission-denied",
+				ChatColor.RED + "You do not have permission to do that!")
+				.ifPresent(message -> sendWithPrefix(message, sender));
+	}
+
+	/**
+	 * Sends the message to the receiver with the {@link Seasons#PREFIX}
+	 *
+	 * @param message to send to the receiver
+	 * @param receiver to send the message to
+	 */
+	public static void sendWithPrefix(String message, CommandSender receiver) {
+		receiver.sendMessage(Seasons.PREFIX + message);
 	}
 
 }

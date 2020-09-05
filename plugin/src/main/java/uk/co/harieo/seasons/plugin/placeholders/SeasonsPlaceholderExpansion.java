@@ -5,13 +5,13 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.jetbrains.annotations.NotNull;
 import uk.co.harieo.seasons.plugin.Seasons;
 import uk.co.harieo.seasons.plugin.models.Cycle;
-import uk.co.harieo.seasons.plugin.models.Season;
 
 public class SeasonsPlaceholderExpansion extends PlaceholderExpansion {
 
-	private Seasons seasons;
+	private final Seasons seasons;
 
 	public SeasonsPlaceholderExpansion(Seasons seasons) {
 		this.seasons = seasons;
@@ -28,22 +28,22 @@ public class SeasonsPlaceholderExpansion extends PlaceholderExpansion {
 	}
 
 	@Override
-	public String getAuthor() {
+	public @NotNull String getAuthor() {
 		return "Harieo";
 	}
 
 	@Override
-	public String getIdentifier() {
+	public @NotNull String getIdentifier() {
 		return "seasons";
 	}
 
 	@Override
-	public String getVersion() {
+	public @NotNull String getVersion() {
 		return seasons.getPlugin().getDescription().getVersion();
 	}
 
 	@Override
-	public String onPlaceholderRequest(Player player, String identifier) {
+	public String onPlaceholderRequest(Player player, @NotNull String identifier) {
 		if (player == null) {
 			return "";
 		}
@@ -77,11 +77,20 @@ public class SeasonsPlaceholderExpansion extends PlaceholderExpansion {
 		if (split.length < 2) {
 			world = player.getWorld();
 		} else {
-			world = Bukkit.getWorld(split[1]);
+			StringBuilder builder = new StringBuilder();
+			for (int i = 1; i < split.length; i++) {
+				builder.append(split[i]);
+				if (i + 1 < split.length) { // Only add if there is a word after this one
+					builder.append("_");
+				}
+			}
+
+			String worldName = builder.toString();
+			world = Bukkit.getWorld(worldName);
 		}
 
 		if (world == null) {
-			return "Invalid world: " + split[1];
+			return "Invalid world";
 		}
 
 		Cycle cycle = seasons.getWorldCycle(world);

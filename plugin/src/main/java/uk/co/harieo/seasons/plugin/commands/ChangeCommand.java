@@ -9,7 +9,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
+import java.util.Optional;
 import uk.co.harieo.seasons.plugin.Seasons;
+import uk.co.harieo.seasons.plugin.configuration.SeasonsLanguageConfiguration;
+import uk.co.harieo.seasons.plugin.configuration.StaticPlaceholders;
 import uk.co.harieo.seasons.plugin.events.DayEndEvent;
 import uk.co.harieo.seasons.plugin.events.SeasonChangeEvent;
 import uk.co.harieo.seasons.plugin.events.SeasonsWeatherChangeEvent;
@@ -51,8 +54,7 @@ public class ChangeCommand implements CommandExecutor {
 
 		Cycle cycle = seasons.getWorldCycle(world);
 		if (cycle == null) {
-			sender.sendMessage(
-					Seasons.PREFIX + ChatColor.RED + "That world is too barren to be affected by Seasons...");
+			SeasonsCommand.sendBarrenWorldError(sender);
 			return false;
 		}
 
@@ -73,9 +75,11 @@ public class ChangeCommand implements CommandExecutor {
 		World world = cycle.getWorld();
 		PluginManager manager = Bukkit.getPluginManager();
 		String commandLabel = command.getLabel();
+		SeasonsLanguageConfiguration languageConfiguration = Seasons.getInstance().getLanguageConfig();
+
 		if (commandLabel.equalsIgnoreCase("changeday")) {
 			if (hasInsufficientPermissions(sender, "seasons.change.day")) {
-				sender.sendMessage(Seasons.PREFIX + ChatColor.RED + "You don't have permission to change the day!");
+				SeasonsCommand.sendPermissionDenied(sender);
 				return;
 			}
 
@@ -89,9 +93,13 @@ public class ChangeCommand implements CommandExecutor {
 			}
 
 			cycle.setDay(newDay);
-			broadcast(world,
-					Seasons.PREFIX + ChatColor.GRAY + "Time shatters before you, days fly by and it is now Day "
-							+ ChatColor.LIGHT_PURPLE + newDay);
+			languageConfiguration.getStringOrDefault("command.force-day",
+					ChatColor.GRAY + "Time shatters before you, days fly by and it is now Day " + ChatColor.LIGHT_PURPLE
+							+ newDay)
+					.ifPresent(message -> broadcast(world,
+							Seasons.PREFIX + message
+									.replaceAll(StaticPlaceholders.DAY.toString(), String.valueOf(newDay))));
+
 			// Confirm to the sender, who may not be in the world
 			sender.sendMessage(
 					Seasons.PREFIX + ChatColor.GREEN + "Successfully " + ChatColor.GRAY + "changed the day to "
@@ -99,7 +107,7 @@ public class ChangeCommand implements CommandExecutor {
 							.getName());
 		} else if (commandLabel.equalsIgnoreCase("changeweather")) {
 			if (hasInsufficientPermissions(sender, "seasons.change.weather")) {
-				sender.sendMessage(Seasons.PREFIX + ChatColor.RED + "You don't have permission to change the weather!");
+				SeasonsCommand.sendPermissionDenied(sender);
 				return;
 			}
 
@@ -113,21 +121,28 @@ public class ChangeCommand implements CommandExecutor {
 				return;
 			}
 
-			Weather oldWeather = Weather.fromName(cycle.getWeather().getName());
+			Weather oldWeather = cycle.getWeather();
 			cycle.setWeather(weather);
-			broadcast(world, Seasons.PREFIX + ChatColor.GRAY
-					+ "The skies grow silent and with a great rumble the weather turns to " + ChatColor.GREEN + weather
-					.getName());
+
+			String weatherName = weather.getName();
+			languageConfiguration.getStringOrDefault("command.force-weather",
+					"The skies grow silent and with a great rumble the weather turns to " + ChatColor.GREEN
+							+ weatherName)
+					.ifPresent(message -> broadcast(world,
+							Seasons.PREFIX + message
+									.replaceAll(StaticPlaceholders.WEATHER.toString(), ChatColor.GREEN + weatherName)));
+
 			// Confirm to the sender, who may not be in the world
 			sender.sendMessage(
 					Seasons.PREFIX + ChatColor.GREEN + "Successfully " + ChatColor.GRAY + "changed the weather to "
-							+ ChatColor.YELLOW + weather.getName() + ChatColor.GRAY + " in " + ChatColor.LIGHT_PURPLE
+							+ ChatColor.YELLOW + weatherName + ChatColor.GRAY + " in " + ChatColor.LIGHT_PURPLE
 							+ world.getName());
+
 			manager.callEvent(new DayEndEvent(cycle, oldWeather, false));
 			manager.callEvent(new SeasonsWeatherChangeEvent(cycle, oldWeather, weather, false));
 		} else if (commandLabel.equalsIgnoreCase("changeseason")) {
 			if (hasInsufficientPermissions(sender, "seasons.change.season")) {
-				sender.sendMessage(Seasons.PREFIX + ChatColor.RED + "You don't have permission to change the season!");
+				SeasonsCommand.sendPermissionDenied(sender);
 				return;
 			}
 
@@ -136,11 +151,17 @@ public class ChangeCommand implements CommandExecutor {
 				sender.sendMessage(Seasons.PREFIX + ChatColor.RED + "We couldn't find a season called " + name);
 				return;
 			}
+			String seasonName = season.getName();
 
 			manager.callEvent(new SeasonChangeEvent(cycle, season, cycle.getSeason(), false));
+
 			cycle.setSeason(season);
-			broadcast(world, Seasons.PREFIX + ChatColor.GRAY + "The air around you changes mystically and becomes "
-					+ ChatColor.GOLD + season.getName());
+			languageConfiguration.getStringOrDefault("command.force-season",
+					ChatColor.GRAY + "The air around you changes mystically and becomes " + ChatColor.GOLD + seasonName)
+					.ifPresent(message -> broadcast(world,
+							Seasons.PREFIX + message
+									.replaceAll(StaticPlaceholders.SEASON.toString(), ChatColor.YELLOW + seasonName)));
+
 			// Confirm to the sender, who may not be in the world
 			sender.sendMessage(
 					Seasons.PREFIX + ChatColor.GREEN + "Successfully " + ChatColor.GRAY + "changed the season to "

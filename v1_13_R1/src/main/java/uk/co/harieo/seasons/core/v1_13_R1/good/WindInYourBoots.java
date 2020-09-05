@@ -40,7 +40,7 @@ public class WindInYourBoots extends Effect implements TickableEffect {
 			if (random < 5) {
 				World world = cycle.getWorld();
 				for (Player player : world.getPlayers()) {
-					if (!player.hasPotionEffect(PotionEffectType.SPEED)) {
+					if (isEnabled() && !player.hasPotionEffect(PotionEffectType.SPEED)) {
 						player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 20, 0));
 						sendGiveMessage(player, ChatColor.GREEN
 								+ "You feel a rush of Wind in your Boots and go hurtling forwards!");

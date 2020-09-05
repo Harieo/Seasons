@@ -1,18 +1,18 @@
 package uk.co.harieo.seasons.plugin.configuration;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
+import java.io.IOException;
 import java.util.List;
-import uk.co.harieo.seasons.plugin.Seasons;
+import uk.co.harieo.seasons.plugin.actionbar.SeasonsActionBar;
 
-public class SeasonsConfig {
+/**
+ * Loads the plugin's settings from the configuration file
+ */
+public class SeasonsConfig implements ConfigurationProvider {
 
-	private JavaPlugin plugin;
-
-	private int version;
+	private double currentVersion;
 	private int daysPerSeason; // Days that must go by before the world moves to the next season
 	private int secondsPerDamage; // Whether to activate the effects of the seasonal weathers
 	private int roofHeight; // The height of the roof that would prevent an effect from the sky
@@ -21,31 +21,49 @@ public class SeasonsConfig {
 	private List<String> disabledWeathers;
 	private List<String> disabledEffects;
 
-	public SeasonsConfig(JavaPlugin plugin) {
-		this.plugin = plugin;
-		load();
-	}
+	@Override
+	public boolean load(JavaPlugin plugin) {
+		FileConfiguration config;
+		try {
+			config = getConfiguration(plugin);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
 
-	public void load() {
-		FileConfiguration config = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "config.yml"));
-		version = config.getInt("version");
+		currentVersion = config.getDouble("version");
 		daysPerSeason = config.getInt("DaysPerSeason");
 		secondsPerDamage = config.getInt("SecondsOfDamage");
 		roofHeight = config.getInt("RoofHeight");
 		enableEffects = config.getBoolean("CustomWeathers");
+		if (config.getBoolean("ActionBar")) {
+			SeasonsActionBar.start();
+		} else {
+			SeasonsActionBar.stop();
+		}
 		disabledWorlds = config.getStringList("disabled-worlds");
 		disabledWeathers = config.getStringList("disabled-weathers");
 		disabledEffects = config.getStringList("disabled-effects");
+		plugin.getLogger().info(disabledWorlds.size() + " worlds have been disabled, " + disabledWeathers.size()
+				+ " weathers have been disabled and " + disabledEffects.size() + " have been disabled");
+		verifyVersion();
 
-		// This must be set if the language config is ever updated past v1
-		if (!config.contains("version") || config.getInt("version") < 2) {
-			Seasons.getInstance().getPlugin().getLogger().warning(
-					"WARNING: Your config.yml file is out of date, please backup and delete it to receive this update!");
-		}
+		return true;
 	}
 
-	public int getVersion() {
-		return version;
+	@Override
+	public String getFileName() {
+		return "config.yml";
+	}
+
+	@Override
+	public double getLatestVersion() {
+		return 3.0;
+	}
+
+	@Override
+	public double getCurrentVersion() {
+		return currentVersion;
 	}
 
 	public int getDaysPerSeason() {
@@ -75,4 +93,5 @@ public class SeasonsConfig {
 	public List<String> getDisabledEffects() {
 		return disabledEffects;
 	}
+
 }
