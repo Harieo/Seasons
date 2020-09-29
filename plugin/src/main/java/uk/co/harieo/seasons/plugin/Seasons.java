@@ -74,20 +74,24 @@ public class Seasons {
  	 */
 	public void startup() {
 		setPrefix();
-		this.worldHandler = new SeasonsWorlds(this); // Load saved worlds
-		new WorldTicker().runTaskTimer(plugin, 0, 20); // Begin the cycles
+		plugin.getLogger().info("Preparing to load...");
+		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+			this.worldHandler = new SeasonsWorlds(this); // Load saved worlds
+			new WorldTicker().runTaskTimer(plugin, 0, 20); // Begin the cycles
 
-		ChangeCommand changeCommand = new ChangeCommand();
-		setCommandExecutor("season", new SeasonsCommand());
-		setCommandExecutor("changeday", changeCommand);
-		setCommandExecutor("changeweather", changeCommand);
-		setCommandExecutor("changeseason", changeCommand);
+			ChangeCommand changeCommand = new ChangeCommand();
+			setCommandExecutor("season", new SeasonsCommand());
+			setCommandExecutor("changeday", changeCommand);
+			setCommandExecutor("changeweather", changeCommand);
+			setCommandExecutor("changeseason", changeCommand);
 
-		Bukkit.getPluginManager().registerEvents(new SeasonalListener(), plugin);
+			Bukkit.getPluginManager().registerEvents(new SeasonalListener(), plugin);
 
-		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-			new SeasonsPlaceholderExpansion(this).register();
-		}
+			if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+				new SeasonsPlaceholderExpansion(this).register();
+			}
+			plugin.getLogger().info("Seasons has been loaded!");
+		});
 	}
 
 	/**
