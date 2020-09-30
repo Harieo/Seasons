@@ -5,7 +5,6 @@ import org.bukkit.World;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import uk.co.harieo.seasons.plugin.configuration.SeasonsConfig;
 import uk.co.harieo.seasons.plugin.events.DayEndEvent;
 import uk.co.harieo.seasons.plugin.events.SeasonChangeEvent;
 import uk.co.harieo.seasons.plugin.events.SeasonsWeatherChangeEvent;
