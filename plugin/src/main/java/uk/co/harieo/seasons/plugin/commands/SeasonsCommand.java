@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.jetbrains.annotations.NotNull;
 import uk.co.harieo.seasons.plugin.Seasons;
 import uk.co.harieo.seasons.plugin.configuration.SeasonsLanguageConfiguration;
 import uk.co.harieo.seasons.plugin.configuration.StaticPlaceholders;
@@ -30,7 +31,8 @@ public class SeasonsCommand implements CommandExecutor {
 					+ "Harieo";
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
+	@SuppressWarnings("annotation")
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
 		if (!(sender instanceof Player)) {
 			// Adds an exceptions for commands which console may perform
 			if (args.length > 0) {
@@ -88,6 +90,7 @@ public class SeasonsCommand implements CommandExecutor {
 
 		seasons.getLanguageConfig().load(plugin); // Reloads the language file
 		seasons.getSeasonsConfig().load(plugin); // Reload the config.yml settings
+		seasons.getWeatherChanceConfiguration().load(plugin); // Reload chances.yml
 		seasons.setPrefix(); // Reloads the prefix separately as that is static
 		sender.sendMessage(Seasons.PREFIX + ChatColor.GREEN + "Plugin has been reloaded!");
 	}

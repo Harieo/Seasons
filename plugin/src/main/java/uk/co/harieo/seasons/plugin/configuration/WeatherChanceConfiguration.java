@@ -4,9 +4,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import uk.co.harieo.seasons.plugin.Seasons;
 import uk.co.harieo.seasons.plugin.models.Weather;
 
@@ -25,15 +23,16 @@ public class WeatherChanceConfiguration implements ConfigurationProvider {
 		try {
 			FileConfiguration configuration = getConfiguration(plugin);
 			currentVersion = configuration.getDouble("version");
+			loadedChances.clear(); // In-case this is a reload
 			for (Weather weather : Weather.values()) {
 				String key = weather.name().toLowerCase();
 				if (configuration.isSet(key)) {
 					loadedChances.put(weather, configuration.getInt(key));
 				} else if (weather.getDefaultChance() > 0) { // Don't allow chance to be set for unnatural weathers
 					configuration.set(key, weather.getDefaultChance());
-					configuration.save(getFile(plugin));
 				}
 			}
+			configuration.save(getFile(plugin));
 
 			verifyVersion();
 			return true;
@@ -61,6 +60,8 @@ public class WeatherChanceConfiguration implements ConfigurationProvider {
 	 * @return the chosen weather
 	 */
 	public Weather pickRandomWeather(Collection<Weather> possibilities) {
+		possibilities.removeIf(weather -> weather.getDefaultChance() <= 0);
+
 		int highestBound = 0;
 		for (Weather weather : possibilities) {
 			highestBound += getChance(weather);
