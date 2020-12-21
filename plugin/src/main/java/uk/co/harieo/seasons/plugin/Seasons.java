@@ -6,11 +6,13 @@ import org.bukkit.World;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
 import java.util.logging.Logger;
 import org.apache.commons.lang.Validate;
+import uk.co.harieo.seasons.plugin.actionbar.TitleMessageHandler;
 import uk.co.harieo.seasons.plugin.commands.ChangeCommand;
 import uk.co.harieo.seasons.plugin.commands.SeasonsCommand;
 import uk.co.harieo.seasons.plugin.configuration.SeasonsConfig;
@@ -85,7 +87,9 @@ public class Seasons {
 			setCommandExecutor("changeweather", changeCommand);
 			setCommandExecutor("changeseason", changeCommand);
 
-			Bukkit.getPluginManager().registerEvents(new SeasonalListener(), plugin);
+			PluginManager pluginManager = Bukkit.getPluginManager();
+			pluginManager.registerEvents(new SeasonalListener(), plugin);
+			pluginManager.registerEvents(new TitleMessageHandler(), plugin);
 
 			if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
 				new SeasonsPlaceholderExpansion(this).register();

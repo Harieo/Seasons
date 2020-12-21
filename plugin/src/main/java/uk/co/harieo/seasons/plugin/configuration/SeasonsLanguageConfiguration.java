@@ -29,7 +29,9 @@ public class SeasonsLanguageConfiguration implements ConfigurationProvider {
 		try {
 			config = getConfiguration(plugin);
 			currentVersion = config.getDouble("version");
-			verifyVersion();
+			if (currentVersion != getLatestVersion() && !attemptVersionInjection(plugin, config)) {
+				verifyVersion();
+			}
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -39,12 +41,32 @@ public class SeasonsLanguageConfiguration implements ConfigurationProvider {
 
 	@Override
 	public double getLatestVersion() {
-		return 3.0;
+		return 4.0;
 	}
 
 	@Override
 	public double getCurrentVersion() {
 		return currentVersion;
+	}
+
+	public boolean attemptVersionInjection(JavaPlugin plugin, FileConfiguration config) {
+		if (getCurrentVersion() == 3) {
+			double versionUpdatingTo = 4.0;
+			config.set("misc.weather-change", "&7The weather has changed");
+			config.set("misc.season-change", "&7The season has changed");
+			config.set("version", versionUpdatingTo);
+			try {
+				config.save(getFile(plugin));
+				plugin.getLogger().info("Your language file has been automatically updated to version "
+						+ versionUpdatingTo);
+				return true;
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}
+		} else {
+			return false;
+		}
 	}
 
 	/**
