@@ -3,6 +3,9 @@ SecondsOfDamage: 3
 CustomWeathers: true
 RoofHeight: 10
 ActionBar: true
+TitleMessages:
+    season: false
+    weather: false
 disabled-worlds:
     - 'world_nether'
     - 'world_the_end'

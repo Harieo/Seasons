@@ -43,7 +43,11 @@ public class SeasonalListener implements Listener {
 			weather.getMessage().ifPresent(message -> player.sendMessage(Seasons.PREFIX + message));
 		}
 
-		world.setStorm(weather.isStorm());
+		boolean storm = weather.isStorm();
+		world.setStorm(storm);
+		if (storm) {
+			world.setThundering(weather.isThundering());
+		}
 	}
 
 	@EventHandler

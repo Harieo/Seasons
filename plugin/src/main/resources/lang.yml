@@ -103,3 +103,5 @@ command:
 misc:
     prefix: '&e&lSeasons&7∙ &r'
     catastrophic-alert: '&c&lCATASTROPHIC WEATHER ALERT - Take care to plan your day'
+    weather-change: '&7The weather has changed'
+    season-change: '&7The season has changed'
