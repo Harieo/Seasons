@@ -2,8 +2,9 @@ name: Java CI
 
 on:
   pull_request:
-    branches:
-    - *
+    types:
+      - opened
+      - edited
   push:
     branches:
     - master
