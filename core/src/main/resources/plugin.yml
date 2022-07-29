@@ -1,8 +1,7 @@
 main: uk.co.harieo.seasons.core.SeasonsCore
-version: 2.5.0
+version: 2.5.1
 name: Seasons
 author: Harieo
-api-version: '1.13'
 softdepend:
   - 'PlaceholderAPI'
 
