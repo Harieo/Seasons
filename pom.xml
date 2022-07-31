@@ -7,7 +7,7 @@
     <groupId>uk.co.harieo</groupId>
     <artifactId>Seasons-parent</artifactId>
     <packaging>pom</packaging>
-    <version>parent</version>
+    <version>2.6.0</version>
 
     <modules>
         <module>core</module>

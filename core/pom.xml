@@ -10,7 +10,6 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>Seasons-Core</artifactId>
-    <version>2.5.1</version>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -23,7 +22,7 @@
         <dependency>
             <groupId>uk.co.harieo</groupId>
             <artifactId>Seasons-plugin</artifactId>
-            <version>plugin</version>
+            <version>parent</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
