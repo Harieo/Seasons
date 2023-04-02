@@ -55,6 +55,12 @@ public class SeasonsPlaceholderExpansion extends PlaceholderExpansion {
 			type = RequestType.WEATHER;
 		} else if (identifier.startsWith("day")) {
 			type = RequestType.DAY;
+		} else if (identifier.startsWith("year")) {
+			if (Seasons.getInstance().getSeasonsConfig().isYearsEnabled()) {
+				type = RequestType.YEAR;
+			} else {
+				return null;
+			}
 		} else {
 			return null;
 		}
@@ -101,6 +107,8 @@ public class SeasonsPlaceholderExpansion extends PlaceholderExpansion {
 				return cycle.getSeason().getName();
 			} else if (type == RequestType.WEATHER) {
 				return cycle.getWeather().getName();
+			} else if (type == RequestType.YEAR) {
+				return String.valueOf(cycle.getYear());
 			} else {
 				return String.valueOf(cycle.getDay());
 			}
@@ -108,7 +116,7 @@ public class SeasonsPlaceholderExpansion extends PlaceholderExpansion {
 	}
 
 	public enum RequestType {
-		SEASON, WEATHER, DAY
+		SEASON, WEATHER, DAY, YEAR
 	}
 
 }

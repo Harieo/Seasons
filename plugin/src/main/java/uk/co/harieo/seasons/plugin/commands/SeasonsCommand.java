@@ -175,10 +175,23 @@ public class SeasonsCommand implements CommandExecutor {
 				replaced = replaced
 						.replace(StaticPlaceholders.MAX_DAYS.toString(),
 								String.valueOf(seasons.getSeasonsConfig().getDaysPerSeason()));
+				if (seasons.getSeasonsConfig().isYearsEnabled()) {
+					replaced = replaced.replace(StaticPlaceholders.YEAR.toString(), String.valueOf(cycle.getYear()));
+					replaced = replaced.replace(StaticPlaceholders.SEASON_NUMBER.toString(), String.valueOf(cycle.getSeasonOfYear()));
+					replaced = replaced
+							.replace(StaticPlaceholders.SEASONS_PER_YEAR.toString(),
+									 String.valueOf(seasons.getSeasonsConfig().getSeasonsPerYear()));
+				}
 				return replaced;
 			}).collect(Collectors.toList()).forEach(player::sendMessage);
 		} else {
-			player.sendMessage(season.getColor() + "Your world is in " + season.getName());
+			player.sendMessage(season.getColor() + "Your world is in " + season.getName()
+					+ (seasons.getSeasonsConfig().isYearsEnabled()
+					   ?
+					(ChatColor.GRAY + " - " + ChatColor.RED + cycle.getYear() + ChatColor.GRAY
+					+ " - " + ChatColor.GREEN + cycle.getSeasonOfYear() + ChatColor.GRAY + "/"
+					+ ChatColor.GREEN + seasons.getSeasonsConfig().getSeasonsPerYear())
+					   : ""));
 			player.sendMessage(ChatColor.GREEN + "The weather is currently " + ChatColor.DARK_GREEN
 					+ cycle.getWeather().getName());
 			player.sendMessage(ChatColor.GOLD + "Today is day " + cycle.getDay()

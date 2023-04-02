@@ -13,12 +13,16 @@ public class Cycle {
 	private World world;
 	private Season season;
 	private Weather weather;
+	private int year;
+	private int seasonOfYear;
 	private int day;
 
-	public Cycle(World world, Season season, Weather weather, int day) {
+	public Cycle(World world, Season season, Weather weather, int year, int seasonOfYear, int day) {
 		this.world = world;
 		this.season = season;
 		this.weather = weather;
+		this.year = year;
+		this.seasonOfYear = seasonOfYear;
 		this.day = day;
 	}
 
@@ -44,6 +48,22 @@ public class Cycle {
 
 	public void setWeather(Weather weather) {
 		this.weather = weather;
+	}
+
+	public int getYear() {
+		return year;
+	}
+
+	public void setYear(int year) {
+		this.year = year;
+	}
+
+	public int getSeasonOfYear() {
+		return seasonOfYear;
+	}
+
+	public void setSeasonOfYear(int seasonOfYear) {
+		this.seasonOfYear = seasonOfYear;
 	}
 
 	public int getDay() {

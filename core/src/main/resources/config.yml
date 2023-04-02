@@ -1,4 +1,7 @@
 DaysPerSeason: 30
+YearsEnabled: true
+StartingYear: 2000
+SeasonsPerYear: 4
 SecondsOfDamage: 3
 CustomWeathers: true
 RoofHeight: 10
@@ -6,6 +9,7 @@ ActionBar: true
 TitleMessages:
     season: false
     weather: false
+    year: false
 disabled-worlds:
     - 'world_nether'
     - 'world_the_end'

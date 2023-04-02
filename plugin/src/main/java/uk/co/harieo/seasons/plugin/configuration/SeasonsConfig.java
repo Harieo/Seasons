@@ -16,9 +16,12 @@ public class SeasonsConfig implements ConfigurationProvider {
 
 	private double currentVersion;
 	private int daysPerSeason; // Days that must go by before the world moves to the next season
+	private int startingYear; // The year that the world starts on
+	private int seasonsPerYear; // The amount of seasons that must pass before the year increases
 	private int secondsPerDamage; // Whether to activate the effects of the seasonal weathers
 	private int roofHeight; // The height of the roof that would prevent an effect from the sky
 	private boolean enableEffects; // How many ticks per damage dealt to a player on a harmful weather
+	private boolean yearsEnabled; // Whether to enable the years system
 	private List<String> disabledWorlds;
 	private List<String> disabledWeathers;
 	private List<String> disabledEffects;
@@ -39,9 +42,12 @@ public class SeasonsConfig implements ConfigurationProvider {
 		}
 
 		daysPerSeason = config.getInt("DaysPerSeason");
+		startingYear = config.getInt("StartingYear");
+		seasonsPerYear = config.getInt("SeasonsPerYear");
 		secondsPerDamage = config.getInt("SecondsOfDamage");
 		roofHeight = config.getInt("RoofHeight");
 		enableEffects = config.getBoolean("CustomWeathers");
+		yearsEnabled = config.getBoolean("YearsEnabled");
 
 		if (config.getBoolean("ActionBar")) {
 			SeasonsActionBar.start();
@@ -49,6 +55,7 @@ public class SeasonsConfig implements ConfigurationProvider {
 			SeasonsActionBar.stop();
 		}
 
+		TitleMessageHandler.setOnYearChange(config.getBoolean("TitleMessages.year"));
 		TitleMessageHandler.setOnSeasonChange(config.getBoolean("TitleMessages.season"));
 		TitleMessageHandler.setOnWeatherChange(config.getBoolean("TitleMessages.weather"));
 
@@ -68,7 +75,7 @@ public class SeasonsConfig implements ConfigurationProvider {
 
 	@Override
 	public double getLatestVersion() {
-		return 4.0;
+		return 4.1;
 	}
 
 	@Override
@@ -85,10 +92,18 @@ public class SeasonsConfig implements ConfigurationProvider {
 	 * @return whether the update was successful. If false, values could not be injected and the config is out of date.
 	 */
 	public boolean attemptVersionInjection(JavaPlugin plugin, FileConfiguration config) {
-		if (getCurrentVersion() == 3) {
-			double versionUpdatingTo = 4.0;
-			config.set("TitleMessages.season", false);
-			config.set("TitleMessages.weather", false);
+		if (getCurrentVersion() < 4.1) {
+			double versionUpdatingTo = 4.1;
+			if (getCurrentVersion() == 3) {
+				config.set("TitleMessages.season", false);
+				config.set("TitleMessages.weather", false);
+			} else if (getCurrentVersion() == 4) {
+				config.set("YearsEnabled", true);
+				config.set("SeasonsPerYear", 4);
+				config.set("StartingYear", 2000);
+			} else return false;
+
+			config.set("TitleMessages.year", false);
 			config.set("version", versionUpdatingTo);
 			try {
 				config.save(getFile(plugin));
@@ -112,6 +127,20 @@ public class SeasonsConfig implements ConfigurationProvider {
 	}
 
 	/**
+	 * @return the year that the world starts on
+	 */
+	public int getStartingYear() {
+		return startingYear;
+	}
+
+	/**
+	 * @return the amount of seasons that must pass before the year increases
+	 */
+	public int getSeasonsPerYear() {
+		return seasonsPerYear;
+	}
+
+	/**
 	 * @return the amount of seconds which should pass between a player being damaged by an effect
 	 */
 	public int getSecondsPerDamage() {
@@ -130,6 +159,13 @@ public class SeasonsConfig implements ConfigurationProvider {
 	 */
 	public boolean hasEnabledEffects() {
 		return enableEffects;
+	}
+
+	/**
+	 * @return whether the years system has been enabled
+	 */
+	public boolean isYearsEnabled() {
+		return yearsEnabled;
 	}
 
 	/**

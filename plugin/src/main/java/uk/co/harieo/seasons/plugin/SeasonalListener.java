@@ -7,13 +7,28 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldLoadEvent;
 
+import uk.co.harieo.seasons.plugin.configuration.StaticPlaceholders;
 import uk.co.harieo.seasons.plugin.events.DayEndEvent;
 import uk.co.harieo.seasons.plugin.events.SeasonChangeEvent;
 import uk.co.harieo.seasons.plugin.events.SeasonsWeatherChangeEvent;
+import uk.co.harieo.seasons.plugin.events.YearChangeEvent;
 import uk.co.harieo.seasons.plugin.models.Season;
 import uk.co.harieo.seasons.plugin.models.Weather;
 
 public class SeasonalListener implements Listener {
+
+	@EventHandler
+	public void onYearChange(YearChangeEvent event) {
+		World world = event.getCycle().getWorld();
+		Seasons.getInstance().getLanguageConfig()
+				.getStringOrDefault("year-trigger", "Entered the %year% year")
+				.map(message -> message.replaceAll(StaticPlaceholders.YEAR.toString(), String.valueOf(event.getChangedTo())))
+				.ifPresent(message -> {
+					for (Player player : world.getPlayers()) {
+						player.sendMessage(Seasons.PREFIX + message);
+					}
+				});
+	}
 
 	@EventHandler
 	public void onSeasonChange(SeasonChangeEvent event) {

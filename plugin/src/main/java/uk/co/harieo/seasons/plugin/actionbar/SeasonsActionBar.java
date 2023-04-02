@@ -1,5 +1,6 @@
 package uk.co.harieo.seasons.plugin.actionbar;
 
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -27,11 +28,18 @@ public class SeasonsActionBar implements Runnable {
 			if (cycle != null) {
 				Season season = cycle.getSeason();
 				Weather weather = cycle.getWeather();
+				ComponentBuilder builder = new ComponentBuilder("");
+				if (Seasons.getInstance().getSeasonsConfig().isYearsEnabled()) {
+					builder.append(Seasons.getInstance().getLanguageConfig().getString("misc.year-color")
+										   .orElse(String.valueOf(ChatColor.RED))
+										   + cycle.getYear())
+							.append("∙ ").color(ChatColor.GRAY);
+				}
 				player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
-						new ComponentBuilder(season.getName()).color(season.getColor().asBungee())
-								.append("∙ ").color(ChatColor.GRAY)
-								.append(weather.getName())
-								.create());
+											builder.append(season.getName()).color(season.getColor().asBungee())
+													.append("∙ ").color(ChatColor.GRAY)
+													.append(weather.getName())
+													.create());
 			}
 		}
 	}

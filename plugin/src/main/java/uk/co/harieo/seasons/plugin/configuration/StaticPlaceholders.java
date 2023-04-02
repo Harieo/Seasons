@@ -2,10 +2,13 @@ package uk.co.harieo.seasons.plugin.configuration;
 
 public enum StaticPlaceholders {
 
+	YEAR("year"),
 	SEASON("season"),
 	WEATHER("weather"),
 	DAY("day"),
 	MAX_DAYS("max-days"),
+	SEASON_NUMBER("season-number"),
+	SEASONS_PER_YEAR("seasons-per-year"),
 	OPTIONS("options"),
 	SEASON_COLOR("season-color");
 

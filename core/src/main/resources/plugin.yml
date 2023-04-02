@@ -2,6 +2,7 @@ main: uk.co.harieo.seasons.core.SeasonsCore
 version: 2.5.1
 name: Seasons
 author: Harieo
+api-version: 1.13
 softdepend:
   - 'PlaceholderAPI'
 
@@ -15,6 +16,8 @@ commands:
     description: Changes the weather in a world
   changeseason:
     description: Changes the season in a world
+  changeyear:
+    description: Changes the year in a world
 
 permissions:
   seasons.*:
@@ -39,6 +42,9 @@ permissions:
     default: op
   seasons.change.season:
     description: Change the season in a world
+    default: op
+  seasons.change.year:
+    description: Change the year in a world
     default: op
   seasons.reload:
     description: Reload the configuration for seasons

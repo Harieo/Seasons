@@ -41,6 +41,8 @@ seasons:
         autumn: 'A cool breeze whispers to the leaves that fall from the trees, it is %season%!'
         winter: 'A few snowflakes fall and the world grows cold, time for %season% to make its mark...'
 
+year-trigger: '&aEntered the %year%! Good luck!'
+
 effects:
     description:
         devastation: '&cYour hearts beats rapidly, yours legs tremble and you find you cannot regenerate health until this Devastation passes!'
@@ -102,7 +104,7 @@ command:
     effects-list-title: '&7For the weather &e%weather%, &7the effects are:'
     effects-list-element: '&6&l%effect%: &7%description%'
     season-info:
-        - '%season-color%Your world is in %season%'
+        - '%season-color%Your world is in %season% &7- &c%year% &7- &a%season-number%&7/&c%seasons-per-year%'
         - '&7The weather is currently &2%weather%'
         - '&eToday is Day %day% of %max-days%'
     season-info-footer: '&7To see the effects of this weather, use the command &e/seasons effects'
@@ -116,9 +118,12 @@ command:
     force-day: '&7Time shatters before you and now it is &bDay %day%'
     force-weather: '&7The skies grow silent and with a great rumble, the weather is now %weather%'
     force-season: '&7The air around you changes mystically and becomes %season%'
+    force-year: '&7Time shatters before you and now it is &bYear %year%'
 
 misc:
     prefix: '&e&lSeasons&7∙ &r'
     catastrophic-alert: '&c&lCATASTROPHIC WEATHER ALERT - Take care to plan your day'
     weather-change: '&7The weather has changed'
     season-change: '&7The season has changed'
+    year-change: '&7The year has changed'
+    year-color: '&c'
