@@ -28,7 +28,7 @@ public class SeasonsActionBar implements Runnable {
 			if (cycle != null) {
 				Season season = cycle.getSeason();
 				Weather weather = cycle.getWeather();
-				ComponentBuilder builder = new ComponentBuilder();
+				ComponentBuilder builder = new ComponentBuilder("");
 				if (Seasons.getInstance().getSeasonsConfig().isYearsEnabled()) {
 					builder.append(Seasons.getInstance().getLanguageConfig().getString("misc.year-color")
 										   .orElse(String.valueOf(ChatColor.RED))

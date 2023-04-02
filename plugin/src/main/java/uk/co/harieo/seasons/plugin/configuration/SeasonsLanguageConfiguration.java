@@ -41,7 +41,7 @@ public class SeasonsLanguageConfiguration implements ConfigurationProvider {
 
 	@Override
 	public double getLatestVersion() {
-		return 4.0;
+		return 4.1;
 	}
 
 	@Override
@@ -50,10 +50,21 @@ public class SeasonsLanguageConfiguration implements ConfigurationProvider {
 	}
 
 	public boolean attemptVersionInjection(JavaPlugin plugin, FileConfiguration config) {
-		if (getCurrentVersion() == 3) {
-			double versionUpdatingTo = 4.0;
-			config.set("misc.weather-change", "&7The weather has changed");
-			config.set("misc.season-change", "&7The season has changed");
+		if (getCurrentVersion() < 4.1) {
+			if (getCurrentVersion() == 3) {
+				config.set("misc.weather-change", "&7The weather has changed");
+				config.set("misc.season-change", "&7The season has changed");
+			} else if (getCurrentVersion() == 4) {
+				config.set("misc.year-change", "&7The year has changed");
+				config.set("misc.year-color", "&c");
+				config.set("command.force-year", "&7Time shatters before you and now it is &bYear %year%");
+				List<String> season_info = config.getStringList("command.season-info");
+				season_info.add("&4If you have enabled the year please add the year here! Example: &c%year% &7- &a%season-number%&7/&c%seasons-per-year%");
+				config.set("command.season-info", season_info);
+				config.set("year-trigger", "&aEntered the %year%! Good luck!");
+			} else return false;
+
+			double versionUpdatingTo = 4.1;
 			config.set("version", versionUpdatingTo);
 			try {
 				config.save(getFile(plugin));
