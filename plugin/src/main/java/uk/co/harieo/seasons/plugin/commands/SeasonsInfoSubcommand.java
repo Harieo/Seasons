@@ -19,6 +19,9 @@ class SeasonsInfoSubcommand {
 		sender.sendMessage(Seasons.PREFIX + ChatColor.GRAY + "Your Configuration Settings (from config.yml):");
 
 		sender.sendMessage(createOptionMessage("Days per Season", String.valueOf(config.getDaysPerSeason())));
+		sender.sendMessage(createOptionMessage("Years are Enabled", String.valueOf(config.isYearsEnabled())));
+		sender.sendMessage(createOptionMessage("Starting Year", String.valueOf(config.getStartingYear())));
+		sender.sendMessage(createOptionMessage("Seasons per Year", String.valueOf(config.getSeasonsPerYear())));
 		sender.sendMessage(createOptionMessage("Seconds per Damage", String.valueOf(config.getSecondsPerDamage())));
 		sender.sendMessage(createOptionMessage("Roof Height", String.valueOf(config.getRoofHeight())));
 		sender.sendMessage(createOptionMessage("Effects are Enabled", String.valueOf(config.hasEnabledEffects())));

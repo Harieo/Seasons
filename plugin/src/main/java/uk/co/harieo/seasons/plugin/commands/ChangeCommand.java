@@ -16,6 +16,7 @@ import uk.co.harieo.seasons.plugin.configuration.StaticPlaceholders;
 import uk.co.harieo.seasons.plugin.events.DayEndEvent;
 import uk.co.harieo.seasons.plugin.events.SeasonChangeEvent;
 import uk.co.harieo.seasons.plugin.events.SeasonsWeatherChangeEvent;
+import uk.co.harieo.seasons.plugin.events.YearChangeEvent;
 import uk.co.harieo.seasons.plugin.models.Cycle;
 import uk.co.harieo.seasons.plugin.models.Season;
 import uk.co.harieo.seasons.plugin.models.Weather;
@@ -167,6 +168,40 @@ public class ChangeCommand implements CommandExecutor {
 					Seasons.PREFIX + ChatColor.GREEN + "Successfully " + ChatColor.GRAY + "changed the season to "
 							+ ChatColor.YELLOW + season.getName() + ChatColor.GRAY + " in " + ChatColor.LIGHT_PURPLE
 							+ world.getName());
+		} else if (commandLabel.equalsIgnoreCase("changeyear")) {
+			if (hasInsufficientPermissions(sender, "seasons.change.year")) {
+				SeasonsCommand.sendPermissionDenied(sender);
+				return;
+			}
+
+			if (!Seasons.getInstance().getSeasonsConfig().isYearsEnabled()) {
+				sender.sendMessage(Seasons.PREFIX + ChatColor.RED + "Years are disabled in the config!");
+				return;
+			}
+
+			int newYear;
+			try {
+				newYear = Integer.parseInt(name);
+			} catch (NumberFormatException ignored) {
+				sender.sendMessage(Seasons.PREFIX
+										   + ChatColor.RED + "Invalid argument: Expected number value /changeyear <value>");
+				return;
+			}
+
+			manager.callEvent(new YearChangeEvent(cycle, newYear, cycle.getYear(), false));
+			cycle.setYear(newYear);
+			languageConfiguration.getStringOrDefault("command.force-year",
+													 ChatColor.GRAY + "Time shatters before you, years fly by and it is now Year " + ChatColor.LIGHT_PURPLE
+															 + newYear)
+					.ifPresent(message -> broadcast(world,
+													Seasons.PREFIX + message
+															.replaceAll(StaticPlaceholders.YEAR.toString(), String.valueOf(newYear))));
+
+			// Confirm to the sender, who may not be in the world
+			sender.sendMessage(
+					Seasons.PREFIX + ChatColor.GREEN + "Successfully " + ChatColor.GRAY + "changed the year to "
+							+ ChatColor.YELLOW + newYear + ChatColor.GRAY + " in " + ChatColor.LIGHT_PURPLE + world
+							.getName());
 		} else {
 			throw new IllegalArgumentException("A command was sent called " + command + " but couldn't be processed");
 		}

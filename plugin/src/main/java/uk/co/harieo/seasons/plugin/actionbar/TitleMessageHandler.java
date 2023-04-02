@@ -16,12 +16,14 @@ import java.util.function.Consumer;
 import uk.co.harieo.seasons.plugin.Seasons;
 import uk.co.harieo.seasons.plugin.events.SeasonChangeEvent;
 import uk.co.harieo.seasons.plugin.events.SeasonsWeatherChangeEvent;
+import uk.co.harieo.seasons.plugin.events.YearChangeEvent;
 import uk.co.harieo.seasons.plugin.models.Cycle;
 import uk.co.harieo.seasons.plugin.models.Season;
 import uk.co.harieo.seasons.plugin.models.Weather;
 
 public class TitleMessageHandler implements Listener {
 
+	private static boolean YEAR_CHANGE = false;
 	private static boolean SEASON_CHANGE = false;
 	private static boolean WEATHER_CHANGE = false;
 
@@ -33,7 +35,7 @@ public class TitleMessageHandler implements Listener {
 			Weather weather = event.getChangedTo();
 			consumeCyclePlayers(player -> {
 				UUID uuid = player.getUniqueId();
-				if (buffer.contains(uuid)) { // If a season change title is showing
+				if (buffer.contains(uuid)) { // If a season/year change title is showing
 					buffer.remove(uuid); // Buffer only applies once
 					return; // As they are buffered, skip this title because another is already showing
 				}
@@ -51,6 +53,12 @@ public class TitleMessageHandler implements Listener {
 		if (SEASON_CHANGE) {
 			Season season = event.getChangedTo();
 			consumeCyclePlayers(player -> {
+				UUID uuid = player.getUniqueId();
+				if (buffer.contains(uuid)) { // If a year change title is showing
+					buffer.remove(uuid); // Buffer only applies once
+					return; // As they are buffered, skip this title because another is already showing
+				}
+
 				player.sendTitle(season.getName(),
 						Seasons.getInstance().getLanguageConfig().getString("misc.season-change")
 								.orElse(ChatColor.GRAY + "The season has changed"),
@@ -60,8 +68,27 @@ public class TitleMessageHandler implements Listener {
 		}
 	}
 
+	@EventHandler
+	public void onYearChange(YearChangeEvent event) {
+		if (YEAR_CHANGE) {
+			int year = event.getChangedTo();
+			consumeCyclePlayers(player -> {
+				player.sendTitle(Seasons.getInstance().getLanguageConfig().getString("misc.year-color")
+										 .orElse(String.valueOf(ChatColor.RED)) + year,
+								 Seasons.getInstance().getLanguageConfig().getString("misc.year-change")
+										 .orElse(ChatColor.GRAY + "The year has changed"),
+								 10, 70, 20);
+				buffer.add(player.getUniqueId());
+			}, event.getCycle());
+		}
+	}
+
 	private void consumeCyclePlayers(Consumer<Player> playerConsumer, Cycle cycle) {
 		cycle.getWorld().getPlayers().forEach(playerConsumer);
+	}
+
+	public static void setOnYearChange(boolean enabled) {
+		YEAR_CHANGE = enabled;
 	}
 
 	public static void setOnSeasonChange(boolean enabled) {

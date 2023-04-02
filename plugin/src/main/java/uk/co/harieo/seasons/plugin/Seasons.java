@@ -86,6 +86,7 @@ public class Seasons {
 			setCommandExecutor("changeday", changeCommand);
 			setCommandExecutor("changeweather", changeCommand);
 			setCommandExecutor("changeseason", changeCommand);
+			setCommandExecutor("changeyear", changeCommand);
 
 			PluginManager pluginManager = Bukkit.getPluginManager();
 			pluginManager.registerEvents(new SeasonalListener(), plugin);

@@ -8,6 +8,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import uk.co.harieo.seasons.plugin.events.DayEndEvent;
 import uk.co.harieo.seasons.plugin.events.SeasonChangeEvent;
 import uk.co.harieo.seasons.plugin.events.SeasonsWeatherChangeEvent;
+import uk.co.harieo.seasons.plugin.events.YearChangeEvent;
 import uk.co.harieo.seasons.plugin.models.Cycle;
 import uk.co.harieo.seasons.plugin.models.Season;
 import uk.co.harieo.seasons.plugin.models.Weather;
@@ -50,11 +51,23 @@ public class WorldTicker extends BukkitRunnable {
 	 * @param cycle to advance the day on
 	 */
 	private void newDay(Cycle cycle) {
+		int year;
 		int day = cycle.getDay();
 		Season season;
 
 		// If the next day will advance past the amount of days in a season, switch to new season
 		if (day + 1 > Seasons.getInstance().getSeasonsConfig().getDaysPerSeason()) {
+			if (Seasons.getInstance().getSeasonsConfig().isYearsEnabled()) {
+				int seasonOfYear = cycle.getSeasonOfYear();
+				if (seasonOfYear + 1 > Seasons.getInstance().getSeasonsConfig().getSeasonsPerYear()) {
+					year = cycle.getYear() + 1;
+					Bukkit.getPluginManager().callEvent(new YearChangeEvent(cycle, year, cycle.getYear(), true));
+					cycle.setYear(year);
+					cycle.setSeasonOfYear(1);
+				} else {
+					cycle.setSeasonOfYear(seasonOfYear + 1);
+				}
+			}
 			cycle.setDay(1);
 			season = Season.next(cycle.getSeason());
 			Bukkit.getPluginManager().callEvent(new SeasonChangeEvent(cycle, season, cycle.getSeason(), true));

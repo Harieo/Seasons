@@ -1,5 +1,6 @@
 package uk.co.harieo.seasons.plugin.configuration;
 
+import com.google.gson.JsonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
@@ -81,14 +82,15 @@ public class SeasonsWorlds {
 
 	/**
 	 * Creates a blank cycle with the static default values: {@link #DEFAULT_SEASON} and {@link #DEFAULT_WEATHER} with
-	 * default day as 1
+	 * default year as {@link SeasonsConfig#getStartingYear()} and day and season of year as 1
 	 *
 	 * @param world to create the cycle for
 	 * @return a blank, default cycle for the specified world
 	 */
 	private Cycle createDefaultCycle(World world) {
 		return new Cycle(world, DEFAULT_SEASON,
-				world.getTime() > 12400 && world.getTime() < 23850 ? Weather.NIGHT : DEFAULT_WEATHER, 1);
+				world.getTime() > 12400 && world.getTime() < 23850 ? Weather.NIGHT : DEFAULT_WEATHER,
+				Seasons.getInstance().getSeasonsConfig().getStartingYear(), 1, 1);
 	}
 
 	/**
@@ -152,6 +154,8 @@ public class SeasonsWorlds {
 		jsonObject.addProperty("worldName", worldName);
 		jsonObject.addProperty("day", cycle.getDay());
 		jsonObject.addProperty("season", cycle.getSeason().name());
+		jsonObject.addProperty("seasonOfYear", cycle.getSeasonOfYear());
+		jsonObject.addProperty("year", cycle.getYear());
 		jsonObject.addProperty("weather", cycle.getWeather().name());
 
 		try (FileWriter writer = new FileWriter(file)) {
@@ -180,6 +184,8 @@ public class SeasonsWorlds {
 	 * @return the gathered information formatted as {@link Cycle}
 	 */
 	private Cycle parseWorldSave(World world) {
+		int year = Seasons.getInstance().getSeasonsConfig().getStartingYear();
+		int seasonOfYear = 1;
 		int day = 1;
 		Season season = DEFAULT_SEASON;
 		Weather weather = DEFAULT_WEATHER;
@@ -190,6 +196,13 @@ public class SeasonsWorlds {
 				JsonObject jsonObject = new JsonParser().parse(reader).getAsJsonObject();
 				day = jsonObject.get("day").getAsInt();
 				season = Season.valueOf(jsonObject.get("season").getAsString());
+				if (jsonObject.get("year") == null || jsonObject.get("year") instanceof JsonNull) {
+					year = Seasons.getInstance().getSeasonsConfig().getStartingYear();
+					seasonOfYear = season.ordinal() + 1;
+				} else {
+					year = jsonObject.get("year").getAsInt();
+					seasonOfYear = jsonObject.get("seasonOfYear").getAsInt();
+				}
 				weather = Weather.valueOf(jsonObject.get("weather").getAsString());
 			} catch (IOException | IllegalArgumentException e) {
 				e.printStackTrace();
@@ -199,7 +212,8 @@ public class SeasonsWorlds {
 		}
 
 		return new Cycle(world, season,
-				world.getTime() > 12400 && world.getTime() < 23850 ? Weather.NIGHT : weather, day);
+				world.getTime() > 12400 && world.getTime() < 23850 ? Weather.NIGHT : weather,
+				year, seasonOfYear, day);
 	}
 
 }
