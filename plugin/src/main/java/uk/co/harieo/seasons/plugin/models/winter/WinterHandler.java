@@ -49,7 +49,6 @@ public class WinterHandler implements Runnable{
             Block iced = waterToFreeze.get(random.nextInt(waterToFreeze.size())).getBlock();
             iced.setType(Material.FROSTED_ICE, false);
             iceToRemove.add(iced.getLocation());
-            //waterToFreeze.remove(iced.getLocation());
         }
         for(int i = 0; i < updates && !snowable.isEmpty();i++){
             Block snow = snowable.get(random.nextInt(snowable.size())).getBlock();
@@ -60,7 +59,6 @@ public class WinterHandler implements Runnable{
                 snow.setType(Material.SNOW);
             }
             snowToRemove.add(snow.getLocation());
-            //snowable.remove(snow.getLocation());
         }
 
         for(Player player : Bukkit.getOnlinePlayers()){
@@ -132,31 +130,6 @@ public class WinterHandler implements Runnable{
             }
         }
     }
-
-
-    /*private static void scanChunk(Chunk chunk) {
-        for (int x = 0; x < 16; x++) {
-            for (int z = 0; z < 16; z++) {
-                *//*Block highest = chunk.getWorld().getHighestBlockAt(x,z);
-                Block above = highest.getRelative(BlockFace.UP);
-                if(highest.getType().isSolid() && above.getType().isAir()){
-                    snowable.add(above.getLocation());
-                }*//*
-                for(int y = 50; y <  100; y++) {
-                    Block potential = chunk.getBlock(x, y, z);
-                    Block abovePotential = chunk.getBlock(x, y + 1, z);
-                    if(potential.getLightFromSky() > 0 && potential.getType().isSolid()){
-                        snowable.add(abovePotential.getLocation());
-                    }
-                    if (potential.getType() == Material.WATER && abovePotential.getType().isAir()) {
-                        if(!isBannedBiome(potential.getBiome())) {
-                            waterToFreeze.add(potential.getLocation());
-                        }
-                    }
-                }
-            }
-        }
-    }*/
 
     public static void start() {
         if (handler.task == null) {
