@@ -1,9 +1,11 @@
 main: uk.co.harieo.seasons.core.SeasonsCore
-version: 2.5.1
+version: 2.5.2
 name: Seasons
 author: Harieo
 softdepend:
   - 'PlaceholderAPI'
+
+api-version: ${spigot.version}
 
 commands:
   season:

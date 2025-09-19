@@ -14,6 +14,7 @@
         <module>v1_12_2_R1</module>
         <module>v1_13_R1</module>
         <module>plugin</module>
+        <module>v1_21_R4</module>
     </modules>
 
     <properties>

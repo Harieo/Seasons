@@ -1,5 +1,6 @@
 package uk.co.harieo.seasons.plugin;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -8,10 +9,6 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.*;
-import java.util.logging.Logger;
-import org.apache.commons.lang.Validate;
 import uk.co.harieo.seasons.plugin.actionbar.TitleMessageHandler;
 import uk.co.harieo.seasons.plugin.commands.ChangeCommand;
 import uk.co.harieo.seasons.plugin.commands.SeasonsCommand;
@@ -22,7 +19,11 @@ import uk.co.harieo.seasons.plugin.configuration.WeatherChanceConfiguration;
 import uk.co.harieo.seasons.plugin.models.Cycle;
 import uk.co.harieo.seasons.plugin.models.effect.Effect;
 import uk.co.harieo.seasons.plugin.models.effect.SeasonsPotionEffect;
+import uk.co.harieo.seasons.plugin.models.winter.ThawHandler;
 import uk.co.harieo.seasons.plugin.placeholders.SeasonsPlaceholderExpansion;
+
+import java.util.*;
+import java.util.logging.Logger;
 
 public class Seasons {
 
@@ -76,6 +77,7 @@ public class Seasons {
  	 */
 	public void startup() {
 		setPrefix();
+		ThawHandler.createBiomeList();//propagate biome list
 		plugin.getLogger().info("Preparing to load...");
 		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 			this.worldHandler = new SeasonsWorlds(this); // Load saved worlds
@@ -138,6 +140,28 @@ public class Seasons {
 	 */
 	public void addEffects(Effect... effects) {
 		this.effects.addAll(Arrays.asList(effects));
+	}
+
+	/**
+	 * Remove an effect from the list of active effects
+	 *
+	 * @param effect to be removed
+	 */
+	private void removeEffect(Effect effect){
+		if(this.effects.contains(effect)){
+			effects.remove(effect);
+		}
+	}
+
+	/**
+	 * Remove a number of effects from the list of active effects
+	 *
+	 * @param effects to be removed
+	 */
+	public void removeEffects(Effect... effects){
+		for(Effect effect : effects){
+			removeEffect(effect);
+		}
 	}
 
 	/**

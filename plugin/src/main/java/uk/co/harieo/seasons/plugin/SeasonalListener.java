@@ -1,23 +1,40 @@
 package uk.co.harieo.seasons.plugin;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.weather.WeatherChangeEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.WorldLoadEvent;
-
 import uk.co.harieo.seasons.plugin.events.DayEndEvent;
 import uk.co.harieo.seasons.plugin.events.SeasonChangeEvent;
 import uk.co.harieo.seasons.plugin.events.SeasonsWeatherChangeEvent;
 import uk.co.harieo.seasons.plugin.models.Season;
 import uk.co.harieo.seasons.plugin.models.Weather;
+import uk.co.harieo.seasons.plugin.models.winter.ThawHandler;
+import uk.co.harieo.seasons.plugin.models.winter.WinterHandler;
 
 public class SeasonalListener implements Listener {
 
 	@EventHandler
 	public void onSeasonChange(SeasonChangeEvent event) {
 		Season season = event.getChangedTo();
+		if(season == Season.WINTER){
+			ThawHandler.stop();
+			WinterHandler.start();
+			for(Chunk loadedChunk : event.getCycle().getWorld().getLoadedChunks()){
+				WinterHandler.addChunk(loadedChunk);
+			}
+		}else{
+			WinterHandler.stop();
+			ThawHandler.start();
+			for(Chunk loadedChunk : event.getCycle().getWorld().getLoadedChunks()){
+				ThawHandler.addChunk(loadedChunk);
+			}
+		}
 		World world = event.getCycle().getWorld();
 		season.getMessage().ifPresent(message -> {
 			for (Player player : world.getPlayers()) {
@@ -68,6 +85,33 @@ public class SeasonalListener implements Listener {
 		Seasons seasons = Seasons.getInstance();
 		if (seasons.getWorldCycle(world) == null) {
 			seasons.getWorldHandler().addWorld(world); // Method will check environment so we don't need to
+		}
+	}
+
+	/*
+	We dont activate the winter and thaw in the nether or end OR disabled worlds
+	 */
+	@EventHandler
+	public void onChunkLoad(ChunkLoadEvent event){
+		Chunk chunk = event.getChunk();
+		World world = chunk.getWorld();
+		String worldName = world.getName().toLowerCase();
+		if(WinterHandler.isAllowedWinter(worldName)) {
+			if (WinterHandler.isWinter()) {
+				WinterHandler.addChunk(chunk);
+			} else {
+				ThawHandler.addChunk(chunk);
+			}
+		}
+	}
+
+	/*
+	We dont want it to rain during winter
+	 */
+	@EventHandler
+	public void onMinecraftWeatherChange(WeatherChangeEvent event){
+		if(WinterHandler.isWinter() && event.toWeatherState()){
+			event.setCancelled(true);
 		}
 	}
 

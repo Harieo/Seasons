@@ -4,15 +4,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scheduler.BukkitRunnable;
-
 import uk.co.harieo.seasons.plugin.events.DayEndEvent;
 import uk.co.harieo.seasons.plugin.events.SeasonChangeEvent;
 import uk.co.harieo.seasons.plugin.events.SeasonsWeatherChangeEvent;
 import uk.co.harieo.seasons.plugin.models.Cycle;
 import uk.co.harieo.seasons.plugin.models.Season;
 import uk.co.harieo.seasons.plugin.models.Weather;
-import uk.co.harieo.seasons.plugin.models.effect.TickableEffect;
 import uk.co.harieo.seasons.plugin.models.effect.Effect;
+import uk.co.harieo.seasons.plugin.models.effect.TickableEffect;
 
 public class WorldTicker extends BukkitRunnable {
 
@@ -57,6 +56,12 @@ public class WorldTicker extends BukkitRunnable {
 		if (day + 1 > Seasons.getInstance().getSeasonsConfig().getDaysPerSeason()) {
 			cycle.setDay(1);
 			season = Season.next(cycle.getSeason());
+//			if(season == Season.WINTER){
+//				WinterHandler.start();
+//			}else{
+//				WinterHandler.stop();
+//			}
+
 			Bukkit.getPluginManager().callEvent(new SeasonChangeEvent(cycle, season, cycle.getSeason(), true));
 			cycle.setSeason(season);
 		} else {
