@@ -18,21 +18,37 @@ public class WinterHandler implements Runnable{
     public static final Set<Chunk> scannedChunks = new HashSet<>();
     private static final List<Location> waterToFreeze = new ArrayList<>();
     private static final List<Location> snowable = new ArrayList<>();
-    private static boolean isWinter = false;
-
     private Random random = new Random();
+    private static boolean isWinter = false;
+    private static boolean isSnowing = false;
+    private static boolean isFreezing = false;
+
+
 
     public static boolean isWinter(){
         return isWinter;
     }
 
+    public static void setFreezing(boolean isFreezing){
+        WinterHandler.isFreezing = isFreezing;
+    }
+
+    public static boolean isFreezing(){
+        return isFreezing;
+    }
+    public static void setSnowing(boolean isSnowing){
+        WinterHandler.isSnowing = isSnowing;
+    }
+
+    public static boolean isSnowing(){
+        return isSnowing;
+    }
+
     public static boolean isAllowedWinter(String world){
 
-        if(world.contains("end") || world.contains("nether") || Seasons.getInstance().getSeasonsConfig().getDisabledWorlds().contains(world)){
-            return false;
-        }else{
-            return true;
-        }
+        return !world.contains("end") &&
+                !world.contains("nether") &&
+                !Seasons.getInstance().getSeasonsConfig().getDisabledWorlds().contains(world);
     }
 
     @Override
@@ -50,32 +66,35 @@ public class WinterHandler implements Runnable{
             iced.setType(Material.FROSTED_ICE, false);
             iceToRemove.add(iced.getLocation());
         }
-        for(int i = 0; i < updates && !snowable.isEmpty();i++){
-            Block snow = snowable.get(random.nextInt(snowable.size())).getBlock();
-            Block below = snow.getRelative(BlockFace.DOWN);
-            if(snow.getType().isAir() &&
-                    below.getType().isSolid() &&
-                    !below.getType().toString().toLowerCase().contains("leaves")) {
-                snow.setType(Material.SNOW);
+        if(isSnowing()) {
+            for (int i = 0; i < updates && !snowable.isEmpty(); i++) {
+                Block snow = snowable.get(random.nextInt(snowable.size())).getBlock();
+                Block below = snow.getRelative(BlockFace.DOWN);
+                if (snow.getType().isAir() &&
+                        below.getType().isSolid() &&
+                        !below.getType().toString().toLowerCase().contains("leaves")) {
+                    snow.setType(Material.SNOW);
+                }
+                snowToRemove.add(snow.getLocation());
             }
-            snowToRemove.add(snow.getLocation());
         }
-
-        for(Player player : Bukkit.getOnlinePlayers()){
-            Location loc = player.getLocation().add(
-                    Math.random() * 6 - 3, // X offset
-                    2 + Math.random(),     // Y offset
-                    Math.random() * 6 - 3  // Z offset
-            );
-            BlockData snowData = Material.SNOW_BLOCK.createBlockData();
-            player.getWorld().spawnParticle(
-                    Particle.FALLING_DUST,
-                    loc,
-                    20, // count
-                    5, 3, 5, // spread
-                    0.1, // speed
-                    snowData
-            );
+        if(isSnowing()) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                Location loc = player.getLocation().add(
+                        Math.random() * 6 - 3, // X offset
+                        2 + Math.random(),     // Y offset
+                        Math.random() * 6 - 3  // Z offset
+                );
+                BlockData snowData = Material.SNOW_BLOCK.createBlockData();
+                player.getWorld().spawnParticle(
+                        Particle.FALLING_DUST,
+                        loc,
+                        20, // count
+                        5, 3, 5, // spread
+                        0.1, // speed
+                        snowData
+                );
+            }
         }
         waterToFreeze.removeAll(iceToRemove);
         snowable.removeAll(snowToRemove);
@@ -104,31 +123,44 @@ public class WinterHandler implements Runnable{
 
                 // Surface snow scan
                 Block highest = world.getHighestBlockAt(worldX, worldZ);
-                Block above = highest.getRelative(BlockFace.UP);
+                Block aboveHighest = highest.getRelative(BlockFace.UP);
 
-                if (!isBannedBiome(highest.getBiome()) &&
-                        highest.getType().isSolid() &&
-                        above.getType().isAir()) {
-                    snowable.add(above.getLocation());
+                if (isSnowableSurface(highest, aboveHighest)) {
+                    snowable.add(aboveHighest.getLocation());
                 }
 
                 // Water freeze scan
                 for (int y = 50; y < 100; y++) {
-                    Block potential = world.getBlockAt(worldX, y, worldZ);
-                    Block abovePotential = world.getBlockAt(worldX, y + 1, worldZ);
+                    Block block = world.getBlockAt(worldX, y, worldZ);
+                    Block above = block.getRelative(BlockFace.UP);
 
-                    if (potential.getLightFromSky() > 0 && potential.getType().isSolid()) {
-                        snowable.add(abovePotential.getLocation());
+                    if (isSnowableSolid(block)) {
+                        snowable.add(above.getLocation());
                     }
 
-                    if (potential.getType() == Material.WATER &&
-                            abovePotential.getType().isAir() &&
-                            !isBannedBiome(potential.getBiome())) {
-                        waterToFreeze.add(potential.getLocation());
+                    if (isFreezableWater(block, above)) {
+                        waterToFreeze.add(block.getLocation());
                     }
                 }
             }
         }
+    }
+
+    private static boolean isSnowableSurface(Block base, Block above) {
+        return !isBannedBiome(base.getBiome()) &&
+                base.getType().isSolid() &&
+                above.getType().isAir();
+    }
+
+    private static boolean isSnowableSolid(Block block) {
+        return block.getLightFromSky() > 0 &&
+                block.getType().isSolid();
+    }
+
+    private static boolean isFreezableWater(Block water, Block above) {
+        return water.getType() == Material.WATER &&
+                above.getType().isAir() &&
+                !isBannedBiome(water.getBiome());
     }
 
     public static void start() {

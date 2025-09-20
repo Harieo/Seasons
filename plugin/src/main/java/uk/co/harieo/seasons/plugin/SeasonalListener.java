@@ -1,5 +1,6 @@
 package uk.co.harieo.seasons.plugin;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.World;
@@ -22,18 +23,25 @@ public class SeasonalListener implements Listener {
 	@EventHandler
 	public void onSeasonChange(SeasonChangeEvent event) {
 		Season season = event.getChangedTo();
+		int counter;
 		if(season == Season.WINTER){
 			ThawHandler.stop();
 			WinterHandler.start();
+			counter = 0;
 			for(Chunk loadedChunk : event.getCycle().getWorld().getLoadedChunks()){
 				WinterHandler.addChunk(loadedChunk);
+				counter++;
 			}
+			Bukkit.getLogger().info("Winter has added " + counter + " chunks");
 		}else{
 			WinterHandler.stop();
 			ThawHandler.start();
+			counter = 0;
 			for(Chunk loadedChunk : event.getCycle().getWorld().getLoadedChunks()){
 				ThawHandler.addChunk(loadedChunk);
+				counter++;
 			}
+			Bukkit.getLogger().info("Thaw has added " + counter + " chunks");
 		}
 		World world = event.getCycle().getWorld();
 		season.getMessage().ifPresent(message -> {
@@ -47,6 +55,9 @@ public class SeasonalListener implements Listener {
 	public void onWeatherChange(SeasonsWeatherChangeEvent event) {
 		Weather weather = event.getChangedTo();
 		World world = event.getCycle().getWorld();
+
+        WinterHandler.setSnowing(weather == Weather.SNOWY);
+		WinterHandler.setFreezing(weather == Weather.FREEZING);
 
 		for (Player player : world.getPlayers()) {
 			if (weather.isCatastrophic()) {

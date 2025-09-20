@@ -44,6 +44,9 @@ public class ThawHandler implements Runnable{
         //Lets remove from the list AFTER we have iterated
         iceToBeScanned.removeAll(iceToRemove);
         snowToBeScanned.removeAll(snowToRemove);
+        //Clear the temp lists
+        iceToRemove.clear();
+        snowToRemove.clear();
 
     }
 
@@ -64,22 +67,38 @@ public class ThawHandler implements Runnable{
         }
     }
 
-    public static void scanForThaw(Chunk chunk){
+    public static void scanForThaw(Chunk chunk) {
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
-                for(int y = 50; y <  100; y++) {
-                    Block potential = chunk.getBlock(x, y, z);
-                    Block abovePotential = chunk.getBlock(x, y + 1, z);
-                    if (potential.getType() == Material.FROSTED_ICE && abovePotential.getType().isAir()) {
-                        iceToBeScanned.add(potential.getLocation());
+                for (int y = 50; y < 100; y++) {
+                    Block block = chunk.getBlock(x, y, z);
+                    Block above = chunk.getBlock(x, y + 1, z);
+
+                    if (isThawableIce(block, above)) {
+                        iceToBeScanned.add(block.getLocation());
                     }
-                    if(potential.getType() == Material.SNOW && !coldBiomes.contains(potential.getBiome())){
-                        snowToBeScanned.add(potential.getLocation());
+
+                    if (isThawableSnow(block)) {
+                        snowToBeScanned.add(block.getLocation());
                     }
                 }
             }
         }
     }
+
+    private static boolean isThawableIce(Block ice, Block above) {
+        return ice.getType() == Material.FROSTED_ICE &&
+                above.getType().isAir();
+    }
+
+    private static boolean isThawableSnow(Block snow) {
+        Biome biome = snow.getWorld().getBiome(snow.getX(), snow.getZ());
+        return snow.getType() == Material.SNOW &&
+                !coldBiomes.contains(biome);
+    }
+
+
+
 
     public static void start() {
         if (handler.task == null) {
