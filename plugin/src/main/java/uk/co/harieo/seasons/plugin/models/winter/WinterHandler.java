@@ -60,11 +60,12 @@ public class WinterHandler implements Runnable{
 
         List<Location> snowToRemove = new ArrayList<>();
         List<Location> iceToRemove = new ArrayList<>();
-
-        for(int i = 0;i < updates && !waterToFreeze.isEmpty();i++){
-            Block iced = waterToFreeze.get(random.nextInt(waterToFreeze.size())).getBlock();
-            iced.setType(Material.FROSTED_ICE, false);
-            iceToRemove.add(iced.getLocation());
+        if(isFreezing()) {
+            for (int i = 0; i < updates && !waterToFreeze.isEmpty(); i++) {
+                Block iced = waterToFreeze.get(random.nextInt(waterToFreeze.size())).getBlock();
+                iced.setType(Material.FROSTED_ICE, false);
+                iceToRemove.add(iced.getLocation());
+            }
         }
         if(isSnowing()) {
             for (int i = 0; i < updates && !snowable.isEmpty(); i++) {
@@ -98,6 +99,9 @@ public class WinterHandler implements Runnable{
         }
         waterToFreeze.removeAll(iceToRemove);
         snowable.removeAll(snowToRemove);
+
+        iceToRemove.clear();
+        snowToRemove.clear();
     }
 
     public static void addChunk(Chunk chunk){
@@ -164,6 +168,7 @@ public class WinterHandler implements Runnable{
     }
 
     public static void start() {
+        ThawHandler.stop();
         if (handler.task == null) {
             Bukkit.getLogger().info("Winter has been started");
             isWinter = true;
@@ -177,5 +182,6 @@ public class WinterHandler implements Runnable{
             handler.task.cancel();
             handler.task = null;
         }
+        ThawHandler.start();
     }
 }

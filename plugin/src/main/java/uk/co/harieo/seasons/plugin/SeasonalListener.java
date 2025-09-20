@@ -25,8 +25,8 @@ public class SeasonalListener implements Listener {
 		Season season = event.getChangedTo();
 		int counter;
 		if(season == Season.WINTER){
-			ThawHandler.stop();
-			WinterHandler.start();
+//			ThawHandler.stop();
+//			WinterHandler.start();
 			counter = 0;
 			for(Chunk loadedChunk : event.getCycle().getWorld().getLoadedChunks()){
 				WinterHandler.addChunk(loadedChunk);
@@ -34,8 +34,8 @@ public class SeasonalListener implements Listener {
 			}
 			Bukkit.getLogger().info("Winter has added " + counter + " chunks");
 		}else{
-			WinterHandler.stop();
-			ThawHandler.start();
+//			WinterHandler.stop();
+//			ThawHandler.start();
 			counter = 0;
 			for(Chunk loadedChunk : event.getCycle().getWorld().getLoadedChunks()){
 				ThawHandler.addChunk(loadedChunk);

@@ -28,6 +28,10 @@ public class ThawHandler implements Runnable{
     @Override
     public void run() {
         int updates = 200;
+
+        Bukkit.getLogger().info("Ice scan queue is " + iceToBeScanned.size());
+        Bukkit.getLogger().info("Snow to be removed is " + snowToRemove.size());
+
         for(int i = 0; i < updates && !iceToBeScanned.isEmpty(); i++){
             Location location = iceToBeScanned.get(random.nextInt(iceToBeScanned.size()));
             location.getBlock().setType(Material.WATER);
@@ -101,6 +105,7 @@ public class ThawHandler implements Runnable{
 
 
     public static void start() {
+        WinterHandler.stop();
         if (handler.task == null) {
             handler.task = Bukkit.getScheduler().runTaskTimer(Seasons.getInstance().getPlugin(), handler, 0, 20 * 2);
         }
@@ -111,5 +116,6 @@ public class ThawHandler implements Runnable{
             handler.task.cancel();
             handler.task = null;
         }
+        WinterHandler.start();
     }
 }
