@@ -19,6 +19,7 @@ public class WinterHandler implements Runnable{
     private static final List<Location> waterToFreeze = new ArrayList<>();
     private static final List<Location> snowable = new ArrayList<>();
     private Random random = new Random();
+    private static World world;
     private static boolean isWinter = false;
     private static boolean isSnowing = false;
     private static boolean isFreezing = false;
@@ -27,6 +28,9 @@ public class WinterHandler implements Runnable{
 
     public static boolean isWinter(){
         return isWinter;
+    }
+    public static void setWinter(boolean isWinter){
+        WinterHandler.isWinter = isWinter;
     }
 
     public static void setFreezing(boolean isFreezing){
@@ -45,7 +49,6 @@ public class WinterHandler implements Runnable{
     }
 
     public static boolean isAllowedWinter(String world){
-
         return !world.contains("end") &&
                 !world.contains("nether") &&
                 !Seasons.getInstance().getSeasonsConfig().getDisabledWorlds().contains(world);
@@ -53,21 +56,29 @@ public class WinterHandler implements Runnable{
 
     @Override
     public void run() {
+        if(!isWinter()){
+            Bukkit.getLogger().info("Winter detected it was thawing so stopping winter");
+            stop();
+            ThawHandler.start();
+        }
         int updates = 200;
-        int queueSize = waterToFreeze.size();
-        Bukkit.getLogger().info("Queue size for water to be frozen " + queueSize);
-        Bukkit.getLogger().info("Snowable Locations number " + snowable.size());
+        if(isSnowing()){
+            Bukkit.getLogger().info("Snowing!!");
+        }
 
         List<Location> snowToRemove = new ArrayList<>();
         List<Location> iceToRemove = new ArrayList<>();
+        //Freeze water (should just check if the weather is set to freezing)
         if(isFreezing()) {
             for (int i = 0; i < updates && !waterToFreeze.isEmpty(); i++) {
                 Block iced = waterToFreeze.get(random.nextInt(waterToFreeze.size())).getBlock();
+                world = iced.getWorld();
                 iced.setType(Material.FROSTED_ICE, false);
                 iceToRemove.add(iced.getLocation());
             }
         }
         if(isSnowing()) {
+            //Generate snow on the ground
             for (int i = 0; i < updates && !snowable.isEmpty(); i++) {
                 Block snow = snowable.get(random.nextInt(snowable.size())).getBlock();
                 Block below = snow.getRelative(BlockFace.DOWN);
@@ -78,8 +89,7 @@ public class WinterHandler implements Runnable{
                 }
                 snowToRemove.add(snow.getLocation());
             }
-        }
-        if(isSnowing()) {
+            //Generate snow flakes (well sort of)
             for (Player player : Bukkit.getOnlinePlayers()) {
                 Location loc = player.getLocation().add(
                         Math.random() * 6 - 3, // X offset
@@ -87,6 +97,7 @@ public class WinterHandler implements Runnable{
                         Math.random() * 6 - 3  // Z offset
                 );
                 BlockData snowData = Material.SNOW_BLOCK.createBlockData();
+                world = player.getWorld();
                 player.getWorld().spawnParticle(
                         Particle.FALLING_DUST,
                         loc,
@@ -96,6 +107,8 @@ public class WinterHandler implements Runnable{
                         snowData
                 );
             }
+            //Turn rain off if its snowy weather
+            world.setStorm(false);
         }
         waterToFreeze.removeAll(iceToRemove);
         snowable.removeAll(snowToRemove);
@@ -168,20 +181,19 @@ public class WinterHandler implements Runnable{
     }
 
     public static void start() {
-        ThawHandler.stop();
+        isWinter = true;
         if (handler.task == null) {
             Bukkit.getLogger().info("Winter has been started");
-            isWinter = true;
             handler.task = Bukkit.getScheduler().runTaskTimer(Seasons.getInstance().getPlugin(), handler, 0, 20);
         }
     }
 
     public static void stop() {
+        isWinter = false;
         if (handler.task != null) {
-            isWinter = false;
+            Bukkit.getLogger().info("Winter has stopped");
             handler.task.cancel();
             handler.task = null;
         }
-        ThawHandler.start();
     }
 }

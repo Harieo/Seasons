@@ -24,9 +24,9 @@ public class SeasonalListener implements Listener {
 	public void onSeasonChange(SeasonChangeEvent event) {
 		Season season = event.getChangedTo();
 		int counter;
+		ThawHandler.start();
 		if(season == Season.WINTER){
-//			ThawHandler.stop();
-//			WinterHandler.start();
+			WinterHandler.setWinter(true);
 			counter = 0;
 			for(Chunk loadedChunk : event.getCycle().getWorld().getLoadedChunks()){
 				WinterHandler.addChunk(loadedChunk);
@@ -34,8 +34,7 @@ public class SeasonalListener implements Listener {
 			}
 			Bukkit.getLogger().info("Winter has added " + counter + " chunks");
 		}else{
-//			WinterHandler.stop();
-//			ThawHandler.start();
+			WinterHandler.setWinter(false);
 			counter = 0;
 			for(Chunk loadedChunk : event.getCycle().getWorld().getLoadedChunks()){
 				ThawHandler.addChunk(loadedChunk);
@@ -121,7 +120,7 @@ public class SeasonalListener implements Listener {
 	 */
 	@EventHandler
 	public void onMinecraftWeatherChange(WeatherChangeEvent event){
-		if(WinterHandler.isWinter() && event.toWeatherState()){
+		if(WinterHandler.isSnowing() && event.toWeatherState()){
 			event.setCancelled(true);
 		}
 	}
